@@ -3,10 +3,8 @@ description: "your Netatmo Favorites Weather Stations and even more!"
 version: "0.0.4"
 slug: "nfws"
 init: false
-startup: application
 url: "https://github.com/GiZMoSK1221/hass-addons/nfws"
 homeassistant_api: true
-hassio_api: false
 arch:
   - aarch64
   - amd64
