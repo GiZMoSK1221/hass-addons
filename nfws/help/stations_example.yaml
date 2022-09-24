@@ -1,0 +1,50 @@
+netatmo_stations:
+    "aa:aa:aa:aa:aa:a1":
+        name: station1                       #name will be nfws_name_sensor...
+        sensors:                            #WindAngle, WindAngleCompass, WindAngleCompassSymbol, GustAngle, GustAngleCompass, GustAngleCompassSymbol, Humidity, Pressure, rain, sum_rain_1, sum_rain_24, WindStrength, GustStrength, Temperature
+            - WindStrength
+            - WindAngleCompass
+            - WindAngleCompassSymbol
+            - GustStrength
+            - GustAngleCompass
+            - GustAngleCompassSymbol
+            - Humidity
+            - rain
+            - sum_rain_1
+            - sum_rain_24
+    "aa:aa:aa:aa:aa:a2":
+        name: station2
+        sensors:
+            - Temperature
+            - WindAngleCompass
+            - WindAngleCompassSymbol
+            - WindStrength
+            - GustStrength
+            - GustAngleCompass
+calculated_sensors:                         #sensor name = nfws_function_sensor_suffix
+    - function: min                         #min, max, avg, first
+      sensors: 
+          - Temperature                     #any sensor except Pressure
+          - Humidity
+      suffix: ""                            #define if you need to have more sensors of one kind/function
+      stations:
+        - "aa:aa:aa:aa:aa:a1"
+        - "aa:aa:aa:aa:aa:a2"
+        - "aa:aa:aa:aa:aa:a3"
+    - function: first                       #especially for wind station, which offen disappears
+      suffix: ""
+      timeDelta: 30                         #netatmo sensor data shoudn't be older than timeDelta (in min). Compared to dashboard_data.time_utc. Default is 30min
+      sensors: 
+          - WindStrength                    #only first sensor will be evaluated
+          - WindAngleCompass                #next sensors will be taken from same station+module
+          - WindAngleCompassSymbol
+          - WindAngle
+          - GustStrength
+          - GustAngleCompass
+          - GustAngleCompassSymbol
+      stations:                             #ordered list
+        - "aa:aa:aa:aa:aa:a1"
+        - "aa:aa:aa:aa:aa:a2"
+        - "aa:aa:aa:aa:aa:a3"
+        - "aa:aa:aa:aa:aa:a4"
+        - "aa:aa:aa:aa:aa:a5"
