@@ -1,0 +1,5 @@
+netatmo_stations:
+    "aa:aa:aa:aa:aa:aa":
+        name: test_station
+        sensors:
+            - Temperature

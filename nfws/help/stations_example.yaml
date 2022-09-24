@@ -1,8 +1,8 @@
 netatmo_stations:
     "aa:aa:aa:aa:aa:a1":
-        name: station1                       #name will be nfws_name_sensor...
-        sensors:                            #WindAngle, WindAngleCompass, WindAngleCompassSymbol, GustAngle, GustAngleCompass, GustAngleCompassSymbol, Humidity, Pressure, rain, sum_rain_1, sum_rain_24, WindStrength, GustStrength, Temperature
-            - WindStrength
+        name: station1                       #name will be nfws_name_station1_...
+        sensors:                             #WindAngle, WindAngleCompass, WindAngleCompassSymbol, GustAngle, GustAngleCompass, GustAngleCompassSymbol, Humidity, Pressure, rain, sum_rain_1, sum_rain_24, WindStrength, GustStrength, Temperature
+            - WindStrength                   #name will be nfws_name_station1_WindStrength
             - WindAngleCompass
             - WindAngleCompassSymbol
             - GustStrength
@@ -18,7 +18,7 @@ netatmo_stations:
             - Temperature
             - WindAngleCompass
             - WindAngleCompassSymbol
-            - WindStrength
+            - WindStrength                  #name will be nfws_name_station2_WindStrength
             - GustStrength
             - GustAngleCompass
 calculated_sensors:                         #sensor name = nfws_function_sensor_suffix
@@ -31,7 +31,7 @@ calculated_sensors:                         #sensor name = nfws_function_sensor_
         - "aa:aa:aa:aa:aa:a1"
         - "aa:aa:aa:aa:aa:a2"
         - "aa:aa:aa:aa:aa:a3"
-    - function: first                       #especially for wind station, which offen disappears
+    - function: first                       #especially for wind station, which often disappears
       suffix: ""
       timeDelta: 30                         #netatmo sensor data shoudn't be older than timeDelta (in min). Compared to dashboard_data.time_utc. Default is 30min
       sensors: 

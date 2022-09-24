@@ -1,5 +1,8 @@
 
-# Home Assistant Add-on: Netatmo Favorites Weather Station
+
+
+
+# <img src="https://raw.githubusercontent.com/GiZMoSK1221/hass-addons/main/nfws/icon.png" alt="drawing" width="50"/> Home Assistant Add-on: Netatmo Favorites Weather Station  
 ![Supports aarch64 Architecture][aarch64-shield] ![Supports amd64 Architecture][amd64-shield] ![Supports armhf Architecture][armhf-shield] ![Supports armv7 Architecture][armv7-shield] ![Supports i386 Architecture][i386-shield]
 
 Netatmo public stations integration for Home Assistant . You can get data from your favorite weather stations in Netatmo,
@@ -18,9 +21,9 @@ This addon enables user without Netatmo hardware to use public data and use them
 
 ![][netatmo_screenshot]
 
-Config example: stations_example.yaml
+Config example: [stations_example.yaml](https://github.com/GiZMoSK1221/hass-addons/blob/main/nfws/help/stations_example.yaml)
 
-**Background**:
+**Background**: 
 Netatmo offers a [getpublicdata API](https://dev.netatmo.com/apidocumentation/weather#getpublicdata), which allows you to retrieve publicly shared weather data from Outdoors Modules within a predefined area. There are two main issues I was facing:
 1. you don't know what you get - when you have a favourite weather station and you trust it's data, even when you provide exact coordinates, you must not get this station in answer
 2. from my observation, wind modules often disappear or don't return data. When you need wind gust to raise venetian blinds to protect them, you need to trust your system and be sure, that you always get this value
@@ -30,7 +33,7 @@ Netatmo offers a [getpublicdata API](https://dev.netatmo.com/apidocumentation/we
 4. Calculated values - function first - retrieves desired value from first available station defined in your list. You just find 5 stations in you surroundings and you have a good chance, that at least one works :)
 
 **Requirements, installation and configuration:**
-read DOCS.md
+read [DOCS.md](https://github.com/GiZMoSK1221/hass-addons/blob/main/nfws/DOCS.md)
 
 [aarch64-shield]: https://img.shields.io/badge/aarch64-yes-green.svg
 [amd64-shield]: https://img.shields.io/badge/amd64-yes-green.svg
