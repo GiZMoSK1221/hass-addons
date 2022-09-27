@@ -2,6 +2,7 @@
 
 # <img src="https://raw.githubusercontent.com/GiZMoSK1221/hass-addons/main/nfws/icon.png" alt="drawing" width="50"/> Home Assistant Add-on: Netatmo Favorites Weather Station  
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=XTWWUQFKVX2XJ&no_recurring=1&item_name=Home+Assistent+Addons&currency_code=CZK)
+
 ![Supports aarch64 Architecture][aarch64-shield] ![Supports amd64 Architecture][amd64-shield] ![Supports armhf Architecture][armhf-shield] ![Supports armv7 Architecture][armv7-shield] ![Supports i386 Architecture][i386-shield]
 
 Netatmo public weather stations integration for Home Assistant . You can receive data from your favourite weather stations in your Netatmo account,
