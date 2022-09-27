@@ -25,6 +25,8 @@ https://weathermap.netatmo.com//?zoom=15&type=temp&param=NoFilter&stationid=**10
 ## Installation and first run
 
  - install the addon
+ [![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https://github.com/GiZMoSK1221/hass-addons)
+
  - go to config tab and enter your client_id and client_secret. Run addon
  - go to log tab. You will see there this message:
  >Missing Netatmo authorisation OAUTH code!
@@ -62,3 +64,4 @@ Now, you were able tu run successfully the addon for the first time. Now, go to 
 -   nfws->deleteRetain: true deletes all sensors on startup created by addon. Use once when your configuration is finished to delete orphaned sensors     
 -  netatmo->log_level: possible values are: debug|info|warning|error|critical. Change to warning or info when addon runs correctly
  
+
