@@ -10,5 +10,3 @@ labels:
   org.opencontainers.image.description: "your Netatmo Favorites Weather Stations and even more!"
   org.opencontainers.image.source: "https://github.com/GiZMoSK1221/hass-addons/tree/main/nfws"
   org.opencontainers.image.licenses: "Apache License 2.0"
-args:
-  TEMPIO_VERSION: "2021.09.0"
