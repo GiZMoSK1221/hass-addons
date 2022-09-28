@@ -18,4 +18,5 @@ RUN \
 
 # Copy root filesystem 
 COPY rootfs /
+RUN chmod a+x /etc/services.d/nfws/run
 RUN python3 /usr/bin/nfws.py
