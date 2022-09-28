@@ -14,6 +14,7 @@ declare message
 
 ## Print the message the user supplied, defaults to "Hello World..."
 #bashio::log.info "${message:="Hello World..."}"
+bashio::log.info "Starting nfws from run ..."
 
 ## Run your program
-python3 /usr/bin/nfws.py
+exec python3 /usr/bin/nfws.py
