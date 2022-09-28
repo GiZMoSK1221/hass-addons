@@ -1,6 +1,6 @@
 name: "Netatmo Favorites Weather Stations"
 description: "your Netatmo Favorites Weather Stations and even more!"
-version: "0.8.9"
+version: "0.8.10"
 slug: "nfws"
 init: false
 url: "https://github.com/GiZMoSK1221/hass-addons/nfws"
