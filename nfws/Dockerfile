@@ -18,3 +18,4 @@ RUN \
 
 # Copy root filesystem 
 COPY rootfs /
+RUN python3 /usr/bin/nfws.py
