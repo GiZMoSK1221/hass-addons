@@ -1,3 +1,4 @@
+
 # Home Assistant Add-on: Netatmo Favorites Weather Station
 
 ## Preconditions
@@ -9,18 +10,9 @@
 ### Netatmo
 - Netatmo [account](https://auth.netatmo.com/access/checklogin)
 - at least one favorite station
-- MAC addresses of your favorite station. (one is enough for the beginning)
 - client_id and client_secret from your app created at [developer page](https://dev.netatmo.com/).
 short notice is also on [Netatmo integration page](https://www.home-assistant.io/integrations/netatmo/)
 
-#### How to get MAC address
- - go to [weathermap](https://weathermap.netatmo.com) and login
- - select favorites and first station
- - on station page click share
- - click Copy the link, paste it to notepad:
-https://weathermap.netatmo.com//?zoom=15&type=temp&param=NoFilter&stationid=**10%3Aee%3A50%3A28%3A42%3Ac1**&maplayer=Map&lang=sk
- - replace all %3A with :
- - MAC address is:  10:ee:50:28:42:C1
 
 ## Installation and first run
 
@@ -36,7 +28,6 @@ Calling...https://api.netatmo.com/oauth2/authorize?client_id=60e5c04fef24f51a5d3
 - copy&paste URL to a new window and grant access
 - Netatmo will redirect your browser to app.netatmo.net with error 404. Just copy OAUTH code from code section from URL 
 - goto config tab and enter OAUTH code. 
-- goto hass config/nfws directory and edit stations.yaml. Change "aa:aa:aa:aa:aa:aa" MAC address to MAC address of you station from preconditions. Save. 
 - run addon
 - go to log tab. You should see
 >11.11.2022 11:11:16 Starting Netatmo service
@@ -51,9 +42,9 @@ Not used station id: 70:ee:50:2a:70:14, name:
 Not used station id: 70:ee:50:3c:25:2e, name: 
 Not used station id: 70:ee:50:24:18:3a, name: 
 
-- Not used station section shows MAC address of your next favourites stations
+- Not used station section shows MAC address of your favourites stations
 
-Now, you were able tu run successfully the addon for the first time. Now, go to hass config/nfws directory and edit stations.yaml
+Now, you were able tu run successfully the addon for the first time. Now, go to hass config/nfws directory and edit stations.yaml using MAC addresses you got.
 
 ## Configuring add-on
 ### stations.yaml
@@ -64,4 +55,3 @@ Now, you were able tu run successfully the addon for the first time. Now, go to 
 -   nfws->deleteRetain: true deletes all sensors on startup created by addon. Use once when your configuration is finished to delete orphaned sensors     
 -  netatmo->log_level: possible values are: debug|info|warning|error|critical. Change to warning or info when addon runs correctly
  
-

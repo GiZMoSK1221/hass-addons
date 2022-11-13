@@ -1,5 +1,5 @@
 netatmo_stations:
-    "aa:aa:aa:aa:aa:aa":
+    "70:ee:50:17:6d:a6":
         name: test_station
         sensors:
             - Temperature

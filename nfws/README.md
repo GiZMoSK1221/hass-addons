@@ -1,5 +1,6 @@
 
 
+
 # <img src="https://raw.githubusercontent.com/GiZMoSK1221/hass-addons/main/nfws/icon.png" alt="drawing" width="50"/> Home Assistant Add-on: Netatmo Favorites Weather Station  
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?business=XTWWUQFKVX2XJ&no_recurring=1&item_name=Home+Assistent+Addons&currency_code=CZK)
 
@@ -34,6 +35,8 @@ Netatmo offers a [getpublicdata API](https://dev.netatmo.com/apidocumentation/we
 
 **Requirements, installation and configuration:**
 read [DOCS.md](https://github.com/GiZMoSK1221/hass-addons/blob/main/nfws/DOCS.md)
+
+Forum: https://community.home-assistant.io/t/netatmo-favorites-weather-station-addon/467534
 
 [aarch64-shield]: https://img.shields.io/badge/aarch64-yes-green.svg
 [amd64-shield]: https://img.shields.io/badge/amd64-yes-green.svg

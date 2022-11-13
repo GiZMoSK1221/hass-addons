@@ -1,4 +1,5 @@
 
+
 # GiZMo's Home Assistant add-on repository
 
 
@@ -14,8 +15,9 @@ This repository contains the following add-ons
 
 _Netatmo integration for Home Assistant. You can get data from your favorite weather stations in Netatmo._
 
-### [Paradox add-on](./)
+### [ParadoxPRT3toMQTT add-on](./)
 tbd, based on [ParadoxHassMQTT](https://github.com/DaveOke/ParadoxHassMQTT) project, integrated into Home Assistant as add-on
+Integrates Paradox Digiplex DGP-848 control panel with PRT3 printer module->USB->RPi4 using ASCII PRT3 protocol
 
 [aarch64-shield]: https://img.shields.io/badge/aarch64-yes-green.svg
 [amd64-shield]: https://img.shields.io/badge/amd64-yes-green.svg

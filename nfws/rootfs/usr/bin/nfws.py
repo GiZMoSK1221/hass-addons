@@ -573,13 +573,14 @@ def netatmo_handle_calculated_sensors_function_minmaxavg(function_sensor):
                 dashboard_data = match.context.value
                 #print(dashboard_data[sensor])
                 values.append(dashboard_data[sensor])
-        value = ""        
-        if function_sensor["function"] == "min":
-            value = min(values)
-        elif function_sensor["function"] == "max":
-            value = max(values)
-        elif function_sensor["function"] == "avg":
-            value = Average(values)
+        value = ""
+        if values != []:
+            if function_sensor["function"] == "min":
+                value = min(values)
+            elif function_sensor["function"] == "max":
+                value = max(values)
+            elif function_sensor["function"] == "avg":
+                value = Average(values)
         
         #print(value)
         suffix = ""
