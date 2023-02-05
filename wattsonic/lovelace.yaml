@@ -1,0 +1,125 @@
+  - theme: Backend-selected
+    title: W
+    path: w
+    visible:
+    layout: {}
+    badges: []
+    cards:
+      - type: custom:power-flow-card
+        title: Aktualna spotreba
+        w_decimals: 2
+        kw_decimals: 2
+        watt_threshold: 999
+        entities:
+          battery: sensor.wattsonic_battery_p
+          battery_charge: sensor.wattsonic_battery_soc
+          grid: sensor.wattsonic_total_power_on_meter
+          solar: sensor.wattsonic_pv_input_total_power
+        inverted_entities: grid
+      - type: entities
+        entities:
+          - entity: sensor.wattsonic_pv_generation_energy_on_that_day
+          - entity: sensor.wattsonic_grid_purchasing_energy_on_that_day
+          - entity: sensor.wattsonic_backup_output_energy_on_that_day
+          - entity: sensor.wattsonic_grid_injection_energy_on_that_day
+          - type: button
+            name: Graf
+            icon: mdi:information
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/wgraph
+        title: Today
+      - type: entities
+        entities:
+          - entity: sensor.wattsonic_inverter_sn
+          - entity: sensor.wattsonic_inverter_running_status_text
+          - entity: sensor.wattsonic_hybrid_inverter_working_mode_setting_text
+          - entity: sensor.wattsonic_total_purchasing_energy_from_grid_on_meter
+          - entity: sensor.wattsonic_total_power_on_meter
+          - entity: sensor.wattsonic_total_pv_generation_from_installation
+          - entity: sensor.wattsonic_total_pv_generation_on_that_day
+          - entity: sensor.wattsonic_pv_input_total_power
+          - entity: sensor.wattsonic_phase_a_power_on_meter
+          - entity: sensor.wattsonic_phase_b_power_on_meter
+          - entity: sensor.wattsonic_phase_c_power_on_meter
+          - entity: sensor.wattsonic_total_backup_p
+          - entity: sensor.wattsonic_p_ac
+        title: Wattsonic basic
+      - type: entities
+        entities:
+          - entity: sensor.wattsonic_grid_injection_energy_on_that_day
+          - entity: sensor.wattsonic_grid_purchasing_energy_on_that_day
+          - entity: sensor.wattsonic_backup_output_energy_on_that_day
+          - entity: sensor.wattsonic_battery_charge_energy_on_that_day
+          - entity: sensor.wattsonic_battery_discharge_energy_on_that_day
+          - entity: sensor.wattsonic_pv_generation_energy_on_that_day
+          - entity: sensor.wattsonic_loading_energy_on_that_day
+          - entity: sensor.wattsonic_energy_purchased_from_grid_on_that_day
+          - entity: sensor.wattsonic_total_energy_injected_to_grid
+          - entity: sensor.wattsonic_total_energy_purchased_from_grid_from_meter
+          - entity: sensor.wattsonic_total_output_energy_on_backup_port
+          - entity: sensor.wattsonic_total_energy_charged_to_battery
+          - entity: sensor.wattsonic_total_energy_discharged_from_battery
+          - entity: sensor.wattsonic_total_pv_generation
+          - entity: sensor.wattsonic_total_loading_energy_consumed_at_grid_side
+          - entity: sensor.wattsonic_total_energy_purchased_from_grid_at_inverter_side
+        title: Wattsonic 3100
+      - type: entities
+        entities:
+          - sensor.wattsonic_grid_lines_a_b_voltage
+          - sensor.wattsonic_grid_lines_b_c_voltage
+          - sensor.wattsonic_grid_lines_c_a_voltage
+          - sensor.wattsonic_grid_phase_a_voltage
+          - sensor.wattsonic_grid_phase_b_voltage
+          - sensor.wattsonic_grid_phase_c_voltage
+          - sensor.wattsonic_grid_phase_a_current
+          - sensor.wattsonic_grid_phase_b_current
+          - sensor.wattsonic_grid_phase_c_current
+        title: Grid
+      - type: entities
+        entities:
+          - entity: sensor.wattsonic_battery_soc
+          - entity: sensor.wattsonic_battery_mode_text
+          - entity: sensor.wattsonic_battery_p
+          - entity: sensor.wattsonic_battery_i
+          - entity: sensor.wattsonic_battery_v
+          - entity: sensor.wattsonic_bms_pack_temperature
+          - entity: sensor.wattsonic_battery_soh
+        title: Battery
+      - type: entities
+        entities:
+          - entity: sensor.wattsonic_pv1_input_power
+          - entity: sensor.wattsonic_pv2_input_power
+          - entity: sensor.wattsonic_temperature_sensor_1
+          - entity: sensor.wattsonic_temperature_sensor_2
+          - entity: sensor.wattsonic_temperature_sensor_3
+          - entity: sensor.wattsonic_temperature_sensor_4
+          - entity: sensor.wattsonic_pv1_voltage
+          - entity: sensor.wattsonic_pv2_voltage
+          - entity: sensor.wattsonic_pv1_current
+          - entity: sensor.wattsonic_pv2_current
+        title: Panel
+      - hours_to_show: 12
+        graph: line
+        type: sensor
+        entity: sensor.wattsonic_battery_p
+        detail: 2
+        name: Battery power
+      - hours_to_show: 12
+        graph: line
+        type: sensor
+        entity: sensor.wattsonic_pv_input_total_power
+        detail: 2
+        name: PV power
+      - hours_to_show: 24
+        graph: line
+        type: sensor
+        entity: sensor.wattsonic_total_backup_p
+        detail: 2
+        name: Load power
+      - hours_to_show: 24
+        graph: line
+        type: sensor
+        entity: sensor.wattsonic_total_power_on_meter
+        detail: 2
+        name: Grid power
