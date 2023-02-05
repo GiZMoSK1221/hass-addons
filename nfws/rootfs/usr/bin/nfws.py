@@ -414,7 +414,8 @@ def hass_register_sensor(entity_name, sensor):
 					"model": "Weather Stations" 
 				}
                 
-    hass_conf["state_class"] = "measurement"
+    if sensor.lower() != "windanglecompass" and sensor.lower() != "windanglecompasssymbol" and sensor.lower() != "gustanglecompass" and sensor.lower() != "gustanglecompasssymbol":
+        hass_conf["state_class"] = "measurement"
     if sensor.lower() == "temperature":
         hass_conf["device_class"] = "temperature"
         hass_conf["unit_of_measurement"] = "°C"
@@ -428,6 +429,8 @@ def hass_register_sensor(entity_name, sensor):
         hass_conf["unit_of_measurement"] = "km/h"
     if sensor.lower() == "sum_rain_24" or sensor.lower() == "sum_rain_1" or sensor.lower() == "rain":
         hass_conf["unit_of_measurement"] = "mm"
+#    if sensor.lower() == "windanglecompass" or sensor.lower() == "windanglecompasssymbol" or sensor.lower() == "gustanglecompass" or sensor.lower() == "gustanglecompasssymbol":
+#        hass_conf["state_class"] = ""
     
     logger.info( snow() + "Registering: " + str(hass_conf))
     ret = hass_mqtt_publish("homeassistant/sensor/nfws/" + entity_name + "/config", json.dumps(hass_conf), qos=0, retain=True) 
@@ -674,7 +677,7 @@ def hass_mqtt_delete_retain_messages():
     mqtt_client.on_message = on_message
     time.sleep(5)
     mqtt_client.unsubscribe("homeassistant/sensor/nfws/#")
-    
+
 
 logging.basicConfig(format='%(message)s')  #DEBUG, INFO, WARNING, ERROR, CRITICAL
 logger = logging.getLogger('nfws')
