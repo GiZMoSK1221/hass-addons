@@ -394,7 +394,7 @@ def hass_mqtt_publish(topic, value, qos, retain):
     return res
 
 def hass_register_sensor(entity_name, sensor):
-#nwfs_name_temperature, sensor name
+#nfws_name_temperature, sensor name
     global registered_entity
     
     if entity_name in registered_entity:
@@ -442,12 +442,12 @@ def hass_publish_station_sensor(station, sensor, value):
 #station from config, sensor name, value
     
     if sensor in station["sensors"]:        #is sensor configured?
-        hass_register_sensor("nwfs_" + station["name"] + "_" + sensor, sensor)
+        hass_register_sensor("nfws_" + station["name"] + "_" + sensor, sensor)
 
         hass_data = {}
         hass_data["value"] = value
         hass_data["updated_when"] = snow()
-        ret = hass_mqtt_publish(f"nfws/sensor/nwfs_{station['name']}_{sensor}/state", json.dumps(hass_data, ensure_ascii=False), qos = 0, retain = False) 
+        ret = hass_mqtt_publish(f"nfws/sensor/nfws_{station['name']}_{sensor}/state", json.dumps(hass_data, ensure_ascii=False), qos = 0, retain = False) 
         #print(ret.rc)
 
     return True

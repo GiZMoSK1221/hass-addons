@@ -15,6 +15,10 @@ This repository contains the following add-ons
 
 _Netatmo integration for Home Assistant. You can get data from your favorite weather stations in Netatmo._
 
+### [Netatmo Favorites Weather Stations add-on](./wattsonic)
+Wattsonic gen3 modbus configs
+Forum: https://community.home-assistant.io/t/wattsonic-photovoltaic-power-plant-fve-integration/406135
+
 ### [ParadoxPRT3toMQTT add-on](./)
 tbd, based on [ParadoxHassMQTT](https://github.com/DaveOke/ParadoxHassMQTT) project, integrated into Home Assistant as add-on
 Integrates Paradox Digiplex DGP-848 control panel with PRT3 printer module->USB->RPi4 using ASCII PRT3 protocol
