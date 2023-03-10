@@ -15,8 +15,7 @@ This repository contains the following add-ons
 
 _Netatmo integration for Home Assistant. You can get data from your favorite weather stations in Netatmo._
 
-### [Netatmo Favorites Weather Stations add-on](./wattsonic)
-Wattsonic gen3 modbus configs
+### [Wattsonic gen3 modbus configs](./wattsonic)
 Forum: https://community.home-assistant.io/t/wattsonic-photovoltaic-power-plant-fve-integration/406135
 
 ### [ParadoxPRT3toMQTT add-on](./)
