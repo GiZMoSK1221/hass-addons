@@ -1,0 +1,230 @@
+modbus:
+- type: tcp
+  host: 192.168.11.141
+  port: 502
+  name: etrel_inch
+  sensors:
+      # inputs
+    - name: etrel_con1_connection_status
+      address: 0
+      input_type: input
+      data_type: int16
+      count: 1
+      scan_interval: 60
+      lazy_error_count: 10
+    - name: etrel_con1_measured_vehicle_number_of_phases
+      address: 1
+      input_type: input
+      data_type: int16
+      count: 1
+    - name: etrel_con1_ev_max_phase_current
+      unit_of_measurement: A
+      address: 2
+      input_type: input
+      data_type: float32
+      count: 2
+      device_class: current
+      scan_interval: 60
+      lazy_error_count: 10
+    - name: Etrel Con1 Target Current from modbus
+      unique_id: etrel_con1_target_current
+      unit_of_measurement: A
+      address: 4
+      input_type: input
+      data_type: float32
+      count: 2
+      device_class: current
+      scan_interval: 60
+      lazy_error_count: 10
+    - name: etrel_con1_current_l1
+      unit_of_measurement: A
+      address: 14
+      input_type: input
+      data_type: float32
+      count: 2
+      device_class: current
+      scan_interval: 60
+      lazy_error_count: 10
+
+    - name: etrel_con1_active_power_l1
+      unit_of_measurement: kW
+      address: 20
+      input_type: input
+      data_type: float32
+      count: 2
+      device_class: power
+      scan_interval: 60
+      lazy_error_count: 10
+    - name: etrel_con1_active_power_l2
+      unit_of_measurement: kW
+      address: 22
+      input_type: input
+      data_type: float32
+      count: 2
+      device_class: power
+      scan_interval: 60
+      lazy_error_count: 10
+    - name: etrel_con1_active_power_l3
+      unit_of_measurement: kW
+      address: 24
+      input_type: input
+      data_type: float32
+      count: 2
+      device_class: power
+      scan_interval: 60
+      lazy_error_count: 10
+    - name: etrel_con1_active_power_total
+      unit_of_measurement: kW
+      address: 26
+      input_type: input
+      data_type: float32
+      count: 2
+      device_class: power
+      scan_interval: 60
+      lazy_error_count: 10
+    - name: etrel_con1_session_imported_energy_total
+      unit_of_measurement: kWh
+      address: 30
+      input_type: input
+      data_type: float32
+      precision: 1
+      count: 2
+      device_class: energy
+      scan_interval: 60
+      lazy_error_count: 10
+    - name: etrel_con1_session_duration
+      unit_of_measurement: h
+      address: 32
+      input_type: input
+      data_type: int64
+      precision: 2
+      count: 4
+#      scale: 0.000278
+      device_class: duration
+      scan_interval: 60
+      lazy_error_count: 10
+    - name: etrel_con1_session_departure_time
+#      unit_of_measurement: s
+      address: 36
+      input_type: input
+      data_type: int64
+      count: 4
+#      device_class: timestamp
+    - name: etrel_con1_ev_max_power
+      unit_of_measurement: kW
+      address: 44
+      input_type: input
+      data_type: float32
+      precision: 1
+      count: 2
+      device_class: power
+    - name: etrel_con1_ev_planned_energy
+      unit_of_measurement: kWh
+      address: 46
+      input_type: input
+      data_type: float32
+      count: 2
+      device_class: energy
+
+    - name: etrel_charger_serial_no
+      address: 990
+      input_type: input
+      data_type: string
+      count: 10
+    - name: etrel_charger_serial_model
+      address: 1000
+      input_type: input
+      data_type: string
+      count: 10
+    - name: etrel_charger_hw_version
+      address: 1010
+      input_type: input
+      data_type: string
+      count: 5
+    - name: etrel_charger_sw_version
+      address: 1015
+      input_type: input
+      data_type: string
+      count: 5
+    - name: etrel_charger_number_of_connectors
+      address: 1020
+      input_type: input
+      data_type: int32
+      count: 2
+
+# 1 : SocketType2
+# 2 : PlugType2
+    - name: etrel_con1_connector_type
+      address: 1022
+      input_type: input
+      data_type: int16
+      count: 1
+      scan_interval: 60
+      lazy_error_count: 10
+    - name: etrel_con1_number_of_phases
+      address: 1023
+      input_type: input
+      data_type: int16
+      count: 1
+      scan_interval: 60
+      lazy_error_count: 10
+    - name: etrel_con1_l1_connected_to_phase
+      address: 1024
+      input_type: input
+      data_type: int16
+      count: 1
+      scan_interval: 60
+      lazy_error_count: 10
+    - name: etrel_con1_l2_connected_to_phase
+      address: 1025
+      input_type: input
+      data_type: int16
+      count: 1
+      scan_interval: 60
+      lazy_error_count: 10
+    - name: etrel_con1_l3_connected_to_phase
+      address: 1026
+      input_type: input
+      data_type: int16
+      count: 1
+      scan_interval: 60
+      lazy_error_count: 10
+    - name: etrel_con1_custom_max_current
+      unit_of_measurement: A
+      address: 1028
+      input_type: input
+      data_type: float32
+      count: 2
+      device_class: current
+      scan_interval: 60
+      lazy_error_count: 10
+
+sensor:
+  - platform: template
+    sensors:
+      etrel_con1_connection_status_text:
+         friendly_name: Etrel Con1 Connection Status
+         value_template: >
+            {% if states('sensor.etrel_con1_connection_status') == '0' %}
+                Unknown
+            {% elif states('sensor.etrel_con1_connection_status') == '1' %}
+                SocketAvailable
+            {% elif states('sensor.etrel_con1_connection_status') == '2' %}
+                WaitingForVehicleToBeConnected
+            {% elif states('sensor.etrel_con1_connection_status') == '3' %}
+                WaitingForVehicleToStart
+            {% elif states('sensor.etrel_con1_connection_status') == '4' %}
+                Charging
+            {% elif states('sensor.etrel_con1_connection_status') == '5' %}
+                ChargingPausedByEv
+            {% elif states('sensor.etrel_con1_connection_status') == '6' %}
+                ChargingPausedByEvse
+            {% elif states('sensor.etrel_con1_connection_status') == '7' %}
+                ChargingEnded
+            {% elif states('sensor.etrel_con1_connection_status') == '8' %}
+                ChargingFault
+            {% elif states('sensor.etrel_con1_connection_status') == '9' %}
+                UnpausingCharging
+            {% elif states('sensor.etrel_con1_connection_status') == '10' %}
+                Unavailable
+            {% endif %}
