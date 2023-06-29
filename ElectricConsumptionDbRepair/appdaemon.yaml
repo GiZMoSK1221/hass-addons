@@ -1,0 +1,11 @@
+---
+secrets: /config/secrets.yaml
+logs:
+  electric_consumption_db_repair_log:
+    name: electric_consumption_db_repair_log_name
+    filename: /share/electric_consumption_db_repair.log
+    log_size: 10240
+appdaemon:
+admin:
+api:
+hadashboard:

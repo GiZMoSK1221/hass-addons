@@ -1,0 +1,30 @@
+---
+hello_world:
+  module: hello
+  class: HelloWorld
+
+ECDbRepair:
+  module: ElectricConsumptionDbRepair        #define in appdaemon.yaml
+  class: RunElectricConsumptionDbRepair
+  config:
+    log: electric_consumption_db_repair_log
+    only_logging: 0     #1=only log detected errors in statistics table; 0=also execute updates
+    every_hour_info: 0  #1=every hour inserts a new line into log
+#    sqlitedb: '/config/home-assistant_v2.db' #when defined default sqlite db, db part is ignored
+    db:  #mariadb
+      host: '192.168.11.44'
+      port: '3307'
+      db: 'mariadb_db'
+      user: !secret MariaDBuser
+      password: !secret MariaDBpwd
+      charset: 'utf8'
+    entities:               #entities to watch
+      - sensor.zw_powerplug_pracka_kwh
+      - sensor.zw_powerplug_pracovna_stol_kwh
+      - sensor.zw_powerplug_tvsat_kwh
+      - sensor.zw_powerplug_kotol_kwh
+      - sensor.zw_light_obyvacka_kwh
+      - sensor.zw_light_stol_kwh
+      - sensor.zw_light_kuchyna_kwh
+      - sensor.zw_powerplug_chladnicka_kwh
+      - sensor.zw_northq_power_reader_kwh

@@ -18,6 +18,14 @@ _Netatmo integration for Home Assistant. You can get data from your favorite wea
 ### [Wattsonic gen3 modbus configs](./wattsonic)
 Forum: https://community.home-assistant.io/t/wattsonic-photovoltaic-power-plant-fve-integration/406135
 
+### [Etrel inch modbus configs](./etrel_inch)
+Forum: https://community.home-assistant.io/t/etrel-inch-modbus-tcp-communication/548968
+
+### [Appdaemon Electric Consumption Db Repair tool](./ElectricConsumptionDbRepair)
+Script tries to repair statistics, wrong received data from sensor. Typically when one value is too high and scrambles charts in energy dashboard
+Forum: N/A
+
+
 ### [ParadoxPRT3toMQTT add-on](./)
 tbd, based on [ParadoxHassMQTT](https://github.com/DaveOke/ParadoxHassMQTT) project, integrated into Home Assistant as add-on
 Integrates Paradox Digiplex DGP-848 control panel with PRT3 printer module->USB->RPi4 using ASCII PRT3 protocol
