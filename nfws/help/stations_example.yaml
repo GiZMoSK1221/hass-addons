@@ -24,7 +24,7 @@ netatmo_stations:
 calculated_sensors:                         #sensor name = nfws_function_sensor_suffix
     - function: min                         #min, max, avg, first
       sensors: 
-          - Temperature                     #any sensor except Pressure
+          - Temperature                     #any sensor
           - Humidity
       suffix: ""                            #define if you need to have more sensors of one kind/function
       stations:

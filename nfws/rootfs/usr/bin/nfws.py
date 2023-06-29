@@ -220,7 +220,7 @@ def netatmo_get_oauth_token():
         except BaseException as err:
             logger.error(f"{snow()}Unexpected {method} {err=}, {type(err)=}")
             logger.error("  Retry in 1 min again")
-            time.sleep(60)
+            time.sleep(60) 
             continue
 
         if response.status_code != requests.codes.ok:
@@ -567,7 +567,10 @@ def netatmo_handle_calculated_sensors_function_minmaxavg(function_sensor):
         for station_id in function_sensor["stations"]:
             #print(station_id)
 
-            station = parse(f"$.devices[?(@._id == '{station_id}')].modules[*].dashboard_data.{sensor}")
+            if sensor == "Pressure":
+                station = parse(f"$.devices[?(@._id == '{station_id}')].dashboard_data.Pressure")
+            else:
+                station = parse(f"$.devices[?(@._id == '{station_id}')].modules[*].dashboard_data.{sensor}")
 
             for match in station.find(json_netatmo_body):
                 if get_dict_value(match.context.context.value, "reachable", "False") != True:
@@ -667,9 +670,12 @@ def hass_mqtt_delete_retain_messages():
         if msg.retain == 1:
             if get_dict_value(config["nfws"], "log_level") == "debug":
                 logger.info(f"Deleting retain topic {msg.topic}")
-            hass_mqtt_publish("homeassistant/sensor/nfws/test", "", 0, True)
+            hass_mqtt_publish(msg.topic, "", 0, True)
+#            hass_mqtt_publish("homeassistant/sensor/nfws/test", "", 0, True)
     global mqtt_client
 
+    if run_mode == "hass":
+        return
     if get_dict_value(config["nfws"], "deleteRetain", False) != True:
         return
     logger.info(snow() + "Deleting retain config messages")
