@@ -29,7 +29,8 @@ all files copy to your config dir (where is configuration.yaml)
 		- setting Grid Injection Power Limit Setting
 	
 	c) **GEN2** configuration
-	as GEN2 has differrent registers, you cannot use my wattsonic.yaml. You can take it and have to change register addresses. When you do this, please send me your yaml and I will post it here
+	as GEN2 has differrent registers, you cannot use my wattsonic.yaml.
+	but, Ivan has made this basic one [wattsonic_gen2.yaml](wattsonic_gen2.yaml). enjoy and feel free to modify here on github
 
 4. edit modbus configuration in wattsonic.yaml
 		 default is connection over serial and RS485. Change port according to your RS485 module.

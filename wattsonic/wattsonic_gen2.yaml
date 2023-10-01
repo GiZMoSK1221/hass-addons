@@ -1,0 +1,409 @@
+modbus:  
+  - name: wattsonic 
+    type: serial
+    baudrate: 9600
+    bytesize: 8
+    method: rtu
+    parity: N
+    port: /dev/ttyUSB0
+    stopbits: 1 
+    sensors:
+   
+      - name: PV Input total Power
+        unique_id: PV Input total Power
+        slave: 247
+        address: 11028
+        input_type: holding
+        state_class: measurement
+        unit_of_measurement: kWh
+        device_class: power
+        count: 2
+        scale: 0.001
+        precision: 3
+        data_type: int32
+        scan_interval: 30
+        lazy_error_count: 10
+      - name: PV1 Input Power
+        unique_id: PV1 Input Power
+        slave: 247
+        address: 11062
+        input_type: holding
+        state_class: measurement
+        unit_of_measurement: kW
+        device_class: power
+        count: 2
+        scale: 0.001
+        precision: 3
+        data_type: int32
+        scan_interval: 10
+        lazy_error_count: 10
+      - name: SOC
+        unique_id: soc
+        slave: 247
+        address: 43000
+        input_type: holding
+        state_class: measurement
+        #unit_of_measurement: %
+        device_class: battery
+        count: 1
+        scale: 0.01
+        precision: 2
+        data_type: int16
+        scan_interval: 60
+        lazy_error_count: 10
+      - name: Temperature Sensor 1 of Inverter
+        unique_id: Temperature Sensor 1 of Inverter
+        slave: 247
+        address: 11032
+        input_type: holding
+        state_class: measurement
+        unit_of_measurement: °C
+        device_class: temperature
+        count: 1
+        scale: 0.1
+        precision: 1
+        data_type: int16
+        scan_interval: 60
+        lazy_error_count: 10
+      - name: Wattsonic P AC
+        unique_id: wattsonic_p_ac
+        slave: 247
+        address: 11016
+        input_type: holding
+        state_class: measurement
+        unit_of_measurement: kW
+        device_class: power
+        count: 2
+        scale: 0.001
+        precision: 3
+        data_type: int32
+        scan_interval: 10
+        lazy_error_count: 10
+      - name: Total PV Generation on that day
+        unique_id: Total PV Generation on that day
+        slave: 247
+        address: 11018
+        input_type: holding
+        state_class: total_increasing #measurement
+        device_class: energy
+        unit_of_measurement: kWh
+        count: 2
+        scale: 0.1
+        precision: 1
+        data_type: int32
+        scan_interval: 300
+        lazy_error_count: 10
+      - name: Phase L1 Power on Energy-Meter
+        unique_id: Phase L1 Power on Energy-Meter
+        slave: 247
+        address: 10994
+        input_type: holding
+        state_class: measurement
+        unit_of_measurement: kW
+        device_class: power
+        count: 2
+        scale: 0.001
+        precision: 3
+        data_type: int32
+        scan_interval: 20
+        lazy_error_count: 10
+      - name: Phase L2 Power on Energy-Meter
+        unique_id: Phase L2 Power on Energy-Meter
+        slave: 247
+        address: 10996
+        input_type: holding
+        state_class: measurement
+        unit_of_measurement: kW
+        device_class: power
+        count: 2
+        scale: 0.001
+        precision: 3
+        data_type: int32
+        scan_interval: 20
+        lazy_error_count: 10
+      - name: Phase L3 Power on Energy-Meter
+        unique_id: Phase L3 Power on Energy-Meter
+        slave: 247
+        address: 10998
+        input_type: holding
+        state_class: measurement
+        unit_of_measurement: kW
+        device_class: power
+        count: 2
+        scale: 0.001
+        precision: 3
+        data_type: int32
+        scan_interval: 20
+        lazy_error_count: 10
+      - name: Wattsonic Total Power on Meter        #Grid power
+        unique_id: wattsonic_total_power_on_meter
+        slave: 247
+        address: 11000
+        input_type: holding
+        state_class: measurement
+        unit_of_measurement: kW
+        device_class: power
+        count: 2
+        scale: 0.001
+        precision: 3
+        data_type: int32
+        scan_interval: 10
+        lazy_error_count: 10
+      - name: Total Grid-Injection Power on Energy-Meter
+        unique_id: Total Grid-Injection Power on Energy-Meter
+        slave: 247
+        address: 11002
+        input_type: holding
+        state_class: total_increasing
+        unit_of_measurement: kWh
+        device_class: energy
+        count: 2
+        scale: 0.01
+        precision: 2
+        data_type: int32
+        scan_interval: 300
+        lazy_error_count: 10
+      - name: Total Purchasing Power from grid on Energy-Meter
+        unique_id: Total Purchasing Power from grid on Energy-Meter
+        slave: 247
+        address: 11004
+        input_type: holding
+        state_class: total_increasing
+        unit_of_measurement: kWh
+        device_class: energy
+        count: 2
+        scale: 0.01
+        precision: 2
+        data_type: int32
+        scan_interval: 300
+        lazy_error_count: 10
+      - name: Battery_Power
+        unique_id: Battery_Power
+        slave: 247
+        address: 40258
+        input_type: holding
+        state_class: measurement
+        unit_of_measurement: kW
+        device_class: power
+        count: 2
+        scale: 0.001
+        precision: 3
+        data_type: int32
+        scan_interval: 10
+        lazy_error_count: 10
+      - name: Grid injection energy on that day [Meter]
+        unique_id: Grid injection energy on that day [Meter]
+        slave: 247
+        address: 41000
+        scale: 0.1
+        precision: 1
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing #measurement
+        device_class: energy
+        count: 1
+        data_type: int16
+        scan_interval: 300
+        lazy_error_count: 10
+      - name: Grid Purchasing energy on that day [Meter]
+        unique_id: Grid Purchasing energy on that day [Meter]
+        slave: 247
+        address: 41001
+        scale: 0.1
+        precision: 1
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing #measurement
+        device_class: energy
+        count: 1
+        data_type: int16
+        scan_interval: 300
+        lazy_error_count: 10
+      - name: Wattsonic Battery Charge Energy on that day
+        unique_id: wattsonic_battery_charge_energy_on_that_day
+        slave: 247
+        address: 41003
+        scale: 0.1
+        precision: 1
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing #measurement
+        device_class: energy
+        count: 1
+        data_type: int16
+        scan_interval: 300
+        lazy_error_count: 10
+      - name: Wattsonic Battery Discharge Energy on that day
+        unique_id: wattsonic_battery_discharge_energy_on_that_day
+        slave: 247
+        address: 41004
+        scale: 0.1
+        precision: 1
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing #measurement
+        device_class: energy
+        count: 1
+        data_type: int16
+        scan_interval: 300
+        lazy_error_count: 10
+      - name: Wattsonic PV Generation Energy on that day    #E-today from GUI
+        unique_id: wattsonic_pv_generation_energy_on_that_day
+        slave: 247
+        address: 41005
+        scale: 0.1
+        precision: 1
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing #measurement
+        device_class: energy
+        count: 1
+        data_type: int16
+        scan_interval: 300
+        lazy_error_count: 10
+      - name: Wattsonic Loading Energy on that day
+        unique_id: wattsonic_loading_energy_on_that_day
+        slave: 247
+        address: 41006
+        scale: 0.1
+        precision: 1
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing #measurement
+        device_class: energy
+        count: 1
+        data_type: int16
+        scan_interval: 300
+        lazy_error_count: 10
+      - name: Wattsonic Energy Purchased from Grid on that day
+        unique_id: wattsonic_energy_purchased_from_grid_on_that_day
+        slave: 247
+        address: 41008
+        scale: 0.1
+        precision: 1
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing #measurement
+        device_class: energy
+        count: 1
+        data_type: int16
+        scan_interval: 300
+        lazy_error_count: 10
+      - name: Wattsonic Total Energy Charged to Battery
+        unique_id: wattsonic_total_energy_charged_to_battery
+        slave: 247
+        address: 41108
+        scale: 0.1
+        precision: 1
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing
+        device_class: energy
+        count: 2
+        data_type: int32
+        scan_interval: 300
+        lazy_error_count: 10
+      - name: Wattsonic Total Energy Discharged from Battery
+        unique_id: wattsonic_total_energy_discharged_from_battery
+        slave: 247
+        address: 41110
+        scale: 0.1
+        precision: 1
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing
+        device_class: energy
+        count: 2
+        data_type: int32
+        scan_interval: 300
+        lazy_error_count: 10
+      - name: Wattsonic Total PV Generation
+        unique_id: wattsonic_total_pv_generation
+        slave: 247
+        address: 41112
+        scale: 0.1
+        precision: 1
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing
+        device_class: energy
+        count: 2
+        data_type: int32
+        scan_interval: 300
+        lazy_error_count: 10
+      - name: Wattsonic Total Loading Energy consumed at grid side
+        unique_id: wattsonic_total_loading_energy_consumed_at_grid_side
+        slave: 247
+        address: 41114
+        scale: 0.1
+        precision: 1
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing
+        device_class: energy
+        count: 2
+        data_type: int32
+        scan_interval: 3600
+        lazy_error_count: 10
+      - name: Wattsonic Total Output Energy on backup port
+        unique_id: Wattsonic Total Output Energy on backup port
+        slave: 247
+        address: 41106
+        input_type: holding
+        state_class: measurement
+        unit_of_measurement: kW
+        device_class: power
+        count: 2
+        scale: 0.001
+        precision: 3
+        data_type: int32
+        scan_interval: 10
+        lazy_error_count: 10
+      - name: Wattsonic Total Energy Purchased from Grid at inverter side
+        unique_id: wattsonic_total_energy_purchased_from_grid_at_inverter_side
+        slave: 247
+        address: 41118
+        scale: 0.1
+        precision: 1
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing
+        device_class: energy
+        count: 2
+        data_type: int32
+        scan_interval: 600
+        lazy_error_count: 10
+      - name: Wattsonic BMS Warn Code
+        unique_id: wattsonic_bms_warn_code
+        slave: 247
+        address: 43018
+        input_type: holding
+        data_type: int32
+        scan_interval: 60
+        lazy_error_count: 10
+      - name: Wattsonic Battery Mode #0:discharge;1:charge
+        unique_id: wattsonic_battery_mode
+        slave: 247
+        address: 40256
+        input_type: holding
+        count: 1
+        data_type: int16
+        scan_interval: 10
+        lazy_error_count: 10
+
+sensor:
+  - platform: template
+    sensors:
+      wattsonic_home_consumption_now:
+         friendly_name: Wattsonic Home Consumption Now
+         unique_id: wattsonic_home_consumption_now
+         unit_of_measurement: kW
+         device_class: power
+         value_template: >
+            {% set diff = (float(states("sensor.wattsonic_p_ac"), default=0) 
+                         - float(states("sensor.wattsonic_total_power_on_meter"), default=0)) | round(3) %}
+            {% if diff>0: %}
+                {{ diff }}
+            {% else %}
+                {{ (float(states("sensor.wattsonic_home_consumption_now"), default=0)) }}
+            {% endif %}
