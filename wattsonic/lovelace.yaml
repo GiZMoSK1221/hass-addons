@@ -1,27 +1,48 @@
   - theme: Backend-selected
     title: W
     path: w
-    visible:
     layout: {}
     badges: []
     cards:
-      - type: custom:power-flow-card
+      - type: custom:power-flow-card-plus
         title: Aktualna spotreba
         w_decimals: 2
         kw_decimals: 2
         watt_threshold: 999
+        clickable_entities: true
         entities:
-          battery: sensor.wattsonic_battery_p
-          battery_charge: sensor.wattsonic_battery_soc
-          grid: sensor.wattsonic_total_power_on_meter
-          solar: sensor.wattsonic_pv_input_total_power
+          home:
+            entity: sensor.wattsonic_home_consumption_now
+            subtract_individual: false
+            override_state: true
+          battery:
+            entity: sensor.wattsonic_battery_p
+            state_of_charge: sensor.wattsonic_battery_soc
+            display_state: one_way
+            state_of_charge_unit_white_space: false
+            use_metadata: false
+            color_circle: true
+          grid:
+            entity: sensor.wattsonic_total_power_on_meter
+            display_state: one_way
+            invert_state: true
+            secondary_info:
+              entity: sensor.wattsonic_grid_injection_energy_on_that_day_15min
+              unit_of_measurement: kW
+            color_circle: true
+          solar:
+            entity: sensor.wattsonic_pv_input_total_power
         inverted_entities: grid
+        use_new_flow_rate_model: false
       - type: entities
         entities:
           - entity: sensor.wattsonic_pv_generation_energy_on_that_day
-          - entity: sensor.wattsonic_grid_purchasing_energy_on_that_day
-          - entity: sensor.wattsonic_backup_output_energy_on_that_day
           - entity: sensor.wattsonic_grid_injection_energy_on_that_day
+            name: Predaj
+          - entity: sensor.wattsonic_grid_purchasing_energy_on_that_day
+          - entity: sensor.wattsonic_battery_soc_eta
+          - entity: sensor.wattsonic_home_consumption_today
+          - entity: sensor.wattsonic_home_consumption_today2
           - type: button
             name: Graf
             icon: mdi:information
@@ -29,6 +50,7 @@
               action: navigate
               navigation_path: /lovelace/wgraph
         title: Today
+        show_header_toggle: false
       - type: entities
         entities:
           - entity: sensor.wattsonic_inverter_sn
@@ -38,12 +60,18 @@
           - entity: sensor.wattsonic_total_power_on_meter
           - entity: sensor.wattsonic_total_pv_generation_from_installation
           - entity: sensor.wattsonic_total_pv_generation_on_that_day
+            name: asi priamo do domu nie do batt
           - entity: sensor.wattsonic_pv_input_total_power
           - entity: sensor.wattsonic_phase_a_power_on_meter
           - entity: sensor.wattsonic_phase_b_power_on_meter
           - entity: sensor.wattsonic_phase_c_power_on_meter
           - entity: sensor.wattsonic_total_backup_p
           - entity: sensor.wattsonic_p_ac
+          - entity: sensor.wattsonic_arm_fault_flag1
+          - entity: sensor.wattsonic_fault_flag1
+          - entity: sensor.wattsonic_fault_flag2
+          - entity: sensor.wattsonic_fault_flag3
+          - entity: sensor.wattsonic_firmware_version
         title: Wattsonic basic
       - type: entities
         entities:
@@ -54,7 +82,9 @@
           - entity: sensor.wattsonic_battery_discharge_energy_on_that_day
           - entity: sensor.wattsonic_pv_generation_energy_on_that_day
           - entity: sensor.wattsonic_loading_energy_on_that_day
+            name: asi import do batt today-nie
           - entity: sensor.wattsonic_energy_purchased_from_grid_on_that_day
+            name: grid import do batt
           - entity: sensor.wattsonic_total_energy_injected_to_grid
           - entity: sensor.wattsonic_total_energy_purchased_from_grid_from_meter
           - entity: sensor.wattsonic_total_output_energy_on_backup_port
@@ -63,6 +93,7 @@
           - entity: sensor.wattsonic_total_pv_generation
           - entity: sensor.wattsonic_total_loading_energy_consumed_at_grid_side
           - entity: sensor.wattsonic_total_energy_purchased_from_grid_at_inverter_side
+            name: celkovo kune z grid do batt
         title: Wattsonic 3100
       - type: entities
         entities:
@@ -79,18 +110,26 @@
       - type: entities
         entities:
           - entity: sensor.wattsonic_battery_soc
+          - entity: sensor.wattsonic_battery_soc_eta
           - entity: sensor.wattsonic_battery_mode_text
           - entity: sensor.wattsonic_battery_p
           - entity: sensor.wattsonic_battery_i
           - entity: sensor.wattsonic_battery_v
           - entity: sensor.wattsonic_bms_pack_temperature
           - entity: sensor.wattsonic_battery_soh
+          - entity: sensor.wattsonic_bms_error_code
+          - entity: sensor.wattsonic_bms_warn_code
+          - entity: sensor.wattsonic_rw_bms_errorcode
+          - entity: sensor.wattsonic_rw_bms_protectioncode
+          - entity: sensor.wattsonic_rw_bms_status
+          - entity: sensor.wattsonic_rw_bms_warncode
         title: Battery
       - type: entities
         entities:
           - entity: sensor.wattsonic_pv1_input_power
           - entity: sensor.wattsonic_pv2_input_power
           - entity: sensor.wattsonic_temperature_sensor_1
+            name: Inverter Temperature
           - entity: sensor.wattsonic_temperature_sensor_2
           - entity: sensor.wattsonic_temperature_sensor_3
           - entity: sensor.wattsonic_temperature_sensor_4
@@ -123,3 +162,42 @@
         entity: sensor.wattsonic_total_power_on_meter
         detail: 2
         name: Grid power
+      - type: entities
+        entities:
+          - entity: switch.wattsonic_grid_injection_power_limit_switch
+          - entity: sensor.wattsonic_grid_injection_power_limit_setting
+          - entity: switch.wattsonic_on_grid_battery_soc_protection_switch
+          - entity: sensor.wattsonic_on_grid_battery_end_soc
+          - entity: switch.wattsonic_off_grid_battery_soc_protection_switch
+          - entity: sensor.wattsonic_off_grid_battery_end_soc
+          - entity: switch.wattsonic_priority_power_output_setting
+        title: Wattsonic RW
+        show_header_toggle: false
+      - type: entities
+        entities:
+          - entity: sensor.wattsonic_ecomode_period_enable_flag
+          - entity: sensor.wattsonic_ecomode_period_enable_flag_bin
+          - entity: sensor.wattsonic_ecomode_period1_chargedischarge_setting
+          - entity: sensor.wattsonic_ecomode_period1_battery_charge_by
+          - entity: sensor.wattsonic_ecomode_period1_power_limit
+          - entity: sensor.wattsonic_ecomode_period1_start_time
+          - entity: sensor.wattsonic_ecomode_period1_end_time
+        show_header_toggle: false
+      - type: custom:history-explorer-card
+        cardName: historycard-91888117
+        combineSameUnits: true
+        defaultTimeRange: 12h
+        showCurrentValues: true
+        legendVisible: true
+        decimation: fast
+        header: hide
+        labelsVisible: true
+        labelAreaWidth: 0
+        uiLayout:
+          toolbar: top
+          selector: hide
+        graphs:
+          - type: line
+            entities:
+              - entity: sensor.wattsonic_pv1_input_power
+              - entity: sensor.wattsonic_pv2_input_power

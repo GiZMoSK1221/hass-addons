@@ -4,3 +4,5 @@ default_config:
 homeassistant:
   packages:
     wattsonic: !include wattsonic.yaml
+    #wattsonic_db: !include wattsonic_sql_mariadb.yaml
+    #wattsonic_db: !include wattsonic_sql_postgre.yaml

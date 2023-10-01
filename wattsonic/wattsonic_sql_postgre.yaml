@@ -1,0 +1,42 @@
+sql:
+  - name: wattsonic_battery_soc_5min_state
+    db_url: !secret URL_MariaDB
+    query: >
+      SELECT round(s.state, 1) as state, datetime(s.last_updated_ts,  'unixepoch', 'localtime') as updated from states s
+      inner join states_meta sm on s.metadata_id=sm.metadata_id and sm.entity_id = 'sensor.wattsonic_battery_soc'
+      where
+      s.state != 'unknown' and
+      s.last_updated_ts <= UNIXEPOCH(datetime('now'))-5*60 
+      ORDER BY s.last_updated_ts DESC LIMIT 1
+    column: "state"
+  - name: wattsonic_battery_soc_5min_last_updated
+    db_url: !secret URL_MariaDB
+    query: >
+      SELECT s.state, datetime(s.last_updated_ts,  'unixepoch', 'localtime') as updated from states s
+      inner join states_meta sm on s.metadata_id=sm.metadata_id and sm.entity_id = 'sensor.wattsonic_battery_soc'
+      where 
+      s.state != 'unknown' and
+      s.last_updated_ts <= UNIXEPOCH(datetime('now'))-5*60 
+      ORDER BY s.last_updated_ts DESC LIMIT 1
+    column: "updated"
+  - name: wattsonic_grid_injection_energy_on_that_day_15min_state
+    db_url: !secret URL_MariaDB
+    query: >
+      SELECT round(s.state, 1) as state, datetime(s.last_updated_ts,  'unixepoch', 'localtime') as updated from states s
+      inner join states_meta sm on s.metadata_id=sm.metadata_id and sm.entity_id = 'sensor.wattsonic_grid_injection_energy_on_that_day'
+      where
+      s.state != 'unknown' and
+      s.last_updated_ts <= UNIXEPOCH(datetime('now'))-15*60 
+      ORDER BY s.last_updated_ts DESC LIMIT 1
+    column: "state"
+
+  - name: wattsonic_grid_injection_energy_on_that_day_15min_last_updated
+    db_url: !secret URL_MariaDB
+    query: >
+      SELECT s.state, datetime(s.last_updated_ts,  'unixepoch', 'localtime') as updated from states s
+      inner join states_meta sm on s.metadata_id=sm.metadata_id and sm.entity_id = 'sensor.wattsonic_grid_injection_energy_on_that_day'
+      where
+      s.state != 'unknown' and
+      s.last_updated_ts <= UNIXEPOCH(datetime('now'))-15*60 
+      ORDER BY s.last_updated_ts DESC LIMIT 1
+    column: "updated"

@@ -1,0 +1,69 @@
+  - theme: Backend-selected
+    title: Wattsonic cloud graph
+    path: wgraph
+    subview: true
+    type: sidebar
+    badges: []
+    cards:
+      - type: custom:apexcharts-card
+        graph_span: 24h
+        span:
+          start: day
+        header:
+          show: true
+          colorize_states: true
+        yaxis:
+          - id: first
+          - id: second
+            opposite: true
+        series:
+          - entity: sensor.wattsonic_battery_soc
+            name: SOC
+            color: yellow
+            yaxis_id: first
+            type: line
+            stroke_width: 3
+            extend_to: now
+            group_by:
+              func: first
+              duration: 5m
+          - entity: sensor.wattsonic_pv_input_total_power
+            name: PV power
+            color: cyan
+            yaxis_id: second
+            type: line
+            stroke_width: 3
+            extend_to: now
+            group_by:
+              func: first
+              duration: 5m
+          - entity: sensor.wattsonic_total_backup_p
+            name: Load power
+            color: orange
+            yaxis_id: second
+            type: line
+            stroke_width: 3
+            extend_to: now
+            group_by:
+              func: first
+              duration: 5m
+          - entity: sensor.wattsonic_battery_p
+            name: Battery power
+            color: green
+            yaxis_id: second
+            type: line
+            stroke_width: 3
+            extend_to: now
+            group_by:
+              func: first
+              duration: 5m
+          - entity: sensor.wattsonic_total_power_on_meter
+            name: Grid power
+            color: blue
+            yaxis_id: second
+            type: line
+            stroke_width: 3
+            extend_to: now
+            group_by:
+              func: first
+              duration: 5m
