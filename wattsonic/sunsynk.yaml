@@ -1,0 +1,69 @@
+type: custom:sunsynk-power-flow-card
+cardstyle: lite
+show_solar: true
+decimal_places: 2
+inverter:
+  model: wattsonic
+  modern: true
+  colour: grey
+  autarky: 'no'
+  auto_scale: true
+  three_phase: false
+battery:
+  shutdown_soc: 20
+  full_capacity: 99
+  empty_capacity: 20
+  show_daily: true
+  show: true
+  energy: 11500
+  invert_power: false
+  auto_scale: true
+solar:
+  show_daily: true
+  mppts: 2
+  pv1_name: Horny
+  pv2_name: Dolny
+  max_power: 8800
+  auto_scale: true
+load:
+  show_daily: true
+grid:
+  show_daily_buy: true
+  show_daily_sell: true
+  show_nonessential: false
+  invert_grid: false
+  additional_loads: 0
+  auto_scale: true
+entities:
+  use_timer_248: none
+  priority_load_243: none
+  inverter_voltage_154: none
+  load_frequency_192: none
+  inverter_current_164: none
+  inverter_power_175: sensor.wattsonic_battery_p_w
+  grid_connected_status_194: binary_sensor.sunsynk_grid_connected_status
+  inverter_status_59: none
+  day_battery_charge_70: sensor.wattsonic_battery_charge_energy_on_that_day
+  day_battery_discharge_71: sensor.wattsonic_battery_discharge_energy_on_that_day
+  battery_voltage_183: sensor.wattsonic_battery_v
+  battery_soc_184: sensor.wattsonic_battery_soc
+  battery_power_190: sensor.wattsonic_battery_p_w
+  battery_current_191: sensor.wattsonic_battery_i
+  day_grid_import_76: sensor.wattsonic_grid_purchasing_energy_on_that_day
+  day_grid_export_77: sensor.wattsonic_grid_injection_energy_on_that_day
+  grid_ct_power_172: sensor.wattsonic_total_power_on_meter_w
+  grid_power_169: sensor.wattsonic_total_power_on_meter_w
+  day_load_energy_84: sensor.wattsonic_home_consumption_today
+  essential_power: sensor.wattsonic_home_consumption_now_w
+  nonessential_power: none
+  aux_power_166: sensor.sunsynk_aux_power
+  day_pv_energy_108: sensor.wattsonic_pv_generation_energy_on_that_day
+  pv1_power_186: sensor.wattsonic_pv1_input_power_w
+  pv2_power_187: sensor.wattsonic_pv2_input_power_w
+  pv1_voltage_109: sensor.wattsonic_pv1_voltage
+  pv1_current_110: sensor.wattsonic_pv1_current
+  pv2_voltage_111: sensor.wattsonic_pv2_voltage
+  pv2_current_112: sensor.wattsonic_pv2_current
+  energy_cost: none
+  battery_temp_182: sensor.wattsonic_bms_pack_temperature
+  radiator_temp_91: sensor.wattsonic_temperature_sensor_1

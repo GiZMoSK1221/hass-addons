@@ -14,6 +14,7 @@ all files copy to your config dir (where is configuration.yaml)
 
 	b) **my latest gen3** configuration
 		- copy [wattsonic_sql_postgre.yaml](wattsonic_sql_postgre.yaml) or [wattsonic_sql_mariadb.yaml](wattsonic_sql_mariadb.yaml) for sql sensors according to your db. Default HA is postgre
+		- edit configuration.yaml and include corresponding db package
 		- copy actual [wattsonic.yaml](wattsonic.yaml)
 	
 	this configuration consist of (but still does not has all registers):
@@ -32,13 +33,17 @@ all files copy to your config dir (where is configuration.yaml)
 	as GEN2 has differrent registers, you cannot use my wattsonic.yaml.
 	but, Ivan has made this basic one [wattsonic_gen2.yaml](wattsonic_gen2.yaml). enjoy and feel free to modify here on github
 
+	d) **Sunways GEN2** configuration from Martin Kremla
+		- based on my latest gen3 config
+		- source is here in [sunways_gen2 directory](sunways_gen2)
+
 4. edit modbus configuration in wattsonic.yaml
 		 default is connection over serial and RS485. Change port according to your RS485 module.
 		 if you are running over TCP/IP, just delete serial config and uncomment tcp config
 
 5. restart HASS
 6. edit your lovelace dashboard, you can take mine [lovelace](lovelace.yaml) and just remove/use sensors
-
+		- added [sunsynk config](sunsynk.yaml)
 
 **MODBUS wiring GEN3**
 check [wattsonic manual](https://www.wattsonic.com/Ftp/EN/Wattsonic%20Li-HV%20Residential%20Three%20Phase%20Hybrid%20Series_UM_EN.pdf), page 65, PIN 13,14

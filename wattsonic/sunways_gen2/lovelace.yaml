@@ -1,0 +1,227 @@
+- title: Fve
+    path: fve
+    icon: mdi:solar-power-variant
+    badges: []
+    cards:
+      - type: custom:history-explorer-card
+        cardName: historycard-91888117
+        combineSameUnits: true
+        defaultTimeRange: 12h
+        showCurrentValues: true
+        legendVisible: true
+        decimation: fast
+        header: hide
+        labelsVisible: true
+        labelAreaWidth: 0
+        uiLayout:
+          toolbar: top
+          selector: hide
+        graphs:
+          - type: line
+            entities:
+              - entity: sensor.wattsonic_pv1_input_power
+              - entity: sensor.wattsonic_pv2_input_power
+      - type: vertical-stack
+        cards:
+          - type: entities
+            entities:
+              - entity: sensor.wattsonic_pv_input_total_power
+                name: Aktualni vyroba
+              - entity: sensor.wattsonic_p_ac
+                name: 'Aktuální odběr '
+              - entity: sensor.wattsonic_pv_generation_energy_on_that_day
+                name: Denní vyroba
+      - type: entities
+        entities:
+          - entity: sensor.wattsonic_pv_generation_energy_on_that_day
+            name: Celkova vyroba
+          - entity: sensor.wattsonic_grid_injection_energy_on_that_day
+            name: Prodej do site
+          - entity: sensor.wattsonic_grid_purchasing_energy_on_that_day
+            name: Nakoupeno ze site
+          - entity: sensor.denni_spotreba
+            name: Celkova denni spotreba
+          - entity: sensor.wattsonic_battery_soc_eta
+          - entity: sensor.wattsonic_home_consumption_now
+          - entity: sensor.wattsonic_home_consumption_today
+          - entity: sensor.wattsonic_home_consumption_today2
+          - type: button
+            name: Graf
+            icon: mdi:information
+            tap_action:
+              action: navigate
+              navigation_path: /martin-tel/wgraph
+        show_header_toggle: false
+        title: 'Výroba dnes '
+      - type: entities
+        entities:
+          - entity: sensor.wattsonic_inverter_running_status_text
+          - entity: sensor.wattsonic_hybrid_inverter_working_mode_setting_text
+          - entity: script.wattsonic_mode_economic
+            name: 'Sunways economic mode '
+            icon: mdi:button-pointer
+            secondary_info: none
+          - entity: script.wattsonic_mode_general
+            name: Sunways general mode
+            icon: mdi:button-pointer
+          - entity: script.wattsonic_mode_offgrid
+            name: Sunways offgrid mode
+            icon: mdi:button-pointer
+          - entity: script.wattsonic_set_grid_injection_power_limit_setting
+            name: Sunways grid injection power limit setting
+            icon: mdi:button-pointer
+        title: Sunways mode
+      - type: entities
+        entities:
+          - entity: sensor.wattsonic_inverter_sn
+          - entity: sensor.wattsonic_inverter_running_status_text
+          - entity: sensor.wattsonic_hybrid_inverter_working_mode_setting_text
+          - entity: sensor.wattsonic_total_purchasing_energy_from_grid_on_meter
+          - entity: sensor.wattsonic_total_power_on_meter
+          - entity: sensor.wattsonic_total_pv_generation_from_installation
+          - entity: sensor.wattsonic_total_pv_generation_on_that_day
+            name: Primo do baterie
+          - entity: sensor.wattsonic_pv_input_total_power
+          - entity: sensor.wattsonic_phase_a_power_on_meter
+          - entity: sensor.wattsonic_phase_b_power_on_meter
+          - entity: sensor.wattsonic_phase_c_power_on_meter
+          - entity: sensor.wattsonic_total_backup_p
+          - entity: sensor.wattsonic_p_ac
+          - entity: sensor.wattsonic_arm_fault_flag1
+          - entity: sensor.wattsonic_fault_flag1
+          - entity: sensor.wattsonic_fault_flag2
+          - entity: sensor.wattsonic_fault_flag3
+          - entity: sensor.wattsonic_firmware_version
+        title: Sunways info
+      - type: entities
+        entities:
+          - entity: sensor.wattsonic_grid_injection_energy_on_that_day
+          - entity: sensor.wattsonic_grid_purchasing_energy_on_that_day
+          - entity: sensor.wattsonic_backup_output_energy_on_that_day
+          - entity: sensor.wattsonic_battery_charge_energy_on_that_day
+          - entity: sensor.wattsonic_battery_discharge_energy_on_that_day
+          - entity: sensor.wattsonic_pv_generation_energy_on_that_day
+          - entity: sensor.wattsonic_loading_energy_on_that_day
+            name: asi import do batt today-nie
+          - entity: sensor.wattsonic_energy_purchased_from_grid_on_that_day
+            name: grid import do batt
+          - entity: sensor.wattsonic_total_energy_injected_to_grid
+          - entity: sensor.wattsonic_total_energy_purchased_from_grid_from_meter
+          - entity: sensor.wattsonic_total_output_energy_on_backup_port
+          - entity: sensor.wattsonic_total_energy_charged_to_battery
+          - entity: sensor.wattsonic_total_energy_discharged_from_battery
+          - entity: sensor.wattsonic_total_pv_generation
+          - entity: sensor.wattsonic_total_loading_energy_consumed_at_grid_side
+          - entity: sensor.wattsonic_total_energy_purchased_from_grid_at_inverter_side
+            name: Celkova zaloha z grid do batt
+        title: Sunways
+      - type: entities
+        entities:
+          - sensor.wattsonic_grid_lines_a_b_voltage
+          - sensor.wattsonic_grid_lines_b_c_voltage
+          - sensor.wattsonic_grid_lines_c_a_voltage
+          - sensor.wattsonic_grid_phase_a_voltage
+          - sensor.wattsonic_grid_phase_b_voltage
+          - sensor.wattsonic_grid_phase_c_voltage
+          - sensor.wattsonic_grid_phase_a_current
+          - sensor.wattsonic_grid_phase_b_current
+          - sensor.wattsonic_grid_phase_c_current
+        title: Grid
+      - type: entities
+        entities:
+          - entity: sensor.wattsonic_battery_soc
+          - entity: sensor.wattsonic_battery_soc_eta
+          - entity: sensor.wattsonic_battery_mode_text
+          - entity: sensor.wattsonic_battery_p
+          - entity: sensor.wattsonic_battery_i
+          - entity: sensor.wattsonic_battery_v
+          - entity: sensor.wattsonic_bms_pack_temperature
+          - entity: sensor.wattsonic_battery_soh
+          - entity: sensor.wattsonic_bms_error_code
+          - entity: sensor.wattsonic_bms_warn_code
+          - entity: sensor.wattsonic_rw_bms_errorcode
+          - entity: sensor.wattsonic_rw_bms_protectioncode
+          - entity: sensor.wattsonic_rw_bms_status
+          - entity: sensor.wattsonic_rw_bms_warncode
+        title: Battery
+      - type: entities
+        entities:
+          - entity: sensor.wattsonic_pv1_input_power
+          - entity: sensor.wattsonic_pv2_input_power
+          - entity: sensor.wattsonic_temperature_sensor_1
+            name: Inverter Temperature
+          - entity: sensor.wattsonic_temperature_sensor_2
+          - entity: sensor.wattsonic_temperature_sensor_3
+          - entity: sensor.wattsonic_temperature_sensor_4
+          - entity: sensor.wattsonic_pv1_voltage
+          - entity: sensor.wattsonic_pv2_voltage
+          - entity: sensor.wattsonic_pv1_current
+          - entity: sensor.wattsonic_pv2_current
+        title: Panel
+      - type: entities
+        entities:
+          - entity: switch.wattsonic_omezovac_vykonu_pro_vkladani_do_site
+          - entity: sensor.wattsonic_grid_injection_power_limit_setting
+          - entity: >-
+              switch.wattsonic_spinac_ochrany_stavu_nabiti_baterie_pri_pripojeni_k_siti
+          - entity: sensor.wattsonic_on_grid_battery_end_soc
+          - entity: switch.wattsonic_spinac_ochrany_stavu_nabiti_baterie_mimo_sit
+          - entity: sensor.wattsonic_off_grid_battery_end_soc
+          - entity: switch.wattsonic_nastaveni_prioritniho_vystupniho_vykonu
+        show_header_toggle: false
+        title: Sunways
+      - type: entities
+        entities:
+          - entity: sensor.wattsonic_ecomode_period_enable_flag
+          - entity: sensor.wattsonic_ecomode_period_enable_flag_bin
+          - entity: sensor.wattsonic_ecomode_period1_chargedischarge_setting
+          - entity: sensor.wattsonic_ecomode_period1_battery_charge_by
+          - entity: sensor.wattsonic_ecomode_period1_power_limit
+          - entity: sensor.wattsonic_ecomode_period1_start_time
+          - entity: sensor.wattsonic_ecomode_period1_end_time
+        show_header_toggle: false
+      - type: entities
+        entities:
+          - entity: sensor.fve_backup_a_f
+          - entity: sensor.fve_backup_a_i
+          - entity: sensor.fve_backup_a_p
+          - entity: sensor.fve_backup_a_v
+          - entity: sensor.fve_backup_b_f
+          - entity: sensor.fve_backup_b_i
+          - entity: sensor.fve_backup_b_p
+          - entity: sensor.fve_backup_b_v
+          - entity: sensor.fve_backup_c_f
+          - entity: sensor.fve_backup_c_i
+          - entity: sensor.fve_backup_c_p
+          - entity: sensor.fve_backup_c_v
+          - entity: sensor.fve_grid_frequency
+          - entity: sensor.fve_invt_a_p
+          - entity: sensor.fve_invt_b_p
+          - entity: sensor.fve_invt_c_p
+          - entity: sensor.fve_max_cell_temperature
+          - entity: sensor.fve_min_cell_temperature
+        title: FVE
+      - hours_to_show: 12
+        graph: line
+        type: sensor
+        entity: sensor.wattsonic_pv_input_total_power
+        detail: 2
+        name: PV power
+      - hours_to_show: 12
+        graph: line
+        type: sensor
+        entity: sensor.wattsonic_battery_p
+        detail: 2
+        name: Battery power
+      - hours_to_show: 24
+        graph: line
+        type: sensor
+        entity: sensor.wattsonic_total_backup_p
+        detail: 2
+        name: Load power
+      - hours_to_show: 24
+        graph: line
+        type: sensor
+        entity: sensor.wattsonic_total_power_on_meter
+        detail: 2
+        name: Grid power
