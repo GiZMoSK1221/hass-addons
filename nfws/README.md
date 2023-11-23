@@ -9,7 +9,7 @@
 Netatmo public weather stations integration for Home Assistant . You can receive data from your favourite weather stations in your Netatmo account,
 ![][netatmo_favorites_list]
 like:
- - Netatmo data: WindAngle, GustAngle, Humidity, Pressure, rain, sum_rain_1, sum_rain_24, WindStrength, GustStrength, Temperature
+ - Netatmo data: WindAngle, GustAngle, Humidity, Pressure, rain, sum_rain_1, sum_rain_24, WindStrength, GustStrength, Temperature, min_temp, max_temp
  - Wind directions(NESW)/Symbols(↓↙→): WindAngleCompass, WindAngleCompassSymbol, GustAngleCompass, GustAngleCompassSymbol
  - Calculated values from station list: first available value, minimal/maximal/average value
 

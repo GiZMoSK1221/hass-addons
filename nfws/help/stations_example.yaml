@@ -1,7 +1,7 @@
 netatmo_stations:
     "aa:aa:aa:aa:aa:a1":
         name: station1                       #name will be nfws_name_station1_...
-        sensors:                             #WindAngle, WindAngleCompass, WindAngleCompassSymbol, GustAngle, GustAngleCompass, GustAngleCompassSymbol, Humidity, Pressure, rain, sum_rain_1, sum_rain_24, WindStrength, GustStrength, Temperature
+        sensors:                             #WindAngle, WindAngleCompass, WindAngleCompassSymbol, GustAngle, GustAngleCompass, GustAngleCompassSymbol, Humidity, Pressure, rain, sum_rain_1, sum_rain_24, WindStrength, GustStrength, Temperature, min_temp, max_temp
             - WindStrength                   #name will be nfws_name_station1_WindStrength
             - WindAngleCompass
             - WindAngleCompassSymbol
@@ -16,6 +16,7 @@ netatmo_stations:
         name: station2
         sensors:
             - Temperature
+            - min_temp
             - WindAngleCompass
             - WindAngleCompassSymbol
             - WindStrength                  #name will be nfws_name_station2_WindStrength

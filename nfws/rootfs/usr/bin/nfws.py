@@ -11,11 +11,11 @@ import os
 import shutil
 
 #---global constants
-netatmo_module_config= {"Temperature" : ["Temperature"], 
-                        "Humidity" : ["Humidity"], 
-                        "Rain" : ["Rain", "sum_rain_1", "sum_rain_24"], 
-                        "Wind" : ["WindStrength", "WindAngle", "GustStrength", "GustAngle"]
-                        }
+# netatmo_module_config= {"Temperature" : ["Temperature"], 
+                        # "Humidity" : ["Humidity"], 
+                        # "Rain" : ["Rain", "sum_rain_1", "sum_rain_24"], 
+                        # "Wind" : ["WindStrength", "WindAngle", "GustStrength", "GustAngle"]
+                        # }
 
 #---global variables
 registered_entity = {}
@@ -416,7 +416,7 @@ def hass_register_sensor(entity_name, sensor):
                 
     if sensor.lower() != "windanglecompass" and sensor.lower() != "windanglecompasssymbol" and sensor.lower() != "gustanglecompass" and sensor.lower() != "gustanglecompasssymbol":
         hass_conf["state_class"] = "measurement"
-    if sensor.lower() == "temperature":
+    if sensor.lower() == "temperature" or sensor.lower() == "min_temp" or sensor.lower() == "max_temp":
         hass_conf["device_class"] = "temperature"
         hass_conf["unit_of_measurement"] = "°C"
     if sensor.lower() == "humidity":
@@ -477,8 +477,11 @@ def netatmo_getdata():
             continue
         json_netatmo = response.json()
         #print(json_netatmo)
-        #print(json.dumps(json_netatmo, indent = 4, sort_keys=True))
-
+        if get_dict_value(config["netatmo"], "show_response", False) == True:
+            #print(json.dumps(json_netatmo, indent = 4, sort_keys=True))
+            logger.debug(json_netatmo)
+            time.sleep(60)
+            
         if "error" in json_netatmo:
             if json_netatmo["error"]["message"] in {"Invalid access token", "Access token expired"}:
                 logger.warning(snow() + "Invalid access token or expired:" + json_netatmo["error"]["message"])
@@ -519,6 +522,10 @@ def netatmo_handle_favourite_stations_sensors():
             if module["data_type"].count("Temperature")!=0:
                 if "Temperature" in module["dashboard_data"]:
                     hass_publish_station_sensor(netatmo_stations[device["_id"]], "Temperature", module["dashboard_data"]["Temperature"])
+                if "min_temp" in module["dashboard_data"]:
+                    hass_publish_station_sensor(netatmo_stations[device["_id"]], "min_temp", module["dashboard_data"]["min_temp"])
+                if "max_temp" in module["dashboard_data"]:
+                    hass_publish_station_sensor(netatmo_stations[device["_id"]], "max_temp", module["dashboard_data"]["max_temp"])
             if module["data_type"].count("Humidity")!=0:
                 if "Humidity" in module["dashboard_data"]:
                     hass_publish_station_sensor(netatmo_stations[device["_id"]], "Humidity", module["dashboard_data"]["Humidity"])
