@@ -8,7 +8,7 @@ inverter:
   colour: grey
   autarky: 'no'
   auto_scale: true
-  three_phase: false
+  three_phase: true
 battery:
   shutdown_soc: 20
   full_capacity: 99
@@ -51,7 +51,10 @@ entities:
   battery_current_191: sensor.wattsonic_battery_i
   day_grid_import_76: sensor.wattsonic_grid_purchasing_energy_on_that_day
   day_grid_export_77: sensor.wattsonic_grid_injection_energy_on_that_day
-  grid_ct_power_172: sensor.wattsonic_total_power_on_meter_w
+  grid_ct_power_total: sensor.wattsonic_total_power_on_meter_w
+  grid_ct_power_172: sensor.wattsonic_phase_a_power_on_meter_w
+  grid_ct_power_L2: sensor.wattsonic_phase_b_power_on_meter_w
+  grid_ct_power_L3: sensor.wattsonic_phase_c_power_on_meter_w
   grid_power_169: sensor.wattsonic_total_power_on_meter_w
   day_load_energy_84: sensor.wattsonic_home_consumption_today
   essential_power: sensor.wattsonic_home_consumption_now_w

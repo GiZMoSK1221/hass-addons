@@ -102,7 +102,7 @@ modbus:
         scale: 0.001
         precision: 3
         data_type: int32
-        scan_interval: 60
+        scan_interval: 10
         lazy_error_count: 10
       - name: Wattsonic Phase B Power on Meter
         unique_id: wattsonic_phase_b_power_on_meter
@@ -115,7 +115,7 @@ modbus:
         scale: 0.001
         precision: 3
         data_type: int32
-        scan_interval: 60
+        scan_interval: 10
         lazy_error_count: 10
       - name: Wattsonic Phase C Power on Meter
         unique_id: wattsonic_phase_c_power_on_meter
@@ -128,7 +128,7 @@ modbus:
         scale: 0.001
         precision: 3
         data_type: int32
-        scan_interval: 60
+        scan_interval: 10
         lazy_error_count: 10
       - name: Wattsonic Total Power on Meter        #Grid power
         unique_id: wattsonic_total_power_on_meter
@@ -1092,6 +1092,56 @@ sensor:
                          - float(states(''sensor.wattsonic_battery_charge_energy_on_that_day''), default=0) 
                          + float(states(''sensor.wattsonic_battery_discharge_energy_on_that_day''), default=0)) | round(3) }}'
 
+      wattsonic_battery_p_w:
+         friendly_name: Wattsonic Battery P Watt
+         unique_id: wattsonic_battery_p_w
+         unit_of_measurement: W
+         device_class: power
+         value_template: '{{ (states(''sensor.wattsonic_battery_p'')|float(0)*1000)|round(0) }}'
+      wattsonic_total_power_on_meter_w:
+         friendly_name: Wattsonic Total Power On Meter Watt
+         unique_id: wattsonic_total_power_on_meter_w
+         unit_of_measurement: W
+         device_class: power
+         value_template: '{{ (states(''sensor.wattsonic_total_power_on_meter'')|float(0)*-1000)|round(0) }}'
+      wattsonic_pv1_input_power_w:
+         friendly_name: Wattsonic PV1 Input Power Watt
+         unique_id: wattsonic_pv1_input_power_w
+         unit_of_measurement: W
+         device_class: power
+         value_template: '{{ (states(''sensor.wattsonic_pv1_input_power'')|float(0)*1000)|round(0) }}'
+      wattsonic_pv2_input_power_w:
+         friendly_name: Wattsonic PV2 Input Power Watt
+         unique_id: wattsonic_pv2_input_power_w
+         unit_of_measurement: W
+         device_class: power
+         value_template: '{{ (states(''sensor.wattsonic_pv2_input_power'')|float(0)*1000)|round(0) }}'
+      wattsonic_home_consumption_now_w:
+         friendly_name: Wattsonic Home Consumption Now Watt
+         unique_id: wattsonic_home_consumption_now_w
+         unit_of_measurement: W
+         device_class: power
+         value_template: '{{ (states(''sensor.wattsonic_home_consumption_now'')|float(0)*1000)|round(0) }}'
+      wattsonic_phase_a_power_on_meter_w:
+         friendly_name: Wattsonic Phase A Power on Meter Watt
+         unique_id: wattsonic_phase_a_power_on_meter_w
+         unit_of_measurement: W
+         device_class: power
+         value_template: '{{ (states(''sensor.wattsonic_phase_a_power_on_meter'')|float(0)*1000)|round(0) }}'
+      wattsonic_phase_b_power_on_meter_w:
+         friendly_name: Wattsonic Phase B Power on Meter Watt
+         unique_id: wattsonic_phase_b_power_on_meter_w
+         unit_of_measurement: W
+         device_class: power
+         value_template: '{{ (states(''sensor.wattsonic_phase_b_power_on_meter'')|float(0)*1000)|round(0) }}'
+      wattsonic_phase_c_power_on_meter_w:
+         friendly_name: Wattsonic Phase C Power on Meter Watt
+         unique_id: wattsonic_phase_c_power_on_meter_w
+         unit_of_measurement: W
+         device_class: power
+         value_template: '{{ (states(''sensor.wattsonic_phase_c_power_on_meter'')|float(0)*1000)|round(0) }}'
+
+
 #jeden riadok 1 - 2,65535,65535,860,65535,1,7; cas je 00:01-00:07
 #druhy riadok 3 - 1,0,65535,235,65535,5915,5937; cas je 23:27-23:49; 23.5%
 #druhy riadok 3 - 2,65535,65535,860,65535,0,256; cas je 00:00-01:00
@@ -1142,6 +1192,12 @@ sensor:
 #When the power from PV isn’t enough, the battery will discharge to supply back-up loads together with PV. 
 #Note: If there’s no grid connection when configuring the hybrid system, please set the work mode to “Off-grid” to enable 
 #the power output in back-up port and switch to other modes when grid comes back.
+
+# UPS mode
+# Power grid is connected, power from PV or grid will firstly charge the battery until it’s full, 
+# and loads will be supplied by the grid during charging period. Battery will not discharge power when the grid is connected. 
+# Power grid fails, and PV power is insufficient to meet the loads' consumption, the battery will discharge power to supply 
+# loads connected to the back-up port.
 
 #Wattsonic Minimal import from grid alghoritm
 #aim is not to buy energy for the inverter when not needed. Inverter is switched to Off-grid mode when the battery SOC is between 30-99
@@ -1209,6 +1265,17 @@ automation:
   mode: single
 
 script:
+  wattsonic_mode_ups:
+    alias: wattsonic_mode_ups
+    sequence:
+    - service: modbus.write_register
+      data:
+        address: 50000
+        hub: wattsonic
+        slave: 247
+        value: 259
+    mode: single
+    icon: mdi:alpha-w-box
   wattsonic_mode_economic:
     alias: wattsonic_mode_economic
     sequence:
@@ -1266,4 +1333,66 @@ script:
     mode: single
     icon: mdi:alpha-w-box
 
-  
+  wattsonic_charge_battery_from_grid:
+    alias: wattsonic_charge_battery_from_grid
+    sequence:
+    - service: modbus.write_register
+      data:
+        hub: wattsonic
+        slave: 247
+        address: 53006
+        value: 1
+    - service: modbus.write_register
+      data:
+        hub: wattsonic
+        slave: 247
+        address: 53007
+        value:
+        - 1
+        - 1
+        - 65535
+        - 1000
+        - 65535
+        - 0
+        - 5947
+    - service: script.wattsonic_mode_economic
+      data: {}
+    - wait_for_trigger:
+      - platform: state
+        entity_id:
+        - sensor.wattsonic_hybrid_inverter_working_mode_setting
+        to: '259'
+      timeout:
+        hours: 0
+        minutes: 10
+        seconds: 0
+        milliseconds: 0
+    - if:
+      - condition: state
+        entity_id: sensor.wattsonic_battery_mode
+        state: '0'
+      then:
+      - wait_for_trigger:
+        - platform: state
+          entity_id:
+          - sensor.wattsonic_battery_mode
+          to: '1'
+        timeout:
+          hours: 0
+          minutes: 10
+          seconds: 0
+          milliseconds: 0
+    - wait_for_trigger:
+      - platform: state
+        entity_id:
+        - sensor.wattsonic_battery_mode
+        to: '0'
+      timeout:
+        hours: 3
+        minutes: 0
+        seconds: 0
+        milliseconds: 0
+    - service: script.wattsonic_mode_general
+      data: {}
+    mode: single
+ 
