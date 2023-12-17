@@ -1,0 +1,19 @@
+type: custom:flex-table-card
+entities:
+  include: sensor.pidtabule
+columns:
+  - data: data
+    modify: >-
+      x.arrival_timestamp_predicted_time+"+"+x.delay+"''/ za
+      "+x.arrival_timestamp_predicted_est+"''"
+    name: Cas
+  - data: data
+    modify: x.route_short_name
+    name: Linka
+  - data: data
+    modify: x.last_stop_name
+    name: Poloha
+title: Odjazdy smer Praha
+css:
+  tbody tr td+: 'font-weight: bold;'
+  tbody tr td:nth-child(odd)+: 'font-weight: normal;'

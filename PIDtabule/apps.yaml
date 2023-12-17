@@ -1,0 +1,21 @@
+---
+hello_world:
+  module: hello
+  class: HelloWorld
+
+PIDtabule:
+  module: PIDtabule        #define in appdaemon.yaml, .py filename
+  class: PIDtabuleClass
+  config:
+    log: pidtabule_log          #define for logging to separate file, not to AppDaemon log. Also edit appdaemon.yaml
+    #add your token from https://api.golemio.cz/api-keys/auth/sign-in
+    golemio_token: 
+    api_param: '&mode=departures&order=real&skip=canceled&includeMetroTrains=true&airCondition=true'
+    connection_limit: 5         #number of connections for golemio API
+    gtfsIds:                    #list of stations, get your gtfsId from here: http://data.pid.cz/stops/xml/StopsByName.xml
+      - U454Z301
+    only_destination_names:     #returns only connections to this destinations, delete when not needed
+      - Praha Masarykovo nádr.
+      - Praha hl.n.
+#    only_connection_names:     #returns only this connection names, delete when not needed
+#      - S11

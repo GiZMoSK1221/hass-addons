@@ -1,0 +1,7 @@
+Odjazdy
+{% set data = state_attr('sensor.pidtabule','data') %}
+
+{% for i in range(0, data | count ) %}
+{{ data[i]['arrival_timestamp_predicted_time'] }} {{ data[i]['trip_short_name'] }} {{ data[i]['trip_headsign'] }}
+
+{% endfor %}

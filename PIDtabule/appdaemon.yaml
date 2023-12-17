@@ -1,0 +1,10 @@
+---
+logs: #reload appdaemon addon after editing
+  pidtabule_log:
+    name: pidtabule_log_name
+    filename: /share/pidtabule.log
+    log_size: 1024000
+appdaemon:
+admin:
+api:
+hadashboard:

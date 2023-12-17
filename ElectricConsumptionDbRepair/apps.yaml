@@ -10,7 +10,7 @@ ECDbRepair:
     log: electric_consumption_db_repair_log
     only_logging: 0     #1=only log detected errors in statistics table; 0=also execute updates
     every_hour_info: 0  #1=every hour inserts a new line into log
-#    sqlitedb: '/config/home-assistant_v2.db' #when defined default sqlite db, db part is ignored
+#    sqlitedb: '/homeassistant/home-assistant_v2.db' #when defined default sqlite db, db part is ignored
     db:  #mariadb
       host: '192.168.11.44'
       port: '3307'
