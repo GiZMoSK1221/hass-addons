@@ -3,7 +3,7 @@
 Script kazdu minutu stiahne pozadovane odchody a posle ich do HA
 zdroj dat: golemio API
 
-![https://github.com/GiZMoSK1221/hass-addons/blob/main/PIDtabule/priklad.png]
+![][https://github.com/GiZMoSK1221/hass-addons/blob/main/PIDtabule/priklad.png]
 
 **Preconditions:**
 - vlastny token z [golemio](https://api.golemio.cz/api-keys/auth/sign-in)
