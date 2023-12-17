@@ -25,6 +25,8 @@ Forum: https://community.home-assistant.io/t/etrel-inch-modbus-tcp-communication
 Script tries to repair statistics, wrong received data from sensor. Typically when one value is too high and scrambles charts in energy dashboard
 Forum: N/A
 
+### [Appdaemon PIDtabule](./PIDtabule)
+data z golemio API pre PID tabule - zastavkove odchody spojov
 
 ### [ParadoxPRT3toMQTT add-on](./)
 tbd, based on [ParadoxHassMQTT](https://github.com/DaveOke/ParadoxHassMQTT) project, integrated into Home Assistant as add-on
