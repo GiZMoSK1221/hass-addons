@@ -41,7 +41,7 @@ entities:
   load_frequency_192: none
   inverter_current_164: none
   inverter_power_175: sensor.wattsonic_battery_p_w
-  grid_connected_status_194: binary_sensor.sunsynk_grid_connected_status
+  grid_connected_status_194: sensor.wattsonic_sunsync_grid_connected
   inverter_status_59: none
   day_battery_charge_70: sensor.wattsonic_battery_charge_energy_on_that_day
   day_battery_discharge_71: sensor.wattsonic_battery_discharge_energy_on_that_day
@@ -70,3 +70,4 @@ entities:
   energy_cost: none
   battery_temp_182: sensor.wattsonic_bms_pack_temperature
   radiator_temp_91: sensor.wattsonic_temperature_sensor_1
+  environment_temp: sensor.zw_temp_outdoor_air_temperature

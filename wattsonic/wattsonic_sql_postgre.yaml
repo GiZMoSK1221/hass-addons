@@ -17,7 +17,6 @@ sql:
       s.last_updated_ts <= UNIXEPOCH(datetime('now'))-5*60 
       ORDER BY s.last_updated_ts DESC LIMIT 1
     column: "updated"
-
   - name: wattsonic_grid_injection_energy_on_that_day_15min_state
     query: >
       SELECT round(s.state, 1) as state, datetime(s.last_updated_ts,  'unixepoch', 'localtime') as updated from states s
@@ -27,6 +26,7 @@ sql:
       s.last_updated_ts <= UNIXEPOCH(datetime('now'))-15*60 
       ORDER BY s.last_updated_ts DESC LIMIT 1
     column: "state"
+
   - name: wattsonic_grid_injection_energy_on_that_day_15min_last_updated
     query: >
       SELECT s.state, datetime(s.last_updated_ts,  'unixepoch', 'localtime') as updated from states s
@@ -36,3 +36,4 @@ sql:
       s.last_updated_ts <= UNIXEPOCH(datetime('now'))-15*60 
       ORDER BY s.last_updated_ts DESC LIMIT 1
     column: "updated"
+

@@ -75,14 +75,27 @@ modbus:
         data_type: string
         scan_interval: 86400
         lazy_error_count: 10
-      - name: Wattsonic Firmware Version
-        unique_id: wattsonic_firmware_version
+      - name: Wattsonic Firmware Version1
+        unique_id: wattsonic_firmware_version1
         slave: 247
         address: 10011
         input_type: holding
-        data_type: int32
+        count: 2
+        data_type: custom
+        structure: ">BBBB"
+        scan_interval: 600
+        lazy_error_count: 10
+      - name: Wattsonic Firmware Version2
+        unique_id: wattsonic_firmware_version2
+        slave: 247
+        address: 10013
+        input_type: holding
+        count: 2
+        data_type: custom
+        structure: ">BBBB"
         scan_interval: 60
         lazy_error_count: 10
+
       - name: Wattsonic Inverter Running Status #0:wait, wait for on-grid 1:check, self-check 2:On Grid 3:fault 4:flash, firmware update 5.Off Grid
         unique_id: wattsonic_inverter_running_status
         slave: 247
@@ -1140,7 +1153,15 @@ sensor:
          unit_of_measurement: W
          device_class: power
          value_template: '{{ (states(''sensor.wattsonic_phase_c_power_on_meter'')|float(0)*1000)|round(0) }}'
-
+      wattsonic_sunsync_grid_connected:
+         friendly_name: Wattsonic Sunsync Grid Connected
+         unique_id: wattsonic_sunsync_grid_connected
+         value_template: >
+           {% if states('sensor.wattsonic_inverter_running_status') == '2' %} 
+              1
+           {% else %}
+              0
+           {% endif %}
 
 #jeden riadok 1 - 2,65535,65535,860,65535,1,7; cas je 00:01-00:07
 #druhy riadok 3 - 1,0,65535,235,65535,5915,5937; cas je 23:27-23:49; 23.5%
