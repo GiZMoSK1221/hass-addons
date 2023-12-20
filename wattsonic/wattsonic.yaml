@@ -1382,7 +1382,7 @@ script:
       - platform: state
         entity_id:
         - sensor.wattsonic_hybrid_inverter_working_mode_setting
-        to: '259'
+        to: '258'
       timeout:
         hours: 0
         minutes: 10
@@ -1390,7 +1390,7 @@ script:
         milliseconds: 0
     - if:
       - condition: state
-        entity_id: sensor.wattsonic_battery_mode
+        entity_id: sensor.wattsonic_battery_mode   #0:discharge;1:charge
         state: '0'
       then:
       - wait_for_trigger:
