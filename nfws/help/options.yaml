@@ -1,0 +1,20 @@
+netatmo:
+    client_id: "xx"
+    client_secret: "xx"
+    refresh_interval: 2                     #refresh time in minutes
+    oauth_code: "yy"
+    redirect_uri: "hassio"
+    state: "nfws_hass"                      #SOME_ARBITRARY_BUT_UNIQUE_STRING
+    show_response: "Truee"
+    #granted rights can be checked here: https://home.netatmo.com/settings/my-account
+    #documentation: https://dev.netatmo.com/apidocumentation/oauth#errors
+    #apps: https://dev.netatmo.com/apps/
+mqtt:
+    address: "192.168.11.44"
+    port: 1883
+    username: "user"
+    password: "pwd"
+    client: "nwsclient12"
+nfws:
+    deleteRetain: fTrue                      #deletes all nfws retained configuration messages on start, default= False
+    log_level: debug                        #normal or debug

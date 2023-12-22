@@ -54,26 +54,38 @@ class PIDtabuleClass(hass.Hass):
         route_short_name = departure["route"]["short_name"] #cislo spoja
         if "only_connection_names" not in config or route_short_name in config["only_connection_names"]:
           trip_short_name = departure["trip"]["short_name"]  #cislo vlaku
-          predicted = departure["arrival_timestamp"]["predicted"]
-          predicted_time = datetime.datetime.fromisoformat(predicted).time()
-          if predicted_time.minute < 10:
-            predicted_time_rounded = f"{predicted_time.hour}:0{predicted_time.minute}"
+          departure_timestamp_in_minutes = departure["departure_timestamp"]["minutes"]
+          arrival_predicted = departure["arrival_timestamp"]["predicted"]
+          arrival_predicted_time = datetime.datetime.fromisoformat(arrival_predicted).time()
+          if arrival_predicted_time.minute < 10:
+            arrival_predicted_time_rounded = f"{arrival_predicted_time.hour}:0{arrival_predicted_time.minute}"
           else:
-            predicted_time_rounded = f"{predicted_time.hour}:{predicted_time.minute}"
-          predicted_est = round((datetime.datetime.fromisoformat(predicted).timestamp()-datetime.datetime.now().timestamp()) // 60)
+            arrival_predicted_time_rounded = f"{arrival_predicted_time.hour}:{arrival_predicted_time.minute}"
+
+          arrival_scheduled = departure["arrival_timestamp"]["scheduled"]
+          arrival_scheduled_time = datetime.datetime.fromisoformat(arrival_scheduled).time()
+          if arrival_scheduled_time.minute < 10:
+            arrival_scheduled_time_rounded = f"{arrival_scheduled_time.hour}:0{arrival_scheduled_time.minute}"
+          else:
+            arrival_scheduled_time_rounded = f"{arrival_scheduled_time.hour}:{arrival_scheduled_time.minute}"
+
+
+          arrival_predicted_est = round((datetime.datetime.fromisoformat(arrival_predicted).timestamp()-datetime.datetime.now().timestamp()) // 60)
           last_stop_name = departure["last_stop"]["name"]  #nazov poslednej zastavky
           if last_stop_name is None:
             last_stop_name = ""
-          delay = 0
+          delay_minutes = 0
           if departure["delay"]["is_available"] == True:
-            delay = departure["delay"]["minutes"]
-          #self.mylog(f'{route_short_name} to {trip_headsign} at {predicted_time_rounded}, in {predicted_est} min, meska: {delay} minut')
-          connection_list.append({"arrival_timestamp_predicted_time":f"{predicted_time_rounded}", 
-                                  "arrival_timestamp_predicted_est":f"{predicted_est}", 
-                                  "route_short_name":f"{route_short_name}",                          #cislo spoja - S22
-                                  "trip_short_name":f"{trip_short_name}",                            #cislo vlaku - os8123
-                                  "trip_headsign":f"{trip_headsign}",                                #cielova stanica
-                                  "delay":f"{delay}",
+            delay_minutes = departure["delay"]["minutes"]
+          #self.mylog(f'{route_short_name} to {trip_headsign} at {arrival_predicted_time_rounded}, in {arrival_predicted_est} min, meska: {delay_minutes} minut')
+          connection_list.append({"arrival_timestamp_predicted_time":f"{arrival_predicted_time_rounded}", 
+                                  "arrival_timestamp_predicted_est":f"{arrival_predicted_est}",         #cas prichodu za - vypocitana hodnota
+                                  "arrival_timestamp_scheduled_time":f"{arrival_scheduled_time_rounded}",
+                                  "departure_timestamp_in_minutes":f"{departure_timestamp_in_minutes}", #cas prichodu za
+                                  "route_short_name":f"{route_short_name}",                             #cislo spoja - S22
+                                  "trip_short_name":f"{trip_short_name}",                               #cislo vlaku - os8123
+                                  "trip_headsign":f"{trip_headsign}",                                   #cielova stanica
+                                  "delay":f"{delay_minutes}",
                                   "last_stop_name":f"{last_stop_name}" 
                                   })
           
