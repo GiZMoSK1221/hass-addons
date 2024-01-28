@@ -89,6 +89,25 @@ class RunElectricConsumptionDbRepair(hass.Hass):
         "start_ts": result_prev[5]
       }
 
+    sql = f"""SELECT sst.id as id, sst.metadata_id, sst.state, sst.sum, sm.statistic_id, sst.start_ts FROM statistics sst 
+             inner join statistics_meta sm on sm.id=sst.metadata_id and sm.statistic_id='{entity}'
+             and sst.id<{result_prev['id']}
+             order by sst.start_ts desc LIMIT 1"""
+    cursor.execute(sql)
+    result_prev_prev = cursor.fetchone()
+    if result_prev_prev == None:
+        self.mylog(f"No data found prev_prev: {entity}" )
+        return
+    if 'sqlitedb' in config:
+      result_prev_prev = {
+        "id": result_prev_prev[0],
+        "metadata_id": result_prev_prev[1],
+        "state": result_prev_prev[2],
+        "sum": result_prev_prev[3],
+        "statistic_id": result_prev_prev[4],
+        "start_ts": result_prev_prev[5]
+      }
+
     dt_object = datetime.datetime.fromtimestamp(result_last['start_ts'])
     sum_diff = result_last['sum']-result_prev['sum']
     state_diff = result_last['state']-result_prev['state']
@@ -96,15 +115,16 @@ class RunElectricConsumptionDbRepair(hass.Hass):
     if abs(sum_diff - state_diff) > 0.3:
       if result_last['state']<result_prev['state']:
         self.mylog(f"{dt_object} {entity} newer is lower")
+        self.mylog(result_prev_prev)
         self.mylog(result_prev)
         self.mylog(result_last)
-        new_sum = result_prev['sum']-result_prev['state']+result_last['state']
-        update_s =              f"""UPDATE statistics SET sum = {new_sum}, state = {result_last['state']} WHERE metadata_id = {result_last['metadata_id']} AND start_ts >= {result_prev['start_ts']};"""
-        update_sst = f"""UPDATE statistics_short_term SET sum = {new_sum}, state = {result_last['state']} WHERE metadata_id = {result_last['metadata_id']} AND start_ts >= {result_prev['start_ts']};"""
+        update_s =              f"""UPDATE statistics SET sum = {result_prev_prev['sum']}, state = {result_prev_prev['state']} WHERE metadata_id = {result_last['metadata_id']} AND start_ts >= {result_prev['start_ts']};"""
+        update_sst = f"""UPDATE statistics_short_term SET sum = {result_prev_prev['sum']}, state = {result_prev_prev['state']} WHERE metadata_id = {result_last['metadata_id']} AND start_ts >= {result_prev['start_ts']};"""
         self.mylog(update_s)
         self.mylog(update_sst)
       else:
         self.mylog(f"{dt_object} {entity} not ok")
+        self.mylog(result_prev_prev)
         self.mylog(result_prev)
         self.mylog(result_last)
         update_s =              f"""UPDATE statistics SET sum = {result_prev['sum']}, state = {result_prev['state']} WHERE metadata_id = {result_last['metadata_id']} AND start_ts > {result_prev['start_ts']};"""
@@ -123,10 +143,6 @@ class RunElectricConsumptionDbRepair(hass.Hass):
             cursor.close()
         except MySQLError as e:
             self.mylog(f"{e} -- {e.args[0]}")
-    # elif result_last['state']<result_prev['state']:
-        # self.mylog(f"{dt_object} {entity} newer is lower")
-        # self.mylog(result_prev)
-        # self.mylog(result_last)
 
 
   def initialize(self):

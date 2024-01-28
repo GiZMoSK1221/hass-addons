@@ -95,7 +95,10 @@ class PIDtabuleClass(hass.Hass):
                   }
     #, "unique_id": "PIDtabule"}
 #    state_state = f'{connection_list[0]["route_short_name"]}/{connection_list[0]["trip_short_name"]} do {connection_list[0]["trip_headsign"]} za {connection_list[0]["predicted_est"]} min'
-    state_state = f'{connection_list[0]["route_short_name"]} za {connection_list[0]["arrival_timestamp_predicted_est"]} min'
+#    state_state = f'{connection_list[0]["route_short_name"]} za {connection_list[0]["arrival_timestamp_predicted_est"]} min'   #S2 za 22m
+#    state_state = f'{connection_list[0]["arrival_timestamp_predicted_time"]}+{connection_list[0]["delay"]}/{connection_list[0]["arrival_timestamp_predicted_est"]}' #22:14+2/6
+#    state_state = f'{connection_list[0]["route_short_name"]}: za {connection_list[0]["arrival_timestamp_predicted_est"]} v {connection_list[0]["arrival_timestamp_predicted_time"]}+{connection_list[0]["delay"]} v {connection_list[0]["last_stop_name"]}' #S22: 22:14+2/za 6 Celakovice
+    state_state = f"{connection_list[0]['route_short_name']} za {connection_list[0]['arrival_timestamp_predicted_est']}' v {connection_list[0]['arrival_timestamp_predicted_time']}+{connection_list[0]['delay']}' / {connection_list[0]['last_stop_name']}" #S22: 22:14+2/za 6 Celakovice
     #self.mylog(state_state)
     self.set_state("sensor.PIDtabule", state = state_state, attributes = state_attr)
 

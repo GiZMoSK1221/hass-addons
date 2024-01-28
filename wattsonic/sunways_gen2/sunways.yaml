@@ -1,14 +1,22 @@
+# modified by Jan Jirousek/25.01.2024
 #   sunways
 # name: musi byt stejny jako hub: uplne dole v automatizaci. 
 # tohle nastaveni modbus mam pres waveshare rs485 to eth poe. 
-modbus:
-  - name: Sunways
-    type: tcp
-    host: 192.168.1.252
-    port: 502
+modbus:  
+  - name: sunways 
+    # type: tcp
+    # host: 192.168.11.142
+    # port: 502
+    type: serial
+    baudrate: 9600
+    bytesize: 8
+    method: rtu
+    parity: N
+    port: /dev/ttyUSB1
+    stopbits: 1
     switches:
-      - name: Wattsonic Omezovač výkonu pro vkládání do sítě  #0:Off;1:ON
-        unique_id: wattsonic_grid_injection_power_limit_switch #RW
+      - name: Sunways Grid Injection Power Limit Switch  #0:Off;1:ON
+        unique_id: sunways_grid_injection_power_limit_switch #RW
         slave: 247
         address: 25100
         write_type: holding
@@ -20,8 +28,8 @@ modbus:
             address: 25100
             state_on: 1
             state_off: 0
-      - name: Wattsonic Spínač ochrany stavu nabití baterie mimo síť  #0:Off;1:ON
-        unique_id: wattsonic_off_grid_battery_soc_protection_switch #RW
+      - name: Sunways Off-grid Battery SOC Protection Switch  #0:Off;1:ON
+        unique_id: sunways_off_grid_battery_soc_protection_switch #RW
         slave: 247
         address: 52504
         write_type: holding
@@ -33,8 +41,8 @@ modbus:
             address: 52504
             state_on: 1
             state_off: 0
-      - name: Wattsonic Spínač ochrany stavu nabití baterie při připojení k síti  #0:Off;1:ON
-        unique_id: wattsonic_on_grid_battery_soc_protection_switch #RW
+      - name: Sunways On-grid Battery SOC Protection Switch  #0:Off;1:ON
+        unique_id: sunways_on_grid_battery_soc_protection_switch #RW
         slave: 247
         address: 52502
         write_type: holding
@@ -46,8 +54,8 @@ modbus:
             address: 52502
             state_on: 1
             state_off: 0
-      - name: Wattsonic Nastavení prioritního výstupního výkonu  #0：PV Output Priority ; 1：Battery Output Priority
-        unique_id: wattsonic_priority_power_output_setting #RW
+      - name: Sunways Priority Power Output Setting  #0：PV Output Priority ; 1：Battery Output Priority
+        unique_id: sunways_priority_power_output_setting #RW
         slave: 247
         address: 50210
         write_type: holding
@@ -59,36 +67,49 @@ modbus:
             address: 50210
             state_on: 1
             state_off: 0
-    
+
+
     sensors:
-# 1
-      - name: Wattsonic Inverter SN
-        unique_id: wattsonic_inverter_sn
+      - name: Sunways Inverter SN
+        unique_id: sunways_inverter_sn
         slave: 247
         address: 10000
         input_type: holding
         data_type: string
         count: 10
         scan_interval: 86400
-# 3  
-      - name: Wattsonic Firmware Version
-        unique_id: wattsonic_firmware_version
+
+      - name: Sunways Firmware Version1
+        unique_id: sunways_firmware_version1
         slave: 247
         address: 10011
         input_type: holding
-        data_type: int32
+        count: 2
+        data_type: custom
+        structure: ">BBBB"
+        scan_interval: 600
+
+      - name: Sunways Firmware Version2
+        unique_id: sunways_firmware_version2
+        slave: 247
+        address: 10013
+        input_type: holding
+        count: 2
+        data_type: custom
+        structure: ">BBBB"
         scan_interval: 60
-# 8
+
+
       - name: Sunways Inverter Running Status #0:wait, wait for on-grid 1:check, self-check 2:On Grid 3:fault 4:flash, firmware update 5.Off Grid
-        unique_id: wattsonic_inverter_running_status
+        unique_id: sunways_inverter_running_status
         slave: 247
         address: 10105
         input_type: holding
         data_type: int16
         scan_interval: 10
-# 12
-      - name: Wattsonic Phase A Power on Meter
-        unique_id: wattsonic_phase_a_power_on_meter
+
+      - name: Sunways Phase A Power on Meter
+        unique_id: sunways_phase_a_power_on_meter
         slave: 247
         address: 10994
         input_type: holding
@@ -98,23 +119,23 @@ modbus:
         scale: 0.001
         precision: 3
         data_type: int32
-        scan_interval: 5
-# 13
-      - name: Wattsonic Phase B Power on Meter
-        unique_id: wattsonic_phase_b_power_on_meter
+        scan_interval: 10
+
+      - name: Sunways Phase B Power on Meter
+        unique_id: sunways_phase_b_power_on_meter
         slave: 247
         address: 10996
         input_type: holding
         state_class: measurement
         unit_of_measurement: kW
-        device_class: power 
+        device_class: power
         scale: 0.001
         precision: 3
         data_type: int32
-        scan_interval: 5
-# 14
-      - name: Wattsonic Phase C Power on Meter
-        unique_id: wattsonic_phase_c_power_on_meter
+        scan_interval: 10
+
+      - name: Sunways Phase C Power on Meter
+        unique_id: sunways_phase_c_power_on_meter
         slave: 247
         address: 10998
         input_type: holding
@@ -124,23 +145,233 @@ modbus:
         scale: 0.001
         precision: 3
         data_type: int32
-        scan_interval: 5
-# 15
-      - name: Wattsonic Total Power on Meter        #Grid power
-        unique_id: wattsonic_total_power_on_meter
+        scan_interval: 10
+
+      - name: Sunways Total Power on Meter        #Grid power
+        unique_id: sunways_total_power_on_meter
         slave: 247
         address: 11000
         input_type: holding
-        unit_of_measurement: W
         state_class: measurement
+        unit_of_measurement: kW
+        device_class: power
+        scale: 0.001
+        precision: 3
         data_type: int32
-        scale: 1
-        offset: 0
+        scan_interval: 10
+
+
+      - name: Sunways Grid Injection Energy on that day   #export/day
+        unique_id: sunways_grid_injection_energy_on_that_day
+        slave: 247
+        address: 41000
+        scale: 0.1
+        precision: 2
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing
+        device_class: energy
+        data_type: int16
+        scan_interval: 60
+
+      - name: Sunways Grid Purchasing Energy on that day
+        unique_id: sunways_grid_purchasing_energy_on_that_day
+        slave: 247
+        address: 41001
+        scale: 0.1
         precision: 1
-        scan_interval: 5
-# 16
-      - name: Wattsonic Total Grid-Injection Energy on Meter
-        unique_id: wattsonic_total_grid_injection_energy_on_meter
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing
+        device_class: energy
+        data_type: int16
+        scan_interval: 60
+
+      - name: Sunways Backup Output Energy on that day
+        unique_id: sunways_backup_output_energy_on_that_day
+        slave: 247
+        address: 41002
+        scale: 0.1
+        precision: 1
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing
+        device_class: energy
+        data_type: int16
+        scan_interval: 300
+
+      - name: Sunways Battery Charge Energy on that day
+        unique_id: sunways_battery_charge_energy_on_that_day
+        slave: 247
+        address: 41003
+        scale: 0.1
+        precision: 1
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing
+        device_class: energy
+        data_type: int16
+        scan_interval: 60
+
+      - name: Sunways Battery Discharge Energy on that day
+        unique_id: sunways_battery_discharge_energy_on_that_day
+        slave: 247
+        address: 41004
+        scale: 0.1
+        precision: 1
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing
+        device_class: energy
+        data_type: int16
+        scan_interval: 60
+
+      - name: Sunways PV Generation Energy on that day    #E-today from GUI
+        unique_id: sunways_pv_generation_energy_on_that_day
+        slave: 247
+        address: 41005
+        scale: 0.1
+        precision: 1
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing
+        device_class: energy
+        data_type: int16
+        scan_interval: 60
+
+      - name: Sunways Loading Energy on that day
+        unique_id: sunways_loading_energy_on_that_day
+        slave: 247
+        address: 41006
+        scale: 0.1
+        precision: 1
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing
+        device_class: energy
+        data_type: int16
+        scan_interval: 300
+
+      - name: Sunways Energy Purchased from Grid on that day  #on inverter side
+        unique_id: sunways_energy_purchased_from_grid_on_that_day
+        slave: 247
+        address: 41008
+        scale: 0.1
+        precision: 1
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing
+        device_class: energy
+        data_type: int16
+        scan_interval: 300
+
+      - name: Sunways Total Energy injected to grid
+        unique_id: sunways_total_energy_injected_to_grid
+        slave: 247
+        address: 41102
+        scale: 0.1
+        precision: 1
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing
+        device_class: energy
+        data_type: int32
+        scan_interval: 600
+
+      - name: Sunways Total Energy Purchased from Grid from Meter
+        unique_id: sunways_total_energy_purchased_from_grid_from_meter
+        slave: 247
+        address: 41104
+        scale: 0.1
+        precision: 1
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing
+        device_class: energy
+        data_type: int32
+        scan_interval: 600
+
+      - name: Sunways Total Output Energy on backup port
+        unique_id: sunways_total_output_energy_on_backup_port
+        slave: 247
+        address: 41106
+        scale: 0.1
+        precision: 1
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing
+        device_class: energy
+        data_type: int32
+        scan_interval: 3600
+
+      - name: Sunways Total Energy Charged to Battery
+        unique_id: sunways_total_energy_charged_to_battery
+        slave: 247
+        address: 41108
+        scale: 0.1
+        precision: 1
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing
+        device_class: energy
+        data_type: int32
+        scan_interval: 600
+
+      - name: Sunways Total Energy Discharged from Battery
+        unique_id: sunways_total_energy_discharged_from_battery
+        slave: 247
+        address: 41110
+        scale: 0.1
+        precision: 1
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing
+        device_class: energy
+        data_type: int32
+        scan_interval: 600
+
+      - name: Sunways Total PV Generation
+        unique_id: sunways_total_pv_generation
+        slave: 247
+        address: 41112
+        scale: 0.1
+        precision: 1
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing
+        device_class: energy
+        data_type: int32
+        scan_interval: 600
+
+      - name: Sunways Total Loading Energy consumed at grid side  #totoal load consumption
+        unique_id: sunways_total_loading_energy_consumed_at_grid_side
+        slave: 247
+        address: 41114
+        scale: 0.1
+        precision: 1
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing
+        device_class: energy
+        data_type: int32
+        scan_interval: 3600
+
+      - name: Sunways Total Energy Purchased from Grid at inverter side
+        unique_id: sunways_total_energy_purchased_from_grid_at_inverter_side
+        slave: 247
+        address: 41118
+        scale: 0.1
+        precision: 1
+        input_type: holding
+        unit_of_measurement: kWh
+        state_class: total_increasing
+        device_class: energy
+        data_type: int32
+        scan_interval: 3600
+
+
+      - name: Sunways Total Grid-Injection Energy on Meter
+        unique_id: sunways_total_grid_injection_energy_on_meter
         slave: 247
         address: 11002
         input_type: holding
@@ -151,9 +382,9 @@ modbus:
         precision: 2
         data_type: int32
         scan_interval: 3600
-# 17
-      - name: Wattsonic Total Purchasing Energy from Grid on Meter
-        unique_id: wattsonic_total_purchasing_energy_from_grid_on_meter
+
+      - name: Sunways Total Purchasing Energy from Grid on Meter
+        unique_id: sunways_total_purchasing_energy_from_grid_on_meter
         slave: 247
         address: 11004
         input_type: holding
@@ -164,9 +395,10 @@ modbus:
         precision: 2
         data_type: int32
         scan_interval: 3600
-# 18
-      - name: Wattsonic Grid Lines A/B Voltage
-        unique_id: wattsonic_grid_lines_a_b_voltage
+
+
+      - name: Sunways Grid Lines A/B Voltage
+        unique_id: sunways_grid_lines_a_b_voltage
         slave: 247
         address: 11006
         input_type: holding
@@ -177,9 +409,9 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 60
-# 19
-      - name: Wattsonic Grid Lines B/C Voltage
-        unique_id: wattsonic_grid_lines_b_c_voltage
+
+      - name: Sunways Grid Lines B/C Voltage
+        unique_id: sunways_grid_lines_b_c_voltage
         slave: 247
         address: 11007
         input_type: holding
@@ -190,9 +422,9 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 60
-# 20
-      - name: Wattsonic Grid Lines C/A Voltage
-        unique_id: wattsonic_grid_lines_c_a_voltage
+
+      - name: Sunways Grid Lines C/A Voltage
+        unique_id: sunways_grid_lines_c_a_voltage
         slave: 247
         address: 11008
         input_type: holding
@@ -203,9 +435,9 @@ modbus:
         precision: 1
         data_type: int16        
         scan_interval: 60
-# 21
-      - name: Wattsonic Grid Phase A Voltage
-        unique_id: wattsonic_grid_phase_a_voltage
+
+      - name: Sunways Grid Phase A Voltage
+        unique_id: sunways_grid_phase_a_voltage
         slave: 247
         address: 11009
         input_type: holding
@@ -216,22 +448,9 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 60
-# 22
-      - name: Wattsonic Grid Phase A Current
-        unique_id: wattsonic_grid_phase_a_current
-        slave: 247
-        address: 11010
-        input_type: holding
-        state_class: measurement
-        unit_of_measurement: A
-        device_class: current
-        scale: 0.1
-        precision: 1
-        data_type: int16
-        scan_interval: 60
-# 23
-      - name: Wattsonic Grid Phase B Voltage
-        unique_id: wattsonic_grid_phase_b_voltage
+
+      - name: Sunways Grid Phase B Voltage
+        unique_id: sunways_grid_phase_b_voltage
         slave: 247
         address: 11011
         input_type: holding
@@ -242,22 +461,9 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 60
-# 24
-      - name: Wattsonic Grid Phase B Current
-        unique_id: wattsonic_grid_phase_b_current
-        slave: 247
-        address: 11012
-        input_type: holding
-        state_class: measurement
-        unit_of_measurement: A
-        device_class: current
-        scale: 0.1
-        precision: 1
-        data_type: int16
-        scan_interval: 60
-# 22
-      - name: Wattsonic Grid Phase C Voltage
-        unique_id: wattsonic_grid_pase_c_voltage
+
+      - name: Sunways Grid Phase C Voltage
+        unique_id: sunways_grid_pase_c_voltage
         slave: 247
         address: 11013
         input_type: holding
@@ -268,9 +474,35 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 60
-# 25
-      - name: Wattsonic Grid Phase C Current
-        unique_id: wattsonic_grid_phase_c_current
+
+      - name: Sunways Grid Phase A Current
+        unique_id: sunways_grid_phase_a_current
+        slave: 247
+        address: 11010
+        input_type: holding
+        state_class: measurement
+        unit_of_measurement: A
+        device_class: current
+        scale: 0.1
+        precision: 1
+        data_type: int16
+        scan_interval: 60
+
+      - name: Sunways Grid Phase B Current
+        unique_id: sunways_grid_phase_b_current
+        slave: 247
+        address: 11012
+        input_type: holding
+        state_class: measurement
+        unit_of_measurement: A
+        device_class: current
+        scale: 0.1
+        precision: 1
+        data_type: int16
+        scan_interval: 60
+
+      - name: Sunways Grid Phase C Current
+        unique_id: sunways_grid_phase_c_current
         slave: 247
         address: 11014
         input_type: holding
@@ -281,7 +513,7 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 60
-# 23
+
       - name: FVE_Grid Frequency     ####NENI###
         slave: 247
         address: 11015
@@ -291,22 +523,22 @@ modbus:
         offset: 0
         precision: 1
         scan_interval: 5
-# 24
-      - name: Wattsonic P AC
-        unique_id: wattsonic_p_ac
+
+      - name: Sunways P AC
+        unique_id: sunways_p_ac
         slave: 247
         address: 11016
         input_type: holding
-        unit_of_measurement: W
         state_class: measurement
+        unit_of_measurement: kW
+        device_class: power
+        scale: 0.001
+        precision: 3
         data_type: int32
-        scale: 1
-        offset: 0
-        precision: 1
-        scan_interval: 5
-# 25
-      - name: Wattsonic Total PV Generation on that day  #energy today
-        unique_id: wattsonic_total_pv_generation_on_that_day
+        scan_interval: 10
+
+      - name: Sunways Total PV Generation on that day  #energy today
+        unique_id: sunways_total_pv_generation_on_that_day
         slave: 247
         address: 11018
         input_type: holding
@@ -317,9 +549,9 @@ modbus:
         precision: 1
         data_type: int32
         scan_interval: 1800
-# 26
-      - name: Wattsonic Total PV Generation from Installation  #energy total
-        unique_id: wattsonic_total_pv_generation_from_installation
+
+      - name: Sunways Total PV Generation from Installation  #energy total
+        unique_id: sunways_total_pv_generation_from_installation
         slave: 247
         address: 11020
         input_type: holding
@@ -330,7 +562,7 @@ modbus:
         precision: 1
         data_type: int32
         scan_interval: 3600
-# 27
+
       - name: FVE_Total PV Generation  Time from Installation           ####NENALEZENO###
         slave: 247
         address: 11022
@@ -341,23 +573,22 @@ modbus:
         precision: 1
         scan_interval: 60
         data_type: int32
-# 28   
-      - name: Wattsonic PV Input Total Power        #PV power, panel actual power
-        unique_id: wattsonic_pv_input_total_power
+
+      - name: Sunways PV Input Total Power        #PV power, panel actual power
+        unique_id: sunways_pv_input_total_power
         slave: 247
         address: 11028
         input_type: holding
         state_class: measurement
         device_class: power
-        unit_of_measurement: W
-        scale: 1
-        offset: 0
-        precision: 1
-        scan_interval: 5
+        unit_of_measurement: kW
+        scale: 0.001
+        precision: 3
         data_type: int32
-# 29
-      - name: Wattsonic Temperature Sensor 1
-        unique_id: wattsonic_temperature_sensor_1
+        scan_interval: 10
+
+      - name: Sunways Temperature Sensor 1
+        unique_id: sunways_temperature_sensor_1
         slave: 247
         address: 11032
         input_type: holding
@@ -367,10 +598,10 @@ modbus:
         scale: 0.1
         precision: 1
         data_type: int16
-        scan_interval: 5
-# 30
-      - name: Wattsonic Temperature Sensor 2
-        unique_id: wattsonic_temperature_sensor_2
+        scan_interval: 600
+
+      - name: Sunways Temperature Sensor 2
+        unique_id: sunways_temperature_sensor_2
         slave: 247
         address: 11033
         input_type: holding
@@ -380,10 +611,10 @@ modbus:
         scale: 0.1
         precision: 1
         data_type: int16
-        scan_interval: 5
-# 31
-      - name: Wattsonic Temperature Sensor 3
-        unique_id: wattsonic_temperature_sensor_3
+        scan_interval: 600
+
+      - name: Sunways Temperature Sensor 3
+        unique_id: sunways_temperature_sensor_3
         slave: 247
         address: 11034
         input_type: holding
@@ -394,9 +625,9 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 600
-# 32
-      - name: Wattsonic Temperature Sensor 4
-        unique_id: wattsonic_temperature_sensor_4
+
+      - name: Sunways Temperature Sensor 4
+        unique_id: sunways_temperature_sensor_4
         slave: 247
         address: 11035
         input_type: holding
@@ -407,9 +638,9 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 600
-# 33
-      - name: Wattsonic PV1 Voltage
-        unique_id: wattsonic_pv1_voltage
+
+      - name: Sunways PV1 Voltage
+        unique_id: sunways_pv1_voltage
         slave: 247
         address: 11038
         input_type: holding
@@ -420,22 +651,9 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 300
-# 34
-      - name: Wattsonic PV1 Current
-        unique_id: wattsonic_pv1_current
-        slave: 247
-        address: 11039
-        input_type: holding
-        state_class: measurement
-        unit_of_measurement: A
-        device_class: current
-        scale: 0.1
-        precision: 1
-        data_type: int16
-        scan_interval: 300
-# 35
-      - name: Wattsonic PV2 Voltage
-        unique_id: wattsonic_pv2_voltage
+
+      - name: Sunways PV2 Voltage
+        unique_id: sunways_pv2_voltage
         slave: 247
         address: 11040
         input_type: holding
@@ -446,9 +664,22 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 300
-# 36
-      - name: Wattsonic PV2 Current
-        unique_id: wattsonic_pv2_current
+
+      - name: Sunways PV1 Current
+        unique_id: sunways_pv1_current
+        slave: 247
+        address: 11039
+        input_type: holding
+        state_class: measurement
+        unit_of_measurement: A
+        device_class: current
+        scale: 0.1
+        precision: 1
+        data_type: int16
+        scan_interval: 300
+
+      - name: Sunways PV2 Current
+        unique_id: sunways_pv2_current
         slave: 247
         address: 11041
         input_type: holding
@@ -459,9 +690,9 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 300
-# 37
-      - name: Wattsonic PV1 Input Power
-        unique_id: wattsonic_pv1_input_power
+
+      - name: Sunways PV1 Input Power
+        unique_id: sunways_pv1_input_power
         slave: 247
         address: 11062
         input_type: holding
@@ -472,9 +703,9 @@ modbus:
         precision: 3
         data_type: int32
         scan_interval: 10
-# 38
-      - name: Wattsonic PV2 Input Power
-        unique_id: wattsonic_pv2_input_power
+
+      - name: Sunways PV2 Input Power
+        unique_id: sunways_pv2_input_power
         slave: 247
         address: 11064
         input_type: holding
@@ -485,37 +716,39 @@ modbus:
         precision: 3
         data_type: int32
         scan_interval: 10
-# 39
-      - name: Wattsonic ARM Fault Flag1 #Table 3.3 Troubleshooting
-        unique_id: wattsonic_arm_fault_flag1
+
+      - name: Sunways ARM Fault Flag1 #Table 3.3 Troubleshooting
+        unique_id: sunways_arm_fault_flag1
         slave: 247
         address: 18000
         input_type: holding
         data_type: int32
         scan_interval: 60
-      - name: Wattsonic Fault Flag1 #Table 3.3 Troubleshooting
-        unique_id: wattsonic_fault_flag1
+
+      - name: Sunways Fault Flag1 #Table 3.3 Troubleshooting
+        unique_id: sunways_fault_flag1
         slave: 247
         address: 10112
         input_type: holding
         data_type: int32
         scan_interval: 60
-      - name: Wattsonic Fault Flag2 #Table 3.3 Troubleshooting
-        unique_id: wattsonic_fault_flag2
+
+      - name: Sunways Fault Flag2 #Table 3.3 Troubleshooting
+        unique_id: sunways_fault_flag2
         slave: 247
         address: 10114
         input_type: holding
         data_type: int32
         scan_interval: 60
-      - name: Wattsonic Fault Flag3 #Table 3.3 Troubleshooting
-        unique_id: wattsonic_fault_flag3
+
+      - name: Sunways Fault Flag3 #Table 3.3 Troubleshooting
+        unique_id: sunways_fault_flag3
         slave: 247
         address: 10116
         input_type: holding
         data_type: int32
         scan_interval: 60
-        
-# 40
+
       - name: FVE_Backup_A_V
         slave: 247
         address: 40200
@@ -525,7 +758,7 @@ modbus:
         offset: 0
         precision: 1
         scan_interval: 5
-# 41
+
       - name: FVE_Backup_A_I
         slave: 247
         address: 40201
@@ -537,17 +770,17 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 300
-# 42
+
       - name: FVE_Backup_A_F
         slave: 247
         address: 40202
         unit_of_measurement: Hz
         state_class: measurement
-        scale: 0.1
+        scale: 0.01
         offset: 0
         precision: 1
         scan_interval: 5
-# 43
+
       - name: FVE_Backup_A_P
         slave: 247
         address: 40204
@@ -559,7 +792,7 @@ modbus:
         precision: 3
         data_type: int32
         scan_interval: 10
-# 44
+
       - name: FVE_Backup_B_V
         slave: 247
         address: 40210
@@ -569,7 +802,7 @@ modbus:
         offset: 0
         precision: 1
         scan_interval: 5
-# 45
+
       - name: FVE_Backup_B_I
         slave: 247
         address: 40211
@@ -581,17 +814,17 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 300
-# 46
+
       - name: FVE_Backup_B_F
         slave: 247
         address: 40212
         unit_of_measurement: Hz
         state_class: measurement
-        scale: 0.1
+        scale: 0.01
         offset: 0
         precision: 1
         scan_interval: 5
-# 47
+
       - name: FVE_Backup_B_P
         slave: 247
         address: 40214
@@ -603,7 +836,7 @@ modbus:
         precision: 3
         data_type: int32
         scan_interval: 10
-# 48
+
       - name: FVE_Backup_C_V
         slave: 247
         address: 40220
@@ -613,7 +846,7 @@ modbus:
         offset: 0
         precision: 1
         scan_interval: 5
-# 49
+
       - name: FVE_Backup_C_I
         slave: 247
         address: 40221
@@ -625,17 +858,17 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 300
-# 50
+
       - name: FVE_Backup_C_F
         slave: 247
         address: 40222
         unit_of_measurement: Hz
         state_class: measurement
-        scale: 0.1
+        scale: 0.01
         offset: 0
         precision: 1
         scan_interval: 5
-# 51
+
       - name: FVE_Backup_C_P
         slave: 247
         address: 40224
@@ -647,9 +880,9 @@ modbus:
         precision: 3
         data_type: int32
         scan_interval: 10
-# 52
-      - name: Wattsonic Total Backup P          #load power, total active power
-        unique_id: wattsonic_total_backup_p
+      
+      - name: Sunways Total Backup P          #load power, total active power
+        unique_id: sunways_total_backup_p
         slave: 247
         address: 40230
         input_type: holding
@@ -660,7 +893,7 @@ modbus:
         precision: 3
         data_type: int32
         scan_interval: 10
-# 53
+
       - name: FVE_Invt_A_P
         slave: 247
         address: 40236
@@ -672,7 +905,7 @@ modbus:
         precision: 3
         data_type: int32
         scan_interval: 10
-# 54
+
       - name: FVE_Invt_B_P
         slave: 247
         address: 40242
@@ -684,7 +917,7 @@ modbus:
         precision: 3
         data_type: int32
         scan_interval: 10
-# 55
+
       - name: FVE_Invt_C_P
         slave: 247
         address: 40248
@@ -696,9 +929,10 @@ modbus:
         precision: 3
         data_type: int32
         scan_interval: 10
-# 56
-      - name: Wattsonic Battery V #DC Voltage
-        unique_id: wattsonic_battery_v
+
+
+      - name: Sunways Battery V #DC Voltage
+        unique_id: sunways_battery_v
         slave: 247
         address: 40254
         input_type: holding
@@ -709,9 +943,9 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 300
-# 57
-      - name: Wattsonic Battery I #DC Current
-        unique_id: wattsonic_battery_i
+
+      - name: Sunways Battery I #DC Current
+        unique_id: sunways_battery_i
         slave: 247
         address: 40255
         input_type: holding
@@ -722,17 +956,9 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 300
-# 58
-      - name: Wattsonic Battery Mode #0:discharge;1:charge
-        unique_id: wattsonic_battery_mode
-        slave: 247
-        address: 40256
-        input_type: holding
-        data_type: int16
-        scan_interval: 10
-# 59
-      - name: Wattsonic Battery P           #Battery Power
-        unique_id: wattsonic_battery_p
+
+      - name: Sunways Battery P           #Battery Power
+        unique_id: sunways_battery_p
         slave: 247
         address: 40258
         input_type: holding
@@ -743,235 +969,32 @@ modbus:
         precision: 3
         data_type: int32
         scan_interval: 10
-# 60
-      - name: Wattsonic Grid Injection Energy on that day   #export/day 
-        unique_id: wattsonic_grid_injection_energy_on_that_day
+
+      - name: Sunways Battery Mode #0:discharge;1:charge
+        unique_id: sunways_battery_mode
         slave: 247
-        address: 41000
-        scale: 0.1
-        precision: 2
+        address: 40256
         input_type: holding
-        unit_of_measurement: kWh
-        state_class: total_increasing
-        device_class: energy
         data_type: int16
-        scan_interval: 60
-        
-# 61
-      - name: Wattsonic Grid Purchasing Energy on that day
-        unique_id: wattsonic_grid_purchasing_energy_on_that_day
-        slave: 247
-        address: 41001
-        scale: 0.1
-        precision: 1
-        input_type: holding
-        unit_of_measurement: kWh
-        state_class: total_increasing
-        device_class: energy
-        data_type: int16
-        scan_interval: 60
-        #300
-        
-# 62
-      - name: Wattsonic Backup Output Energy on that day
-        unique_id: wattsonic_backup_output_energy_on_that_day
-        slave: 247
-        address: 41002
-        scale: 0.1
-        precision: 1
-        input_type: holding
-        unit_of_measurement: kWh
-        state_class: total_increasing
-        device_class: energy
-        data_type: int16
-        scan_interval: 300
-# 63
-      - name: Wattsonic Battery Charge Energy on that day
-        unique_id: wattsonic_battery_charge_energy_on_that_day
-        slave: 247
-        address: 41003
-        scale: 0.1
-        precision: 1
-        input_type: holding
-        unit_of_measurement: kWh
-        state_class: total_increasing
-        device_class: energy
-        data_type: int16
-        scan_interval: 60
-# 64
-      - name: Wattsonic Battery Discharge Energy on that day
-        unique_id: wattsonic_battery_discharge_energy_on_that_day
-        slave: 247
-        address: 41004
-        scale: 0.1
-        precision: 1
-        input_type: holding
-        unit_of_measurement: kWh
-        state_class: total_increasing
-        device_class: energy
-        data_type: int16
-        scan_interval: 60
-# 65
-      - name: Wattsonic PV Generation Energy on that day    #E-today from GUI
-        unique_id: wattsonic_pv_generation_energy_on_that_day
-        slave: 247
-        address: 41005
-        scale: 0.1
-        precision: 1
-        input_type: holding
-        unit_of_measurement: kWh
-        state_class: total_increasing
-        device_class: energy
-        data_type: int16
-        scan_interval: 60
-# 66
-      - name: Wattsonic Loading Energy on that day
-        unique_id: wattsonic_loading_energy_on_that_day
-        slave: 247
-        address: 41006
-        scale: 0.1
-        precision: 1
-        input_type: holding
-        unit_of_measurement: kWh
-        state_class: total_increasing
-        device_class: energy
-        data_type: int16
-        scan_interval: 300
-# 67
-      - name: Wattsonic Energy Purchased from Grid on that day  #on inverter side
-        unique_id: wattsonic_energy_purchased_from_grid_on_that_day
-        slave: 247
-        address: 41008
-        scale: 0.1
-        precision: 1
-        input_type: holding
-        unit_of_measurement: kWh
-        state_class: total_increasing
-        device_class: energy
-        data_type: int16
-        scan_interval: 300
-# 68
-      - name: Wattsonic Total Energy injected to grid
-        unique_id: wattsonic_total_energy_injected_to_grid
-        slave: 247
-        address: 41102
-        scale: 0.1
-        precision: 1
-        input_type: holding
-        unit_of_measurement: kWh
-        state_class: total_increasing
-        device_class: energy
-        data_type: int32
-        scan_interval: 600
-# 69
-      - name: Wattsonic Total Energy Purchased from Grid from Meter
-        unique_id: wattsonic_total_energy_purchased_from_grid_from_meter
-        slave: 247
-        address: 41104
-        scale: 0.1
-        precision: 1
-        input_type: holding
-        unit_of_measurement: kWh
-        state_class: total_increasing
-        device_class: energy
-        data_type: int32
-        scan_interval: 600
-# 70
-      - name: Wattsonic Total Output Energy on backup port
-        unique_id: wattsonic_total_output_energy_on_backup_port
-        slave: 247
-        address: 41106
-        scale: 0.1
-        precision: 1
-        input_type: holding
-        unit_of_measurement: kWh
-        state_class: total_increasing
-        device_class: energy
-        data_type: int32
-        scan_interval: 3600
-# 71
-      - name: Wattsonic Total Energy Charged to Battery
-        unique_id: wattsonic_total_energy_charged_to_battery
-        slave: 247
-        address: 41108
-        scale: 0.1
-        precision: 1
-        input_type: holding
-        unit_of_measurement: kWh
-        state_class: total_increasing
-        device_class: energy
-        data_type: int32
-        scan_interval: 600
-# 72
-      - name: Wattsonic Total Energy Discharged from Battery
-        unique_id: wattsonic_total_energy_discharged_from_battery
-        slave: 247
-        address: 41110
-        scale: 0.1
-        precision: 1
-        input_type: holding
-        unit_of_measurement: kWh
-        state_class: total_increasing
-        device_class: energy
-        data_type: int32
-        scan_interval: 600
-# 73
-      - name: Wattsonic Total PV Generation
-        unique_id: wattsonic_total_pv_generation
-        slave: 247
-        address: 41112
-        scale: 0.1
-        precision: 1
-        input_type: holding
-        unit_of_measurement: kWh
-        state_class: total_increasing
-        device_class: energy
-        data_type: int32
-        scan_interval: 600
-# 74
-      - name: Wattsonic Total Loading Energy consumed at grid side  #totoal load consumption
-        unique_id: wattsonic_total_loading_energy_consumed_at_grid_side
-        slave: 247
-        address: 41114
-        scale: 0.1
-        precision: 1
-        input_type: holding
-        unit_of_measurement: kWh
-        state_class: total_increasing
-        device_class: energy
-        data_type: int32
-        scan_interval: 3600
-# 75
-      - name: Wattsonic Total Energy Purchased from Grid at inverter side
-        unique_id: wattsonic_total_energy_purchased_from_grid_at_inverter_side
-        slave: 247
-        address: 41118
-        scale: 0.1
-        precision: 1
-        input_type: holding
-        unit_of_measurement: kWh
-        state_class: total_increasing
-        device_class: energy
-        data_type: int32
-        scan_interval: 3600
+        scan_interval: 10
+
 #BMS registers
-# 79   
-      - name: Wattsonic BMS Software Version
-        unique_id: wattsonic_bms_software_version
+      - name: Sunways BMS Software Version
+        unique_id: sunways_bms_software_version
         slave: 247
         address: 42003
         input_type: holding
         data_type: int16
         scan_interval: 600
- # 80      
-      - name: Wattsonic BMS Hardware Version
-        unique_id: wattsonic_bms_hardware_version
+
+      - name: Sunways BMS Hardware Version
+        unique_id: sunways_bms_hardware_version
         slave: 247
         address: 42004
         input_type: holding
         data_type: int16
         scan_interval: 600
-# 81
+
       - name: FVE_BMS Charge Imax
         slave: 247
         address: 42005
@@ -981,7 +1004,6 @@ modbus:
         precision: 0
         scan_interval: 10
 
-# 82-1
       - name: FVE_BMS Discharge Imax
         slave: 247
         address: 42006
@@ -990,9 +1012,9 @@ modbus:
         offset: 0
         precision: 0
         scan_interval: 10
-# 82
-      - name: Wattsonic Battery SOC
-        unique_id: wattsonic_battery_soc
+
+      - name: Sunways Battery SOC
+        unique_id: sunways_battery_soc
         slave: 247
         address: 43000
         input_type: holding
@@ -1002,10 +1024,10 @@ modbus:
         scale: 0.01
         precision: 2
         data_type: int16
-        scan_interval: 10
-# 83
-      - name: Wattsonic Battery SOH
-        unique_id: wattsonic_battery_soh
+        scan_interval: 60
+
+      - name: Sunways Battery SOH
+        unique_id: sunways_battery_soh
         slave: 247
         address: 43001
         input_type: holding
@@ -1016,17 +1038,17 @@ modbus:
         precision: 2
         data_type: int16
         scan_interval: 3600
-# 84
-      - name: Wattsonic BMS Status
-        unique_id: wattsonic_bms_status
+
+      - name: Sunways BMS Status
+        unique_id: sunways_bms_status
         slave: 247
         address: 43002
         input_type: holding
         data_type: int16
         scan_interval: 60
-# 85
-      - name: Wattsonic BMS Pack Temperature
-        unique_id: wattsonic_bms_pack_temperature
+
+      - name: Sunways BMS Pack Temperature
+        unique_id: sunways_bms_pack_temperature
         slave: 247
         address: 43003
         input_type: holding
@@ -1037,7 +1059,7 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 300
-# 86
+
       - name: FVE_Max Cell Temperature ID
         slave: 247
         address: 43008
@@ -1046,7 +1068,7 @@ modbus:
         offset: 0
         precision: 0
         scan_interval: 10
-# 87
+
       - name: FVE_Max Cell Temperature
         slave: 247
         address: 43009
@@ -1057,7 +1079,7 @@ modbus:
         precision: 1
         scan_interval: 5
         device_class: "temperature"
-# 88
+
       - name: FVE_Min Cell Temperature ID
         slave: 247
         address: 43010
@@ -1066,7 +1088,7 @@ modbus:
         offset: 0
         precision: 0
         scan_interval: 10
-# 89
+
       - name: FVE_Min Cell Temperature
         slave: 247
         address: 43011
@@ -1077,34 +1099,36 @@ modbus:
         precision: 1
         scan_interval: 5
         device_class: "temperature"
- # 94     
-      - name: Wattsonic BMS Error Code
-        unique_id: wattsonic_bms_error_code
+
+      - name: Sunways BMS Error Code
+        unique_id: sunways_bms_error_code
         slave: 247
         address: 43016
         input_type: holding
         data_type: int32
         scan_interval: 60
- # 95        
-      - name: Wattsonic BMS Warn Code
-        unique_id: wattsonic_bms_warn_code
+
+      - name: Sunways BMS Warn Code
+        unique_id: sunways_bms_warn_code
         slave: 247
         address: 43018
         input_type: holding
         data_type: int32
         scan_interval: 60
-        
-        #Hybrid Inverter EMS Protocol
-      - name: Wattsonic Hybrid Inverter Working Mode Setting  #257=General mode; 258=Economic mode; 259=UPS mode; 512=Off grid mode
-        unique_id: wattsonic_hybrid_inverter_working_mode_setting #RW
+
+
+#RW values
+      - name: Sunways Hybrid Inverter Working Mode Setting  #257=General mode; 258=Economic mode; 259=UPS mode; 512=Off grid mode
+        unique_id: sunways_hybrid_inverter_working_mode_setting #RW
         slave: 247
         address: 50000
         input_type: holding
         data_type: int16
         scan_interval: 60
-       
-      - name: Wattsonic Grid Injection Power Limit Setting  #[0.0%-100.0%]
-        unique_id: wattsonic_grid_injection_power_limit_setting #RW
+
+
+      - name: Sunways Grid Injection Power Limit Setting  #[0.0%-100.0%]
+        unique_id: sunways_grid_injection_power_limit_setting #RW
         slave: 247
         address: 25103
         input_type: holding
@@ -1112,9 +1136,9 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 110
-        
-      - name: Wattsonic On-grid Battery End SOC  #[0.0%-100.0%]
-        unique_id: wattsonic_on_grid_battery_end_soc #RW
+
+      - name: Sunways On-grid Battery End SOC  #[0.0%-100.0%]
+        unique_id: sunways_on_grid_battery_end_soc #RW
         slave: 247
         address: 52503
         input_type: holding
@@ -1122,9 +1146,9 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 360
-        
-      - name: Wattsonic Off-grid Battery End SOC  #[0.0%-100.0%]
-        unique_id: wattsonic_off_grid_battery_end_soc #RW
+
+      - name: Sunways Off-grid Battery End SOC  #[0.0%-100.0%]
+        unique_id: sunways_off_grid_battery_end_soc #RW
         slave: 247
         address: 52505
         input_type: holding
@@ -1132,71 +1156,73 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 360
-        
-      - name: Wattsonic RW BMS Status #Table 3.8
-        unique_id: wattsonic_rw_bms_status
+
+      - name: Sunways RW BMS Status #Table 3.8
+        unique_id: sunways_rw_bms_status
         slave: 247
         address: 53508
         input_type: holding
         data_type: int16
         scan_interval: 60
-        
-      - name: Wattsonic RW BMS ErrorCode #Table 3.9
-        unique_id: wattsonic_rw_bms_errorcode
+
+      - name: Sunways RW BMS ErrorCode #Table 3.9
+        unique_id: sunways_rw_bms_errorcode
         slave: 247
         address: 53509
         input_type: holding
         data_type: int32
         scan_interval: 60
-        
-      - name: Wattsonic RW BMS ProtectionCode #Table 3.9
-        unique_id: wattsonic_rw_bms_protectioncode
+
+      - name: Sunways RW BMS ProtectionCode #Table 3.9
+        unique_id: sunways_rw_bms_protectioncode
         slave: 247
         address: 53511
         input_type: holding
         data_type: int32
         scan_interval: 60
-      
-      - name: Wattsonic RW BMS WarnCode #Table 3.9
-        unique_id: wattsonic_rw_bms_warncode
+
+      - name: Sunways RW BMS WarnCode #Table 3.9
+        unique_id: sunways_rw_bms_warncode
         slave: 247
         address: 53513
         input_type: holding
         data_type: int32
         scan_interval: 60
-        
-      - name: Wattsonic Ecomode Period Enable Flag #bit0- bit5 stands for period1-period6, bit7-bit15 reserved; 0: disable 1: enable
+
+
+      - name: Sunways Ecomode Period Enable Flag #bit0- bit5 stands for period1-period6, bit7-bit15 reserved; 0: disable 1: enable
       #1=one line; #3=2 lines; 7=4lines; 15=5lines; 31=6lines
-        unique_id: wattsonic_ecomode_period_enable_flag
+        unique_id: sunways_ecomode_period_enable_flag
         slave: 247
         address: 53006
         input_type: holding
         data_type: int16
         scan_interval: 60
-        
-      - name: Wattsonic Ecomode Period1 Struct
-        unique_id: wattsonic_ecomode_period1_struct
+
+      - name: Sunways Ecomode Period1 Struct
+        unique_id: sunways_ecomode_period1_struct
         slave: 247
         address: 53007
         input_type: holding
+        count: 7
         data_type: custom
         structure: ">HHHHHHH"
         scan_interval: 60
-        count: 7 
-      
-      - name: Wattsonic Ecomode Period2 Struct
-        unique_id: wattsonic_ecomode_period2_struct
+
+      - name: Sunways Ecomode Period2 Struct
+        unique_id: sunways_ecomode_period2_struct
         slave: 247
         address: 53014
         input_type: holding
-        data_type: custom
         count: 7
+        data_type: custom
         structure: ">HHHHHHH"
         scan_interval: 60
+
 #how to write data:
 #service: modbus.write_register
 #data:
-#  hub: wattsonic
+#  hub: sunways
 #  address: 53007
 #  slave: 247
 #  value:
@@ -1212,54 +1238,55 @@ modbus:
 sensor:
   - platform: template
     sensors:
-      wattsonic_battery_mode_text:
-         friendly_name: Wattsonic Battery Mode
-         unique_id: wattsonic_battery_mode_text
+      sunways_battery_mode_text:
+         friendly_name: Sunways Battery Mode
+         unique_id: sunways_battery_mode_text
          value_template: >
-            {% if states('sensor.wattsonic_battery_mode') == '0' %}
+            {% if states('sensor.sunways_battery_mode') == '0' %}
                 discharge
             {% else %}
                 charge
             {% endif %}
-      wattsonic_hybrid_inverter_working_mode_setting_text:
-         friendly_name: Wattsonic Hybrid Inverter Working Mode
+      sunways_hybrid_inverter_working_mode_setting_text:
+         friendly_name: Sunways Hybrid Inverter Working Mode
          value_template: >
-            {% if states('sensor.wattsonic_hybrid_inverter_working_mode_setting') == '257' %}
+            {% if states('sensor.sunways_hybrid_inverter_working_mode_setting') == '257' %}
                 General mode
-            {% elif states('sensor.wattsonic_hybrid_inverter_working_mode_setting') == '258' %}
+            {% elif states('sensor.sunways_hybrid_inverter_working_mode_setting') == '258' %}
                 Economic mode
-            {% elif states('sensor.wattsonic_hybrid_inverter_working_mode_setting') == '259' %}
+            {% elif states('sensor.sunways_hybrid_inverter_working_mode_setting') == '259' %}
                 UPS mode
-            {% elif states('sensor.wattsonic_hybrid_inverter_working_mode_setting') == '512' %}
+            {% elif states('sensor.sunways_hybrid_inverter_working_mode_setting') == '512' %}
                 Offgrid mode
             {% endif %}
-      wattsonic_inverter_running_status_text:
-         friendly_name: Wattsonic Inverter Running Status
+      sunways_inverter_running_status_text:
+         friendly_name: Sunways Inverter Running Status
          value_template: >
-            {% if states('sensor.wattsonic_inverter_running_status') == '0' %}
+            {% if states('sensor.sunways_inverter_running_status') == '0' %}
                 wait
-            {% elif states('sensor.wattsonic_inverter_running_status') == '1' %}
+            {% elif states('sensor.sunways_inverter_running_status') == '1' %}
                 check
-            {% elif states('sensor.wattsonic_inverter_running_status') == '2' %}
+            {% elif states('sensor.sunways_inverter_running_status') == '2' %}
                 On Grid
-            {% elif states('sensor.wattsonic_inverter_running_status') == '3' %}
+            {% elif states('sensor.sunways_inverter_running_status') == '3' %}
                 fault
-            {% elif states('sensor.wattsonic_inverter_running_status') == '4' %}
+            {% elif states('sensor.sunways_inverter_running_status') == '4' %}
                 flash
-            {% elif states('sensor.wattsonic_inverter_running_status') == '5' %}
+            {% elif states('sensor.sunways_inverter_running_status') == '5' %}
                 Off Grid
             {% endif %}
-      wattsonic_battery_soc_eta:
-         friendly_name: Wattsonic Battery SOC ETA
+      sunways_battery_soc_eta:
+         friendly_name: Sunways Battery SOC ETA
+         unique_id: sunways_battery_soc_eta
          value_template: >
-            {% set battery_SOC = float(states("sensor.wattsonic_battery_soc"), default=100) %}
-            {% set battery_SOC_last = float(states("sensor.wattsonic_battery_soc_5min_state"), default=0) %}
-            {% set timediff = (states.sensor.wattsonic_battery_soc.last_updated.timestamp() - as_datetime(states("sensor.wattsonic_battery_soc_5min_last_updated")).timestamp())/60 %}
+            {% set battery_SOC = float(states("sensor.sunways_battery_soc"), default=100) %}
+            {% set battery_SOC_last = float(states("sensor.sunways_battery_soc_5min_state"), default=0) %}
+            {% set timediff = (states.sensor.sunways_battery_soc.last_updated.timestamp() - as_datetime(states("sensor.sunways_battery_soc_5min_last_updated")).timestamp())/60 %}
             {% set percdiff = battery_SOC - battery_SOC_last %}
             {% if battery_SOC>99: %}
                 full
             {% elif percdiff==0 or timediff==0: %}
-                {{ states('sensor.wattsonic_battery_soc_eta') }}
+                {{ states('sensor.sunways_battery_soc_eta') }}
             {% elif battery_SOC<=20: %}
                 almost dicharged
             {% elif percdiff<=0: %}
@@ -1271,14 +1298,14 @@ sensor:
                 {% set timemissing = (percmissing / (percdiff/timediff))|round  %}
                 ↑{{ as_local(as_datetime(as_timestamp(utcnow()) + timemissing*60)).strftime("%Y-%M-%d %H:%M") }}↑
             {% endif %}
-      wattsonic_grid_injection_energy_on_that_day_15min:   #sell in last 15min
-         friendly_name: Wattsonic Grid Injection 15min
-         unique_id: wattsonic_grid_injection_energy_on_that_day_15min
+      sunways_grid_injection_energy_on_that_day_15min:   #sell in last 15min
+         friendly_name: Sunways Grid Injection 15min
+         unique_id: sunways_grid_injection_energy_on_that_day_15min
          unit_of_measurement: kW
          device_class: power
          value_template: >
-            {% set diff = (float(states("sensor.wattsonic_grid_injection_energy_on_that_day"), default=0) - float(states("sensor.wattsonic_grid_injection_energy_on_that_day_15min_state"), default=0) ) %}
-            {% set timediff = (states.sensor.wattsonic_grid_injection_energy_on_that_day.last_updated.timestamp() - as_datetime(states("sensor.wattsonic_grid_injection_energy_on_that_day_15min_last_updated")).timestamp())/60 %}
+            {% set diff = (float(states("sensor.sunways_grid_injection_energy_on_that_day"), default=0) - float(states("sensor.sunways_grid_injection_energy_on_that_day_15min_state"), default=0) ) %}
+            {% set timediff = (states.sensor.sunways_grid_injection_energy_on_that_day.last_updated.timestamp() - as_datetime(states("sensor.sunways_grid_injection_energy_on_that_day_15min_last_updated")).timestamp())/60 %}
             {% if timediff==0 or diff<=0: %}
                 {{ float(0) }}
             {% else %}
@@ -1291,73 +1318,131 @@ sensor:
             {% endif %}
          attribute_templates:
            diff: >
-            {% set diff = (float(states("sensor.wattsonic_grid_injection_energy_on_that_day"), default=0) - float(states("sensor.wattsonic_grid_injection_energy_on_that_day_15min_state"), default=0) ) %}
+            {% set diff = (float(states("sensor.sunways_grid_injection_energy_on_that_day"), default=0) - float(states("sensor.sunways_grid_injection_energy_on_that_day_15min_state"), default=0) ) %}
             {{ diff }}
            timediff: >
-            {% set timediff = (states.sensor.wattsonic_grid_injection_energy_on_that_day.last_updated.timestamp() - as_datetime(states("sensor.wattsonic_grid_injection_energy_on_that_day_15min_last_updated")).timestamp())/60 %}
+            {% set timediff = (states.sensor.sunways_grid_injection_energy_on_that_day.last_updated.timestamp() - as_datetime(states("sensor.sunways_grid_injection_energy_on_that_day_15min_last_updated")).timestamp())/60 %}
             {{ timediff }}           
-      wattsonic_home_consumption_now:
-         friendly_name: Wattsonic Home Consumption Now
-         unique_id: wattsonic_home_consumption_now
+      sunways_home_consumption_now:
+         friendly_name: Sunways Home Consumption Now
+         unique_id: sunways_home_consumption_now
          unit_of_measurement: kW
          device_class: power
          value_template: >
-            {% set diff = (float(states("sensor.wattsonic_p_ac"), default=0) 
-                         - float(states("sensor.wattsonic_total_power_on_meter"), default=0)) | round(3) %}
+            {% set diff = (float(states("sensor.sunways_p_ac"), default=0) 
+                         - float(states("sensor.sunways_total_power_on_meter"), default=0)) | round(3) %}
             {% if diff>0: %}
                 {{ diff }}
             {% else %}
-                {{ (float(states("sensor.wattsonic_home_consumption_now"), default=0)) }}
+                {{ (float(states("sensor.sunways_home_consumption_now"), default=0)) }}
             {% endif %}
          
-      wattsonic_home_consumption_today:
-         friendly_name: Wattsonic Home Consumption Today
-         unique_id: wattsonic_home_consumption_today
+      sunways_home_consumption_today:
+         friendly_name: Sunways Home Consumption Today
+         unique_id: sunways_home_consumption_today
          unit_of_measurement: kWh
          device_class: energy
-         value_template: '{{ float(states(''sensor.wattsonic_loading_energy_on_that_day''), default= float(states(''sensor.wattsonic_home_consumption_today''), default=-10)) 
-                         + float(states(''sensor.wattsonic_backup_output_energy_on_that_day''), default=0) }}'
-      wattsonic_home_consumption_today2:
-         friendly_name: Wattsonic Home Consumption Today2
-         unique_id: wattsonic_home_consumption_today2
+         value_template: '{{ float(states(''sensor.sunways_loading_energy_on_that_day''), default= float(states(''sensor.sunways_home_consumption_today''), default=-10)) 
+                         + float(states(''sensor.sunways_backup_output_energy_on_that_day''), default=0) }}'
+      sunways_home_consumption_today2:
+         friendly_name: Sunways Home Consumption Today2
+         unique_id: sunways_home_consumption_today2
          unit_of_measurement: kWh
          device_class: energy
-         value_template: '{{ (float(states(''sensor.wattsonic_pv_generation_energy_on_that_day''), default= float(states(''sensor.wattsonic_home_consumption_today2''), default=-10)) 
-                         + float(states(''sensor.wattsonic_grid_purchasing_energy_on_that_day''), default=0)
-                         - float(states(''sensor.wattsonic_grid_injection_energy_on_that_day''), default=0)
-                         - float(states(''sensor.wattsonic_battery_charge_energy_on_that_day''), default=0) 
-                         + float(states(''sensor.wattsonic_battery_discharge_energy_on_that_day''), default=0)) | round(3) }}'
+         value_template: '{{ (float(states(''sensor.sunways_pv_generation_energy_on_that_day''), default= float(states(''sensor.sunways_home_consumption_today2''), default=-10)) 
+                         + float(states(''sensor.sunways_grid_purchasing_energy_on_that_day''), default=0)
+                         - float(states(''sensor.sunways_grid_injection_energy_on_that_day''), default=0)
+                         - float(states(''sensor.sunways_battery_charge_energy_on_that_day''), default=0) 
+                         + float(states(''sensor.sunways_battery_discharge_energy_on_that_day''), default=0)) | round(3) }}'
+
+      sunways_battery_p_w:
+         friendly_name: Sunways Battery P Watt
+         unique_id: sunways_battery_p_w
+         unit_of_measurement: W
+         device_class: power
+         value_template: '{{ (states(''sensor.sunways_battery_p'')|float(0)*1000)|round(0) }}'
+      sunways_total_power_on_meter_w:
+         friendly_name: Sunways Total Power On Meter Watt
+         unique_id: sunways_total_power_on_meter_w
+         unit_of_measurement: W
+         device_class: power
+         value_template: '{{ (states(''sensor.sunways_total_power_on_meter'')|float(0)*-1000)|round(0) }}'
+      sunways_pv1_input_power_w:
+         friendly_name: Sunways PV1 Input Power Watt
+         unique_id: sunways_pv1_input_power_w
+         unit_of_measurement: W
+         device_class: power
+         value_template: '{{ (states(''sensor.sunways_pv1_input_power'')|float(0)*1000)|round(0) }}'
+      sunways_pv2_input_power_w:
+         friendly_name: Sunways PV2 Input Power Watt
+         unique_id: sunways_pv2_input_power_w
+         unit_of_measurement: W
+         device_class: power
+         value_template: '{{ (states(''sensor.sunways_pv2_input_power'')|float(0)*1000)|round(0) }}'
+      sunways_home_consumption_now_w:
+         friendly_name: Sunways Home Consumption Now Watt
+         unique_id: sunways_home_consumption_now_w
+         unit_of_measurement: W
+         device_class: power
+         value_template: '{{ (states(''sensor.sunways_home_consumption_now'')|float(0)*1000)|round(0) }}'
+      sunways_phase_a_power_on_meter_w:
+         friendly_name: Sunways Phase A Power on Meter Watt
+         unique_id: sunways_phase_a_power_on_meter_w
+         unit_of_measurement: W
+         device_class: power
+         value_template: '{{ (states(''sensor.sunways_phase_a_power_on_meter'')|float(0)*1000)|round(0) }}'
+      sunways_phase_b_power_on_meter_w:
+         friendly_name: Sunways Phase B Power on Meter Watt
+         unique_id: sunways_phase_b_power_on_meter_w
+         unit_of_measurement: W
+         device_class: power
+         value_template: '{{ (states(''sensor.sunways_phase_b_power_on_meter'')|float(0)*1000)|round(0) }}'
+      sunways_phase_c_power_on_meter_w:
+         friendly_name: Sunways Phase C Power on Meter Watt
+         unique_id: sunways_phase_c_power_on_meter_w
+         unit_of_measurement: W
+         device_class: power
+         value_template: '{{ (states(''sensor.sunways_phase_c_power_on_meter'')|float(0)*1000)|round(0) }}'
+      sunways_sunsync_grid_connected:
+         friendly_name: Sunways Sunsync Grid Connected
+         unique_id: sunways_sunsync_grid_connected
+         value_template: >
+           {% if states('sensor.sunways_inverter_running_status') == '2' %} 
+              1
+           {% else %}
+              0
+           {% endif %}
 
 #jeden riadok 1 - 2,65535,65535,860,65535,1,7; cas je 00:01-00:07
 #druhy riadok 3 - 1,0,65535,235,65535,5915,5937; cas je 23:27-23:49; 23.5%
 #druhy riadok 3 - 2,65535,65535,860,65535,0,256; cas je 00:00-01:00
 #druhy riadok 3 - 2,65535,65535,860,65535,512,768; cas je 02:00-03:00
 #
-      wattsonic_ecomode_period1_chargedischarge_setting:
-         friendly_name: Wattsonic Ecomode Period1 ChargeDischarge Setting #Period1: 0:NONE 1:charge 2:discharge
-         unique_id: wattsonic_ecomode_period1_chargedischarge_setting
-         value_template: '{{ states(''sensor.wattsonic_ecomode_period1_struct'').split('','')[0]|default(-1) }}'
-      wattsonic_ecomode_period1_battery_charge_by:   
-         friendly_name: Wattsonic Ecomode Period1 Battery Charge By #0:PV 1:PV+GRID
-         unique_id: wattsonic_ecomode_period1_battery_charge_by
-         value_template: '{{ states(''sensor.wattsonic_ecomode_period1_struct'').split('','')[1]|default(-1) }}'
-      wattsonic_ecomode_period1_power_limit:   
-         friendly_name: Wattsonic Ecomode Period1 Power Limit #[0.0-100.0%]
-         unique_id: wattsonic_ecomode_period1_power_limit
+      sunways_ecomode_period1_chargedischarge_setting:
+         friendly_name: Sunways Ecomode Period1 ChargeDischarge Setting #Period1: 0:NONE 1:charge 2:discharge
+         unique_id: sunways_ecomode_period1_chargedischarge_setting
+         value_template: '{{ states(''sensor.sunways_ecomode_period1_struct'').split('','')[0]|default(-1) }}'
+      sunways_ecomode_period1_battery_charge_by:   
+         friendly_name: Sunways Ecomode Period1 Battery Charge By #0:PV 1:PV+GRID
+         unique_id: sunways_ecomode_period1_battery_charge_by
+         value_template: '{{ states(''sensor.sunways_ecomode_period1_struct'').split('','')[1]|default(-1) }}'
+      sunways_ecomode_period1_power_limit:   
+         friendly_name: Sunways Ecomode Period1 Power Limit #[0.0-100.0%]
+         unique_id: sunways_ecomode_period1_power_limit
          unit_of_measurement: '%'
-         value_template: '{{ states(''sensor.wattsonic_ecomode_period1_struct'').split('','')[3]|float(0)/10|default(-1) }}'
-      wattsonic_ecomode_period1_start_time:
-         friendly_name: Wattsonic Ecomode Period1 Start Time #High 8bits(Hour):[0,23] Low 8bits(Mins):[0,59]
-         unique_id: wattsonic_ecomode_period1_start_time
-         value_template: '{{ ((states(''sensor.wattsonic_ecomode_period1_struct'').split('','')[5]|int//256)|string).zfill(2) }}:{{ ((states(''sensor.wattsonic_ecomode_period1_struct'').split('','')[5]|int%256)|string).zfill(2) }}'
-      wattsonic_ecomode_period1_end_time:
-         friendly_name: Wattsonic Ecomode Period1 End Time #High 8bits(Hour):[0,23] Low 8bits(Mins):[0,59]
-         unique_id: wattsonic_ecomode_period1_end_time
-         value_template: '{{ ((states(''sensor.wattsonic_ecomode_period1_struct'').split('','')[6]|int//256)|string).zfill(2) }}:{{ ((states(''sensor.wattsonic_ecomode_period1_struct'').split('','')[6]|int%256)|string).zfill(2) }}'
-      wattsonic_ecomode_period_enable_flag_bin:
-         friendly_name: Wattsonic Ecomode Period Enable Flag Binary
-         unique_id: wattsonic_ecomode_period_enable_flag_bin
-         value_template: '{{ (''{:b}''.format(states(''sensor.wattsonic_ecomode_period_enable_flag'')|int)).ljust(6, ''0'') }}'
+         value_template: '{{ states(''sensor.sunways_ecomode_period1_struct'').split('','')[3]|float(0)/10|default(-1) }}'
+      sunways_ecomode_period1_start_time:
+         friendly_name: Sunways Ecomode Period1 Start Time #High 8bits(Hour):[0,23] Low 8bits(Mins):[0,59]
+         unique_id: sunways_ecomode_period1_start_time
+         value_template: '{{ ((states(''sensor.sunways_ecomode_period1_struct'').split('','')[5]|int//256)|string).zfill(2) }}:{{ ((states(''sensor.sunways_ecomode_period1_struct'').split('','')[5]|int%256)|string).zfill(2) }}'
+      sunways_ecomode_period1_end_time:
+         friendly_name: Sunways Ecomode Period1 End Time #High 8bits(Hour):[0,23] Low 8bits(Mins):[0,59]
+         unique_id: sunways_ecomode_period1_end_time
+         value_template: '{{ ((states(''sensor.sunways_ecomode_period1_struct'').split('','')[6]|int//256)|string).zfill(2) }}:{{ ((states(''sensor.sunways_ecomode_period1_struct'').split('','')[6]|int%256)|string).zfill(2) }}'
+      sunways_ecomode_period_enable_flag_bin:
+         friendly_name: Sunways Ecomode Period Enable Flag Binary
+         unique_id: sunways_ecomode_period_enable_flag_bin
+         value_template: '{{ (''{:b}''.format(states(''sensor.sunways_ecomode_period_enable_flag'')|int)).ljust(6, ''0'') }}'
 
 
 #Normal help
@@ -1379,7 +1464,13 @@ sensor:
 #Note: If there’s no grid connection when configuring the hybrid system, please set the work mode to “Off-grid” to enable 
 #the power output in back-up port and switch to other modes when grid comes back.
 
-#Wattsonic Minimal import from grid alghoritm
+# UPS mode
+# Power grid is connected, power from PV or grid will firstly charge the battery until it’s full, 
+# and loads will be supplied by the grid during charging period. Battery will not discharge power when the grid is connected. 
+# Power grid fails, and PV power is insufficient to meet the loads' consumption, the battery will discharge power to supply 
+# loads connected to the back-up port.
+
+#Sunways Minimal import from grid alghoritm
 #aim is not to buy energy for the inverter when not needed. Inverter is switched to Off-grid mode when the battery SOC is between 30-99
 #inverter takes cca 1,7kWh/day or 70W/h
 #usefull when household consumption is low and battery storage can last for whole night
@@ -1401,30 +1492,31 @@ sensor:
 #* = event, withou asterix are conditions
 automation:
 - id: '1679907434474'
-  alias: Wattsonic Minimal import from grid set General Mode
+  alias: Sunways Minimal import from grid set General Mode
   description: turn on General mode => when battery full, energy goes also to grid
   trigger:
   - platform: numeric_state
-    entity_id: sensor.wattsonic_battery_soc
+    entity_id: sensor.sunways_battery_soc
     above: 99.8
   - platform: numeric_state
-    entity_id: sensor.wattsonic_battery_soc
+    entity_id: sensor.sunways_battery_soc
     below: 30
   - platform: numeric_state
-    entity_id: sensor.wattsonic_battery_soc
+    entity_id: sensor.sunways_battery_soc
     below: 25
   condition:
   - condition: not
     conditions:
     - condition: state
-      entity_id: sensor.wattsonic_hybrid_inverter_working_mode_setting_text
+      entity_id: sensor.sunways_hybrid_inverter_working_mode_setting_text
       state: General mode
   action:
-  - service: script.wattsonic_mode_general
+  - service: script.sunways_mode_general
     data: {}
+    enabled: false
   mode: single
 - id: '1679935088587'
-  alias: Wattsonic Minimal import from grid set Off-grid Mode
+  alias: Sunways Minimal import from grid set Off-grid Mode
   description: ''
   trigger:
   - platform: sun
@@ -1432,70 +1524,146 @@ automation:
     offset: -01:00:00
   condition:
   - condition: numeric_state
-    entity_id: sensor.wattsonic_battery_soc
+    entity_id: sensor.sunways_battery_soc
     above: 60
   - condition: state
-    entity_id: sensor.wattsonic_hybrid_inverter_working_mode_setting_text
+    entity_id: sensor.sunways_hybrid_inverter_working_mode_setting_text
     state: General mode
   action:
-  - service: script.wattsonic_mode_offgrid
+  - service: script.sunways_mode_offgrid
     data: {}
+    enabled: false
   mode: single
 
 script:
-  wattsonic_mode_economic:
-    alias: wattsonic_mode_economic
+  sunways_mode_ups:
+    alias: sunways_mode_ups
     sequence:
     - service: modbus.write_register
       data:
         address: 50000
-        hub: Sunways
+        hub: sunways
+        slave: 247
+        value: 259
+    mode: single
+    icon: mdi:alpha-w-box
+  sunways_mode_economic:
+    alias: sunways_mode_economic
+    sequence:
+    - service: modbus.write_register
+      data:
+        address: 50000
+        hub: sunways
         slave: 247
         value: 258
     mode: single
     icon: mdi:alpha-w-box
-  wattsonic_mode_general:
-    alias: wattsonic_mode_general
+  sunways_mode_general:
+    alias: sunways_mode_general
     sequence:
     - service: modbus.write_register
       data:
         address: 50000
-        hub: Sunways
+        hub: sunways
         slave: 247
         value: 257
     mode: single
     icon: mdi:alpha-w-box
-  wattsonic_mode_offgrid:
-    alias: wattsonic_mode_offgrid
+  sunways_mode_offgrid:
+    alias: sunways_mode_offgrid
     sequence:
     - service: modbus.write_register
       data:
         address: 50000
-        hub: Sunways
+        hub: sunways
         slave: 247
         value: 512
     mode: single
     icon: mdi:alpha-w-box
-  # wattsonic_set_grid_injection_power_limit_switch:
-    # alias: Wattsonic Set Grid Injection Power Limit Switch
+  # sunways_set_grid_injection_power_limit_switch:
+    # alias: Sunways Set Grid Injection Power Limit Switch
     # sequence:
     # - service: modbus.write_register
       # data:
         # address: 25100
-        # hub: wattsonic
+        # hub: sunways
         # slave: 247
         # value: '{{ switch }}'
     # mode: single
     # icon: mdi:alpha-w-box
     
-  wattsonic_set_grid_injection_power_limit_setting:
-    alias: Wattsonic Set Grid Injection Power Limit Setting
+  sunways_set_grid_injection_power_limit_setting:
+    alias: Sunways Set Grid Injection Power Limit Setting
     sequence:
     - service: modbus.write_register
       data:
         address: 25103
-        hub: Sunways
+        hub: sunways
         slave: 247
         value: '{{ float(limit)*10 }}'
     mode: single
     icon: mdi:alpha-w-box
+
+  sunways_charge_battery_from_grid:
+    alias: sunways_charge_battery_from_grid
+    sequence:
+    - service: modbus.write_register
+      data:
+        hub: sunways
+        slave: 247
+        address: 53006
+        value: 1
+    - service: modbus.write_register
+      data:
+        hub: sunways
+        slave: 247
+        address: 53007
+        value:
+        - 1
+        - 1
+        - 65535
+        - 1000
+        - 65535
+        - 0
+        - 5947
+    - service: script.sunways_mode_economic
+      data: {}
+    - wait_for_trigger:
+      - platform: state
+        entity_id:
+        - sensor.sunways_hybrid_inverter_working_mode_setting
+        to: '258'
+      timeout:
+        hours: 0
+        minutes: 10
+        seconds: 0
+        milliseconds: 0
+    - if:
+      - condition: state
+        entity_id: sensor.sunways_battery_mode   #0:discharge;1:charge
+        state: '0'
+      then:
+      - wait_for_trigger:
+        - platform: state
+          entity_id:
+          - sensor.sunways_battery_mode
+          to: '1'
+        timeout:
+          hours: 0
+          minutes: 10
+          seconds: 0
+          milliseconds: 0
+    - wait_for_trigger:
+      - platform: state
+        entity_id:
+        - sensor.sunways_battery_mode
+        to: '0'
+      timeout:
+        hours: 3
+        minutes: 0
+        seconds: 0
+        milliseconds: 0
+    - service: script.sunways_mode_general
+      data: {}
+    mode: single
+ 
