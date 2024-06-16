@@ -1,0 +1,225 @@
+#hacks addon https://github.com/enkama/hass-variables
+#install addon in hacks
+#restart hass os
+#in Devices and services add Variables+History
+#include package in configuration.yaml
+#homeassistant:
+#  packages:
+#    wattsonic_history: !include wattsonic_Variables+History.yaml
+
+variable:
+  wattsonic_battery_soc_5min_history:
+    value: 0
+    restore: true
+    exclude_from_recorder: true
+    unique_id: wattsonic_battery_soc_5min_history
+    attributes:
+      icon: mdi:history
+  wattsonic_battery_soc_eta:
+    value: "init"
+    restore: true
+    exclude_from_recorder: true
+    unique_id: wattsonic_battery_soc_eta
+    friendly_name: Wattsonic Battery SOC ETA
+    attributes:
+      icon: mdi:clock
+
+  wattsonic_grid_injection_energy_on_that_day_15min_history:
+    value: 0
+    restore: true
+    exclude_from_recorder: true
+    unique_id: wattsonic_grid_injection_energy_on_that_day_15min_history
+    attributes:
+      icon: mdi:history
+  wattsonic_grid_injection_energy_on_that_day_15min:
+    value: 0
+    restore: true
+    exclude_from_recorder: true
+    unique_id: wattsonic_grid_injection_energy_on_that_day_15min
+    friendly_name: Wattsonic Grid Injection Energy on that Day 15min
+    unit_of_measurement: kW
+    device_class: power
+#    attributes:
+#      icon: mdi:clock
+
+ 
+automation:
+- id: '1713384461619'
+  alias: wattsonic_battery_soc_5min_history_update
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.wattsonic_battery_soc
+  condition: []
+  action:
+  - service: variable.update_sensor
+    target:
+      entity_id: sensor.wattsonic_battery_soc_5min_history
+    data:
+      replace_attributes: true
+      value: '{{ now().strftime("%d.%m.%Y %H:%M:%S") }}'
+      attributes:
+        hist: >
+          {% set maxTime = 5 %}
+          {% set hist_sensor = "sensor.wattsonic_battery_soc_5min_history" %} 
+          {% set json_new = 
+               {"timestamp": as_timestamp(now()),
+                "date": now().strftime("%d.%m.%Y %H:%M:%S"),
+                "value": float(states('sensor.wattsonic_battery_soc'))| default(0) } 
+            %}
+          {% set hist_new = namespace(data=[]) %}
+          {% set hist_old = namespace(data=[]) %}
+          {% if not is_state_attr(hist_sensor, "hist", "unknown") and not state_attr(hist_sensor, "hist") is none %}
+            {% set hist_old.data = state_attr(hist_sensor, "hist") %}
+          {% endif%}
+          
+          {% for json1 in hist_old.data %}
+            {% if json_new.timestamp-json1.timestamp <= maxTime*60+15  %}
+              {% set hist_new.data =  hist_new.data + [(json1)] %}
+            {% endif %}
+          {% endfor %}
+          {% set hist_new.data = hist_new.data + [json_new] %}
+          {{ hist_new.data }}
+  - service: variable.update_sensor
+    target:
+      entity_id: sensor.wattsonic_battery_soc_eta
+    data:
+      replace_attributes: true
+      value: >
+        {% set battery_SOC = float(states("sensor.wattsonic_battery_soc"), default=100) %}
+        {% if state_attr("sensor.wattsonic_battery_soc_5min_history","hist") is none
+              or states("sensor.wattsonic_battery_soc") is none
+              or state_attr("sensor.wattsonic_battery_soc_5min_history","hist")[0].value is none
+              or state_attr("sensor.wattsonic_battery_soc_5min_history","hist")[0].timestamp is none %}
+            {% set battery_SOC_last = 0 %}
+            {% set timediff = 1 %}
+        {% else %}
+            {% set battery_SOC_last = state_attr("sensor.wattsonic_battery_soc_5min_history","hist")[0].value %}
+            {% set timediff = (states.sensor.wattsonic_battery_soc_5min_history.last_updated.timestamp()|float(0) - state_attr("sensor.wattsonic_battery_soc_5min_history","hist")[0].timestamp )/60 %}
+        {% endif %}
+        {% set percdiff = battery_SOC - battery_SOC_last %}
+        {% set discharge_value = float(states("sensor.wattsonic_on_grid_battery_end_soc"), default=20) %}
+        {% if battery_SOC>99: %}
+            full
+        {% elif percdiff==0 or timediff==0: %}
+            {{ states('sensor.wattsonic_battery_soc_eta') }}
+        {% elif battery_SOC<=discharge_value: %}
+            almost dicharged
+        {% elif percdiff<=0: %}
+            {% set percmissing = battery_SOC-discharge_value %}
+            {% set timemissing = (percmissing / (percdiff/timediff))|round  %}
+            ↓{{ as_local(as_datetime(as_timestamp(utcnow()) - timemissing*60)).strftime("%d.%m.%Y %H:%M") }}↓
+        {% else %}
+            {% set percmissing = 100-battery_SOC %}
+            {% set timemissing = (percmissing / (percdiff/timediff))|round  %}
+            ↑{{ as_local(as_datetime(as_timestamp(utcnow()) + timemissing*60)).strftime("%d.%m.%Y %H:%M") }}↑
+        {% endif %}
+      attributes:
+        timediff: >
+          {% if    state_attr("sensor.wattsonic_battery_soc_5min_history","hist") is none
+                or states("sensor.wattsonic_battery_soc") is none
+                or state_attr("sensor.wattsonic_battery_soc_5min_history","hist")[0].timestamp is none %}
+              {% set timediff = 0 %}
+          {% else %}
+              {% set timediff = (states.sensor.wattsonic_battery_soc_5min_history.last_updated.timestamp()|float(0) - float(state_attr("sensor.wattsonic_battery_soc_5min_history","hist")[0].timestamp | default(0)) )/60 %}
+          {% endif %}
+          {{ timediff }}
+        percdiff: >
+          {% set battery_SOC = float(states("sensor.wattsonic_battery_soc"), default=100) %}
+          {% if state_attr("sensor.wattsonic_battery_soc_5min_history","hist") is none
+            or state_attr("sensor.wattsonic_battery_soc_5min_history","hist")[0].value is none %}
+              {% set battery_SOC_last = 0 %}
+          {% else %}
+              {% set battery_SOC_last = float(state_attr("sensor.wattsonic_battery_soc_5min_history","hist")[0].value, default=0) %}
+          {% endif %}
+          {% set percdiff = battery_SOC - battery_SOC_last %}
+          {{ percdiff }}
+
+- id: '1713466950344'
+  alias: wattsonic_grid_injection_energy_on_that_day_15min_history_update
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.wattsonic_battery_soc
+    - sensor.wattsonic_grid_injection_energy_on_that_day
+  condition:
+  - condition: sun
+    before: sunset
+    after: sunrise
+    after_offset: '1:00:00'
+    before_offset: '-1:00:00'
+  action:
+  - service: variable.update_sensor
+    target:
+      entity_id: sensor.wattsonic_grid_injection_energy_on_that_day_15min_history
+    data:
+      replace_attributes: true
+      value: '{{ now().strftime("%d.%m.%Y %H:%M:%S") }}'
+      attributes: 
+        hist: >
+          {% set maxTime = 15 %} {% set hist_sensor =
+          "sensor.wattsonic_grid_injection_energy_on_that_day_15min_history" %}
+          {% set json_new = 
+               {"timestamp": as_timestamp(now()),
+                "date": now().strftime("%d.%m.%Y %H:%M:%S"),
+                "value": float(states('sensor.wattsonic_grid_injection_energy_on_that_day'))| default(0) }
+                %}
+          {% set hist_new = namespace(data=[]) %}
+          {% set hist_old = namespace(data=[]) %}
+          {% if not is_state_attr(hist_sensor, "hist", "unknown") and not state_attr(hist_sensor, "hist") is none %}
+            {% set hist_old.data = state_attr(hist_sensor, "hist") %}
+          {% endif%}
+
+          {% for json1 in hist_old.data %}
+            {% if json_new.timestamp-json1.timestamp <= maxTime*60+15 %}
+              {% set hist_new.data =  hist_new.data + [(json1)] %}
+            {% endif %}
+          {% endfor %}
+
+          {% set hist_new.data = hist_new.data + [json_new] %}
+          {{ hist_new.data }}
+  - service: variable.update_sensor
+    target:
+      entity_id: sensor.wattsonic_grid_injection_energy_on_that_day_15min
+    data:
+      replace_attributes: true
+      value: >
+            {% if    state_attr("sensor.wattsonic_grid_injection_energy_on_that_day_15min_history","hist") is none
+                  or state_attr("sensor.wattsonic_grid_injection_energy_on_that_day_15min_history","hist")[0].value is none
+                  or state_attr("sensor.wattsonic_grid_injection_energy_on_that_day_15min_history","hist")[0].timestamp is none %}
+                {% set diff = 0 %}
+                {% set timediff = 0 %}
+            {% else %}
+                {% set diff = float(states("sensor.wattsonic_grid_injection_energy_on_that_day"), default=0) - state_attr("sensor.wattsonic_grid_injection_energy_on_that_day_15min_history","hist")[0].value %}
+                {% set timediff = (states.sensor.wattsonic_grid_injection_energy_on_that_day_15min_history.last_updated.timestamp() - state_attr("sensor.wattsonic_grid_injection_energy_on_that_day_15min_history","hist")[0].timestamp)/60 %}
+            {% endif %}
+            {% if timediff==0 or diff<=0: %}
+                 0
+            {% elif timediff < 10: %}
+                 0
+            {% else %}
+                {% set res = (diff/timediff*60) %}
+                {{ res| round(1) }}
+            {% endif %}
+      attributes:
+           updated: > 
+             {{ now().strftime("%d.%m.%Y %H:%M:%S") }}
+           diff: >
+             {% if    state_attr("sensor.wattsonic_grid_injection_energy_on_that_day_15min_history","hist") is none
+                   or state_attr("sensor.wattsonic_grid_injection_energy_on_that_day_15min_history","hist")[0].value is none %}
+                 {% set diff = 0 %}
+             {% else %}
+                 {% set diff = (float(states("sensor.wattsonic_grid_injection_energy_on_that_day"), default=0) - state_attr("sensor.wattsonic_grid_injection_energy_on_that_day_15min_history","hist")[0].value ) %}
+             {% endif %}
+             {{ diff }}
+           timediff: >
+             {% if    state_attr("sensor.wattsonic_grid_injection_energy_on_that_day_15min_history","hist") is none
+                   or state_attr("sensor.wattsonic_grid_injection_energy_on_that_day_15min_history","hist")[0].timestamp is none %}
+                 {% set timediff = 0 %}
+             {% else %}
+                 {% set timediff = (states.sensor.wattsonic_grid_injection_energy_on_that_day_15min_history.last_updated.timestamp() - state_attr("sensor.wattsonic_grid_injection_energy_on_that_day_15min_history","hist")[0].timestamp)/60 %}
+             {% endif %}
+             {{ timediff }}
+  mode: single

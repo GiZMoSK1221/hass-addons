@@ -74,7 +74,6 @@ modbus:
         count: 10
         data_type: string
         scan_interval: 86400
-        lazy_error_count: 10
       - name: Wattsonic Firmware Version1
         unique_id: wattsonic_firmware_version1
         slave: 247
@@ -84,7 +83,6 @@ modbus:
         data_type: custom
         structure: ">BBBB"
         scan_interval: 600
-        lazy_error_count: 10
       - name: Wattsonic Firmware Version2
         unique_id: wattsonic_firmware_version2
         slave: 247
@@ -93,9 +91,16 @@ modbus:
         count: 2
         data_type: custom
         structure: ">BBBB"
-        scan_interval: 60
-        lazy_error_count: 10
-
+        scan_interval: 600
+      - name: Wattsonic DateTime
+        unique_id: wattsonic_datetime
+        slave: 247
+        address: 10100
+        input_type: holding
+        count: 3
+        data_type: custom
+        structure: ">BBBBBB"
+        scan_interval: 300
       - name: Wattsonic Inverter Running Status #0:wait, wait for on-grid 1:check, self-check 2:On Grid 3:fault 4:flash, firmware update 5.Off Grid
         unique_id: wattsonic_inverter_running_status
         slave: 247
@@ -103,7 +108,6 @@ modbus:
         input_type: holding
         data_type: int16
         scan_interval: 10
-        lazy_error_count: 10
       - name: Wattsonic Phase A Power on Meter
         unique_id: wattsonic_phase_a_power_on_meter
         slave: 247
@@ -116,7 +120,6 @@ modbus:
         precision: 3
         data_type: int32
         scan_interval: 10
-        lazy_error_count: 10
       - name: Wattsonic Phase B Power on Meter
         unique_id: wattsonic_phase_b_power_on_meter
         slave: 247
@@ -129,7 +132,6 @@ modbus:
         precision: 3
         data_type: int32
         scan_interval: 10
-        lazy_error_count: 10
       - name: Wattsonic Phase C Power on Meter
         unique_id: wattsonic_phase_c_power_on_meter
         slave: 247
@@ -142,7 +144,6 @@ modbus:
         precision: 3
         data_type: int32
         scan_interval: 10
-        lazy_error_count: 10
       - name: Wattsonic Total Power on Meter        #Grid power
         unique_id: wattsonic_total_power_on_meter
         slave: 247
@@ -155,7 +156,6 @@ modbus:
         precision: 3
         data_type: int32
         scan_interval: 10
-        lazy_error_count: 10
 
       - name: Wattsonic Grid Injection Energy on that day   #export/day
         unique_id: wattsonic_grid_injection_energy_on_that_day
@@ -169,7 +169,6 @@ modbus:
         device_class: energy
         data_type: int16
         scan_interval: 60
-        lazy_error_count: 10
       - name: Wattsonic Grid Purchasing Energy on that day
         unique_id: wattsonic_grid_purchasing_energy_on_that_day
         slave: 247
@@ -182,7 +181,6 @@ modbus:
         device_class: energy
         data_type: int16
         scan_interval: 60
-        lazy_error_count: 10
       - name: Wattsonic Backup Output Energy on that day
         unique_id: wattsonic_backup_output_energy_on_that_day
         slave: 247
@@ -195,7 +193,6 @@ modbus:
         device_class: energy
         data_type: int16
         scan_interval: 300
-        lazy_error_count: 10
       - name: Wattsonic Battery Charge Energy on that day
         unique_id: wattsonic_battery_charge_energy_on_that_day
         slave: 247
@@ -208,7 +205,6 @@ modbus:
         device_class: energy
         data_type: int16
         scan_interval: 60
-        lazy_error_count: 10
       - name: Wattsonic Battery Discharge Energy on that day
         unique_id: wattsonic_battery_discharge_energy_on_that_day
         slave: 247
@@ -221,7 +217,6 @@ modbus:
         device_class: energy
         data_type: int16
         scan_interval: 60
-        lazy_error_count: 10
       - name: Wattsonic PV Generation Energy on that day    #E-today from GUI
         unique_id: wattsonic_pv_generation_energy_on_that_day
         slave: 247
@@ -234,7 +229,6 @@ modbus:
         device_class: energy
         data_type: int16
         scan_interval: 60
-        lazy_error_count: 10
       - name: Wattsonic Loading Energy on that day
         unique_id: wattsonic_loading_energy_on_that_day
         slave: 247
@@ -247,7 +241,6 @@ modbus:
         device_class: energy
         data_type: int16
         scan_interval: 300
-        lazy_error_count: 10
       - name: Wattsonic Energy Purchased from Grid on that day  #on inverter side
         unique_id: wattsonic_energy_purchased_from_grid_on_that_day
         slave: 247
@@ -260,7 +253,6 @@ modbus:
         device_class: energy
         data_type: int16
         scan_interval: 300
-        lazy_error_count: 10
       - name: Wattsonic Total Energy injected to grid
         unique_id: wattsonic_total_energy_injected_to_grid
         slave: 247
@@ -273,7 +265,6 @@ modbus:
         device_class: energy
         data_type: int32
         scan_interval: 600
-        lazy_error_count: 10
       - name: Wattsonic Total Energy Purchased from Grid from Meter
         unique_id: wattsonic_total_energy_purchased_from_grid_from_meter
         slave: 247
@@ -286,7 +277,6 @@ modbus:
         device_class: energy
         data_type: int32
         scan_interval: 600
-        lazy_error_count: 10
       - name: Wattsonic Total Output Energy on backup port
         unique_id: wattsonic_total_output_energy_on_backup_port
         slave: 247
@@ -299,7 +289,6 @@ modbus:
         device_class: energy
         data_type: int32
         scan_interval: 3600
-        lazy_error_count: 10
       - name: Wattsonic Total Energy Charged to Battery
         unique_id: wattsonic_total_energy_charged_to_battery
         slave: 247
@@ -312,7 +301,6 @@ modbus:
         device_class: energy
         data_type: int32
         scan_interval: 600
-        lazy_error_count: 10
       - name: Wattsonic Total Energy Discharged from Battery
         unique_id: wattsonic_total_energy_discharged_from_battery
         slave: 247
@@ -325,7 +313,6 @@ modbus:
         device_class: energy
         data_type: int32
         scan_interval: 600
-        lazy_error_count: 10
       - name: Wattsonic Total PV Generation
         unique_id: wattsonic_total_pv_generation
         slave: 247
@@ -338,7 +325,6 @@ modbus:
         device_class: energy
         data_type: int32
         scan_interval: 600
-        lazy_error_count: 10
       - name: Wattsonic Total Loading Energy consumed at grid side  #totoal load consumption
         unique_id: wattsonic_total_loading_energy_consumed_at_grid_side
         slave: 247
@@ -351,7 +337,6 @@ modbus:
         device_class: energy
         data_type: int32
         scan_interval: 3600
-        lazy_error_count: 10
       - name: Wattsonic Total Energy Purchased from Grid at inverter side
         unique_id: wattsonic_total_energy_purchased_from_grid_at_inverter_side
         slave: 247
@@ -364,7 +349,6 @@ modbus:
         device_class: energy
         data_type: int32
         scan_interval: 3600
-        lazy_error_count: 10
 
       - name: Wattsonic Total Grid-Injection Energy on Meter
         unique_id: wattsonic_total_grid_injection_energy_on_meter
@@ -378,7 +362,6 @@ modbus:
         precision: 2
         data_type: int32
         scan_interval: 3600
-        lazy_error_count: 10
       - name: Wattsonic Total Purchasing Energy from Grid on Meter
         unique_id: wattsonic_total_purchasing_energy_from_grid_on_meter
         slave: 247
@@ -391,7 +374,6 @@ modbus:
         precision: 2
         data_type: int32
         scan_interval: 3600
-        lazy_error_count: 10
 
       - name: Wattsonic Grid Lines A/B Voltage
         unique_id: wattsonic_grid_lines_a_b_voltage
@@ -405,7 +387,6 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 60
-        lazy_error_count: 10
       - name: Wattsonic Grid Lines B/C Voltage
         unique_id: wattsonic_grid_lines_b_c_voltage
         slave: 247
@@ -418,7 +399,6 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 60
-        lazy_error_count: 10
       - name: Wattsonic Grid Lines C/A Voltage
         unique_id: wattsonic_grid_lines_c_a_voltage
         slave: 247
@@ -431,7 +411,6 @@ modbus:
         precision: 1
         data_type: int16        
         scan_interval: 60
-        lazy_error_count: 10
       - name: Wattsonic Grid Phase A Voltage
         unique_id: wattsonic_grid_phase_a_voltage
         slave: 247
@@ -444,7 +423,6 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 60
-        lazy_error_count: 10
       - name: Wattsonic Grid Phase B Voltage
         unique_id: wattsonic_grid_phase_b_voltage
         slave: 247
@@ -457,7 +435,6 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 60
-        lazy_error_count: 10
       - name: Wattsonic Grid Phase C Voltage
         unique_id: wattsonic_grid_pase_c_voltage
         slave: 247
@@ -470,7 +447,6 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 60
-        lazy_error_count: 10
       - name: Wattsonic Grid Phase A Current
         unique_id: wattsonic_grid_phase_a_current
         slave: 247
@@ -483,7 +459,6 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 60
-        lazy_error_count: 10
       - name: Wattsonic Grid Phase B Current
         unique_id: wattsonic_grid_phase_b_current
         slave: 247
@@ -496,7 +471,6 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 60
-        lazy_error_count: 10
       - name: Wattsonic Grid Phase C Current
         unique_id: wattsonic_grid_phase_c_current
         slave: 247
@@ -509,7 +483,6 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 60
-        lazy_error_count: 10
       - name: Wattsonic P AC
         unique_id: wattsonic_p_ac
         slave: 247
@@ -522,7 +495,6 @@ modbus:
         precision: 3
         data_type: int32
         scan_interval: 10
-        lazy_error_count: 10
       - name: Wattsonic Total PV Generation on that day  #energy today
         unique_id: wattsonic_total_pv_generation_on_that_day
         slave: 247
@@ -535,7 +507,6 @@ modbus:
         precision: 1
         data_type: int32
         scan_interval: 1800
-        lazy_error_count: 10
       - name: Wattsonic Total PV Generation from Installation  #energy total
         unique_id: wattsonic_total_pv_generation_from_installation
         slave: 247
@@ -548,7 +519,6 @@ modbus:
         precision: 1
         data_type: int32
         scan_interval: 3600
-        lazy_error_count: 10
       - name: Wattsonic PV Input Total Power        #PV power, panel actual power
         unique_id: wattsonic_pv_input_total_power
         slave: 247
@@ -561,7 +531,6 @@ modbus:
         precision: 3
         data_type: int32
         scan_interval: 10
-        lazy_error_count: 10
       - name: Wattsonic Temperature Sensor 1
         unique_id: wattsonic_temperature_sensor_1
         slave: 247
@@ -573,8 +542,7 @@ modbus:
         scale: 0.1
         precision: 1
         data_type: int16
-        scan_interval: 600
-        lazy_error_count: 10
+        scan_interval: 300
       - name: Wattsonic Temperature Sensor 2
         unique_id: wattsonic_temperature_sensor_2
         slave: 247
@@ -587,7 +555,6 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 600
-        lazy_error_count: 10
       - name: Wattsonic Temperature Sensor 3
         unique_id: wattsonic_temperature_sensor_3
         slave: 247
@@ -600,7 +567,6 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 600
-        lazy_error_count: 10
       - name: Wattsonic Temperature Sensor 4
         unique_id: wattsonic_temperature_sensor_4
         slave: 247
@@ -613,7 +579,6 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 600
-        lazy_error_count: 10
       - name: Wattsonic PV1 Voltage
         unique_id: wattsonic_pv1_voltage
         slave: 247
@@ -626,7 +591,6 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 300
-        lazy_error_count: 10
       - name: Wattsonic PV2 Voltage
         unique_id: wattsonic_pv2_voltage
         slave: 247
@@ -639,7 +603,6 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 300
-        lazy_error_count: 10
       - name: Wattsonic PV1 Current
         unique_id: wattsonic_pv1_current
         slave: 247
@@ -652,7 +615,6 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 300
-        lazy_error_count: 10
       - name: Wattsonic PV2 Current
         unique_id: wattsonic_pv2_current
         slave: 247
@@ -665,7 +627,6 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 300
-        lazy_error_count: 10
       - name: Wattsonic PV1 Input Power
         unique_id: wattsonic_pv1_input_power
         slave: 247
@@ -678,7 +639,6 @@ modbus:
         precision: 3
         data_type: int32
         scan_interval: 10
-        lazy_error_count: 10
       - name: Wattsonic PV2 Input Power
         unique_id: wattsonic_pv2_input_power
         slave: 247
@@ -691,7 +651,6 @@ modbus:
         precision: 3
         data_type: int32
         scan_interval: 10
-        lazy_error_count: 10
       - name: Wattsonic ARM Fault Flag1 #Table 3.3 Troubleshooting
         unique_id: wattsonic_arm_fault_flag1
         slave: 247
@@ -699,7 +658,6 @@ modbus:
         input_type: holding
         data_type: int32
         scan_interval: 60
-        lazy_error_count: 10
       - name: Wattsonic Fault Flag1 #Table 3.3 Troubleshooting
         unique_id: wattsonic_fault_flag1
         slave: 247
@@ -707,7 +665,6 @@ modbus:
         input_type: holding
         data_type: int32
         scan_interval: 60
-        lazy_error_count: 10
       - name: Wattsonic Fault Flag2 #Table 3.3 Troubleshooting
         unique_id: wattsonic_fault_flag2
         slave: 247
@@ -715,7 +672,6 @@ modbus:
         input_type: holding
         data_type: int32
         scan_interval: 60
-        lazy_error_count: 10
       - name: Wattsonic Fault Flag3 #Table 3.3 Troubleshooting
         unique_id: wattsonic_fault_flag3
         slave: 247
@@ -723,7 +679,6 @@ modbus:
         input_type: holding
         data_type: int32
         scan_interval: 60
-        lazy_error_count: 10
         
       - name: Wattsonic Total Backup P          #load power, total active power
         unique_id: wattsonic_total_backup_p
@@ -737,7 +692,6 @@ modbus:
         precision: 3
         data_type: int32
         scan_interval: 10
-        lazy_error_count: 10
 
       - name: Wattsonic Battery V #DC Voltage
         unique_id: wattsonic_battery_v
@@ -751,7 +705,6 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 300
-        lazy_error_count: 10
       - name: Wattsonic Battery I #DC Current
         unique_id: wattsonic_battery_i
         slave: 247
@@ -764,7 +717,6 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 300
-        lazy_error_count: 10
       - name: Wattsonic Battery P           #Battery Power
         unique_id: wattsonic_battery_p
         slave: 247
@@ -777,7 +729,6 @@ modbus:
         precision: 3
         data_type: int32
         scan_interval: 10
-        lazy_error_count: 10
       - name: Wattsonic Battery Mode #0:discharge;1:charge
         unique_id: wattsonic_battery_mode
         slave: 247
@@ -785,7 +736,6 @@ modbus:
         input_type: holding
         data_type: int16
         scan_interval: 10
-        lazy_error_count: 10
 #BMS registers
       - name: Wattsonic BMS Software Version
         unique_id: wattsonic_bms_software_version
@@ -794,7 +744,6 @@ modbus:
         input_type: holding
         data_type: int16
         scan_interval: 600
-        lazy_error_count: 10
       - name: Wattsonic BMS Hardware Version
         unique_id: wattsonic_bms_hardware_version
         slave: 247
@@ -802,7 +751,6 @@ modbus:
         input_type: holding
         data_type: int16
         scan_interval: 600
-        lazy_error_count: 10
       - name: Wattsonic Battery SOC
         unique_id: wattsonic_battery_soc
         slave: 247
@@ -815,7 +763,6 @@ modbus:
         precision: 2
         data_type: int16
         scan_interval: 60
-        lazy_error_count: 10
       - name: Wattsonic Battery SOH
         unique_id: wattsonic_battery_soh
         slave: 247
@@ -828,7 +775,6 @@ modbus:
         precision: 2
         data_type: int16
         scan_interval: 3600
-        lazy_error_count: 10
       - name: Wattsonic BMS Status
         unique_id: wattsonic_bms_status
         slave: 247
@@ -836,7 +782,6 @@ modbus:
         input_type: holding
         data_type: int16
         scan_interval: 60
-        lazy_error_count: 10
       - name: Wattsonic BMS Pack Temperature
         unique_id: wattsonic_bms_pack_temperature
         slave: 247
@@ -849,7 +794,6 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 300
-        lazy_error_count: 10
       - name: Wattsonic BMS Error Code
         unique_id: wattsonic_bms_error_code
         slave: 247
@@ -857,7 +801,6 @@ modbus:
         input_type: holding
         data_type: int32
         scan_interval: 60
-        lazy_error_count: 10
       - name: Wattsonic BMS Warn Code
         unique_id: wattsonic_bms_warn_code
         slave: 247
@@ -865,7 +808,6 @@ modbus:
         input_type: holding
         data_type: int32
         scan_interval: 60
-        lazy_error_count: 10
 
 #RW values
       - name: Wattsonic Hybrid Inverter Working Mode Setting  #257=General mode; 258=Economic mode; 259=UPS mode; 512=Off grid mode
@@ -875,7 +817,6 @@ modbus:
         input_type: holding
         data_type: int16
         scan_interval: 60
-        lazy_error_count: 10
 
       - name: Wattsonic Grid Injection Power Limit Setting  #[0.0%-100.0%]
         unique_id: wattsonic_grid_injection_power_limit_setting #RW
@@ -886,7 +827,6 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 110
-        lazy_error_count: 10
       - name: Wattsonic On-grid Battery End SOC  #[0.0%-100.0%]
         unique_id: wattsonic_on_grid_battery_end_soc #RW
         slave: 247
@@ -896,7 +836,6 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 360
-        lazy_error_count: 10
       - name: Wattsonic Off-grid Battery End SOC  #[0.0%-100.0%]
         unique_id: wattsonic_off_grid_battery_end_soc #RW
         slave: 247
@@ -906,7 +845,6 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 360
-        lazy_error_count: 10
       - name: Wattsonic Battery Power Setting
         unique_id: wattsonic_battery_power_setting
         slave: 247
@@ -951,7 +889,6 @@ modbus:
         input_type: holding
         data_type: int16
         scan_interval: 60
-        lazy_error_count: 10
       - name: Wattsonic RW BMS ErrorCode #Table 3.9
         unique_id: wattsonic_rw_bms_errorcode
         slave: 247
@@ -959,7 +896,6 @@ modbus:
         input_type: holding
         data_type: int32
         scan_interval: 60
-        lazy_error_count: 10
       - name: Wattsonic RW BMS ProtectionCode #Table 3.9
         unique_id: wattsonic_rw_bms_protectioncode
         slave: 247
@@ -967,7 +903,6 @@ modbus:
         input_type: holding
         data_type: int32
         scan_interval: 60
-        lazy_error_count: 10
       - name: Wattsonic RW BMS WarnCode #Table 3.9
         unique_id: wattsonic_rw_bms_warncode
         slave: 247
@@ -975,7 +910,6 @@ modbus:
         input_type: holding
         data_type: int32
         scan_interval: 60
-        lazy_error_count: 10
 
       - name: Wattsonic Ecomode Period Enable Flag #bit0- bit5 stands for period1-period6, bit7-bit15 reserved; 0: disable 1: enable
       #1=one line; #3=2 lines; 7=4lines; 15=5lines; 31=6lines
@@ -985,7 +919,6 @@ modbus:
         input_type: holding
         data_type: int16
         scan_interval: 60
-        lazy_error_count: 10
       - name: Wattsonic Ecomode Period1 Struct
         unique_id: wattsonic_ecomode_period1_struct
         slave: 247
@@ -995,7 +928,6 @@ modbus:
         data_type: custom
         structure: ">HHHHHHH"
         scan_interval: 60
-        lazy_error_count: 10
       - name: Wattsonic Ecomode Period2 Struct
         unique_id: wattsonic_ecomode_period2_struct
         slave: 247
@@ -1005,7 +937,6 @@ modbus:
         data_type: custom
         structure: ">HHHHHHH"
         scan_interval: 60
-        lazy_error_count: 10
 #how to write data:
 #service: modbus.write_register
 #data:
@@ -1081,54 +1012,54 @@ sensor:
             {% elif states('sensor.wattsonic_inverter_running_status') == '5' %}
                 Off Grid
             {% endif %}
-      wattsonic_battery_soc_eta:
-         friendly_name: Wattsonic Battery SOC ETA
-         unique_id: wattsonic_battery_soc_eta
-         value_template: >
-            {% set battery_SOC = float(states("sensor.wattsonic_battery_soc"), default=100) %}
-            {% set battery_SOC_last = float(states("sensor.wattsonic_battery_soc_5min_state"), default=0) %}
-            {% set timediff = (states.sensor.wattsonic_battery_soc.last_updated.timestamp() - as_datetime(states("sensor.wattsonic_battery_soc_5min_last_updated")).timestamp())/60 %}
-            {% set percdiff = battery_SOC - battery_SOC_last %}
-            {% if battery_SOC>99: %}
-                full
-            {% elif percdiff==0 or timediff==0: %}
-                {{ states('sensor.wattsonic_battery_soc_eta') }}
-            {% elif battery_SOC<=20: %}
-                almost dicharged
-            {% elif percdiff<=0: %}
-                {% set percmissing = battery_SOC-20 %}
-                {% set timemissing = (percmissing / (percdiff/timediff))|round  %}
-                ↓{{ as_local(as_datetime(as_timestamp(utcnow()) - timemissing*60)).strftime("%Y-%m-%d %H:%M") }}↓
-            {% else %}
-                {% set percmissing = 100-battery_SOC %}
-                {% set timemissing = (percmissing / (percdiff/timediff))|round  %}
-                ↑{{ as_local(as_datetime(as_timestamp(utcnow()) + timemissing*60)).strftime("%Y-%M-%d %H:%M") }}↑
-            {% endif %}
-      wattsonic_grid_injection_energy_on_that_day_15min:   #sell in last 15min
-         friendly_name: Wattsonic Grid Injection 15min
-         unique_id: wattsonic_grid_injection_energy_on_that_day_15min
-         unit_of_measurement: kW
-         device_class: power
-         value_template: >
-            {% set diff = (float(states("sensor.wattsonic_grid_injection_energy_on_that_day"), default=0) - float(states("sensor.wattsonic_grid_injection_energy_on_that_day_15min_state"), default=0) ) %}
-            {% set timediff = (states.sensor.wattsonic_grid_injection_energy_on_that_day.last_updated.timestamp() - as_datetime(states("sensor.wattsonic_grid_injection_energy_on_that_day_15min_last_updated")).timestamp())/60 %}
-            {% if timediff==0 or diff<=0: %}
-                {{ float(0) }}
-            {% else %}
-                {% set res = (diff/timediff*60) %}
-                {% if res>15: %}
-                    {{ float(0) }}
-                {% else %}
-                    {{ res| round(1) }}
-                {% endif %}
-            {% endif %}
-         attribute_templates:
-           diff: >
-            {% set diff = (float(states("sensor.wattsonic_grid_injection_energy_on_that_day"), default=0) - float(states("sensor.wattsonic_grid_injection_energy_on_that_day_15min_state"), default=0) ) %}
-            {{ diff }}
-           timediff: >
-            {% set timediff = (states.sensor.wattsonic_grid_injection_energy_on_that_day.last_updated.timestamp() - as_datetime(states("sensor.wattsonic_grid_injection_energy_on_that_day_15min_last_updated")).timestamp())/60 %}
-            {{ timediff }}           
+      # wattsonic_battery_soc_eta:
+         # friendly_name: Wattsonic Battery SOC ETA
+         # unique_id: wattsonic_battery_soc_eta
+         # value_template: >
+            # {% set battery_SOC = float(states("sensor.wattsonic_battery_soc"), default=100) %}
+            # {% set battery_SOC_last = float(states("sensor.wattsonic_battery_soc_5min_state"), default=0) %}
+            # {% set timediff = (states.sensor.wattsonic_battery_soc.last_updated.timestamp() - as_datetime(states("sensor.wattsonic_battery_soc_5min_last_updated")).timestamp())/60 %}
+            # {% set percdiff = battery_SOC - battery_SOC_last %}
+            # {% if battery_SOC>99: %}
+                # full
+            # {% elif percdiff==0 or timediff==0: %}
+                # {{ states('sensor.wattsonic_battery_soc_eta') }}
+            # {% elif battery_SOC<=20: %}
+                # almost dicharged
+            # {% elif percdiff<=0: %}
+                # {% set percmissing = battery_SOC-20 %}
+                # {% set timemissing = (percmissing / (percdiff/timediff))|round  %}
+                # ↓{{ as_local(as_datetime(as_timestamp(utcnow()) - timemissing*60)).strftime("%Y-%m-%d %H:%M") }}↓
+            # {% else %}
+                # {% set percmissing = 100-battery_SOC %}
+                # {% set timemissing = (percmissing / (percdiff/timediff))|round  %}
+                # ↑{{ as_local(as_datetime(as_timestamp(utcnow()) + timemissing*60)).strftime("%Y-%M-%d %H:%M") }}↑
+            # {% endif %}
+      # wattsonic_grid_injection_energy_on_that_day_15min:   #sell in last 15min
+         # friendly_name: Wattsonic Grid Injection 15min
+         # unique_id: wattsonic_grid_injection_energy_on_that_day_15min
+         # unit_of_measurement: kW
+         # device_class: power
+         # value_template: >
+            # {% set diff = (float(states("sensor.wattsonic_grid_injection_energy_on_that_day"), default=0) - float(states("sensor.wattsonic_grid_injection_energy_on_that_day_15min_state"), default=0) ) %}
+            # {% set timediff = (states.sensor.wattsonic_grid_injection_energy_on_that_day.last_updated.timestamp() - as_datetime(states("sensor.wattsonic_grid_injection_energy_on_that_day_15min_last_updated")).timestamp())/60 %}
+            # {% if timediff==0 or diff<=0: %}
+                # {{ float(0) }}
+            # {% else %}
+                # {% set res = (diff/timediff*60) %}
+                # {% if res>15: %}
+                    # {{ float(0) }}
+                # {% else %}
+                    # {{ res| round(1) }}
+                # {% endif %}
+            # {% endif %}
+         # attribute_templates:
+           # diff: >
+            # {% set diff = (float(states("sensor.wattsonic_grid_injection_energy_on_that_day"), default=0) - float(states("sensor.wattsonic_grid_injection_energy_on_that_day_15min_state"), default=0) ) %}
+            # {{ diff }}
+           # timediff: >
+            # {% set timediff = (states.sensor.wattsonic_grid_injection_energy_on_that_day.last_updated.timestamp() - as_datetime(states("sensor.wattsonic_grid_injection_energy_on_that_day_15min_last_updated")).timestamp())/60 %}
+            # {{ timediff }}           
       wattsonic_home_consumption_now:
          friendly_name: Wattsonic Home Consumption Now
          unique_id: wattsonic_home_consumption_now
@@ -1472,4 +1403,3 @@ script:
     - service: script.wattsonic_mode_general
       data: {}
     mode: single
- 
