@@ -907,6 +907,43 @@ modbus:
         data_type: int16
         scan_interval: 360
         lazy_error_count: 10
+      - name: Wattsonic Battery Power Setting
+        unique_id: wattsonic_battery_power_setting
+        slave: 247
+        address: 50207
+        input_type: holding
+        unit_of_measurement: kW
+        scale: 0.01
+        precision: 1
+        data_type: int16
+        scan_interval: 60
+      - name: Wattsonic Battery Max. AC Power Limit Setting
+        unique_id: wattsonic_battery_power_max_up_limit
+        slave: 247
+        address: 50208
+        input_type: holding
+        scale: 0.01    #spec: 100
+        precision: 1
+        unit_of_measurement: kW
+        data_type: int16
+        scan_interval: 60
+      - name: Wattsonic Battery Min. AC Power Limit Setting
+        unique_id: wattsonic_battery_power_min_up_limit
+        slave: 247
+        address: 50209
+        input_type: holding
+        unit_of_measurement: kW
+        scale: 0.01
+        precision: 1
+        data_type: int16
+        scan_interval: 60
+      - name: Wattsonic Battery Configuration # Table 3.7
+        unique_id: wattsonic_battery_configuration
+        slave: 247
+        address: 52500
+        input_type: holding
+        data_type: int16
+        scan_interval: 60
       - name: Wattsonic RW BMS Status #Table 3.8
         unique_id: wattsonic_rw_bms_status
         slave: 247
@@ -988,6 +1025,19 @@ modbus:
 sensor:
   - platform: template
     sensors:
+      wattsonic_battery_configuration_text:
+         friendly_name: Wattsonic Battery Configuration
+         unique_id: wattsonic_battery_configuration_text
+         value_template: >
+            {% if states('sensor.wattsonic_battery_configuration') == '1' %}
+                Solinteg
+            {% elif states('sensor.wattsonic_battery_configuration') == '2' %}
+                EMS
+            {% elif states('sensor.wattsonic_battery_configuration') == '10' %}
+                Wattsonic Li-HV
+            {% else %}
+                Reserved
+            {% endif %}
       wattsonic_battery_mode_text:
          friendly_name: Wattsonic Battery Mode
          unique_id: wattsonic_battery_mode_text
@@ -1008,6 +1058,12 @@ sensor:
                 UPS mode
             {% elif states('sensor.wattsonic_hybrid_inverter_working_mode_setting') == '512' %}
                 Offgrid mode
+            {% elif states('sensor.wattsonic_hybrid_inverter_working_mode_setting') == '769' %}
+                EMS_ACCtrlMode
+            {% elif states('sensor.wattsonic_hybrid_inverter_working_mode_setting') == '770' %}
+                EMS_GeneralMode
+            {% elif states('sensor.wattsonic_hybrid_inverter_working_mode_setting') == '771' %}
+                EMS_BattCtrlMode
             {% endif %}
       wattsonic_inverter_running_status_text:
          friendly_name: Wattsonic Inverter Running Status
