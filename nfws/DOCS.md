@@ -10,11 +10,11 @@
 ### Netatmo
 - Netatmo [account](https://auth.netatmo.com/access/checklogin)
 - Netatmo App created at [developer page](https://dev.netatmo.com/)
-https://raw.githubusercontent.com/GiZMoSK1221/hass-addons/main/nfws/help/netatmo_new_app.jpg
+![](https://raw.githubusercontent.com/GiZMoSK1221/hass-addons/main/nfws/help/netatmo_new_app.jpg)
 - client_id and client_secret from your app
-https://raw.githubusercontent.com/GiZMoSK1221/hass-addons/main/nfws/help/netatmo_ids.jpg
+![](https://raw.githubusercontent.com/GiZMoSK1221/hass-addons/main/nfws/help/netatmo_ids.jpg)
 - at least one [favorite station](https://weathermap.netatmo.com/?zoom=15&maplayer=Map)
-https://raw.githubusercontent.com/GiZMoSK1221/hass-addons/main/nfws/help/netatmo_add_fav.jpg
+![](https://raw.githubusercontent.com/GiZMoSK1221/hass-addons/main/nfws/help/netatmo_add_fav.jpg)
 
 
 ## Installation and first run
@@ -30,10 +30,10 @@ Example of returned URL: https://app.netatmo.net/oauth2/hassio?state=nfws_hass&c
 Calling...https://api.netatmo.com/oauth2/authorize?client_id=60e5c04fef24f51a5d36c03a&redirect_uri=hassio&scope=read_station&state=nfws_hass
 
 - copy&paste URL to a new window and grant access
-https://raw.githubusercontent.com/GiZMoSK1221/hass-addons/main/nfws/help/netatmo_accept.jpg
+![](https://raw.githubusercontent.com/GiZMoSK1221/hass-addons/main/nfws/help/netatmo_accept.jpg)
 
 - Netatmo will redirect your browser to app.netatmo.net with error 404. Just copy OAUTH code from code section from URL  (code=OAUTH code)
-https://raw.githubusercontent.com/GiZMoSK1221/hass-addons/main/nfws/help/netatmo_accept_code.jpg
+![](https://raw.githubusercontent.com/GiZMoSK1221/hass-addons/main/nfws/help/netatmo_accept_code.jpg)
 
 - goto config tab and enter OAUTH code. 
 - run addon
