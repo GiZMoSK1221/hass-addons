@@ -11,8 +11,9 @@ inverter:
   three_phase: true
 battery:
   shutdown_soc: 20
-  full_capacity: 99
-  empty_capacity: 20
+  xxfull_capacity: 99
+  xxempty_capacity: 20
+  show_remaining_energy: true
   show_daily: true
   show: true
   energy: 11500
@@ -21,8 +22,11 @@ battery:
 solar:
   show_daily: true
   mppts: 2
+  efficiency: 3
   pv1_name: Horny
+  pv1_max_power: 4400
   pv2_name: Dolny
+  pv2_max_power: 4400
   max_power: 8800
   auto_scale: true
 load:
@@ -40,29 +44,29 @@ entities:
   inverter_voltage_154: none
   load_frequency_192: none
   inverter_current_164: none
-  inverter_power_175: sensor.wattsonic_battery_p_w
+  inverter_power_175: sensor.wattsonic_battery_p
   grid_connected_status_194: sensor.wattsonic_sunsync_grid_connected
   inverter_status_59: none
   day_battery_charge_70: sensor.wattsonic_battery_charge_energy_on_that_day
   day_battery_discharge_71: sensor.wattsonic_battery_discharge_energy_on_that_day
   battery_voltage_183: sensor.wattsonic_battery_v
   battery_soc_184: sensor.wattsonic_battery_soc
-  battery_power_190: sensor.wattsonic_battery_p_w
+  battery_power_190: sensor.wattsonic_battery_p
   battery_current_191: sensor.wattsonic_battery_i
   day_grid_import_76: sensor.wattsonic_grid_purchasing_energy_on_that_day
   day_grid_export_77: sensor.wattsonic_grid_injection_energy_on_that_day
   grid_ct_power_total: sensor.wattsonic_total_power_on_meter_w
-  grid_ct_power_172: sensor.wattsonic_phase_a_power_on_meter_w
-  grid_ct_power_L2: sensor.wattsonic_phase_b_power_on_meter_w
-  grid_ct_power_L3: sensor.wattsonic_phase_c_power_on_meter_w
+  grid_ct_power_172: sensor.wattsonic_phase_a_power_on_meter
+  grid_ct_power_L2: sensor.wattsonic_phase_b_power_on_meter
+  grid_ct_power_L3: sensor.wattsonic_phase_c_power_on_meter
   grid_power_169: sensor.wattsonic_total_power_on_meter_w
   day_load_energy_84: sensor.wattsonic_home_consumption_today
-  essential_power: sensor.wattsonic_home_consumption_now_w
+  essential_power: sensor.wattsonic_home_consumption_now
   nonessential_power: none
   aux_power_166: sensor.sunsynk_aux_power
   day_pv_energy_108: sensor.wattsonic_pv_generation_energy_on_that_day
-  pv1_power_186: sensor.wattsonic_pv1_input_power_w
-  pv2_power_187: sensor.wattsonic_pv2_input_power_w
+  pv1_power_186: sensor.wattsonic_pv1_input_power
+  pv2_power_187: sensor.wattsonic_pv2_input_power
   pv1_voltage_109: sensor.wattsonic_pv1_voltage
   pv1_current_110: sensor.wattsonic_pv1_current
   pv2_voltage_111: sensor.wattsonic_pv2_voltage

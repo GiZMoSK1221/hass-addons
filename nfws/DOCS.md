@@ -9,9 +9,12 @@
 
 ### Netatmo
 - Netatmo [account](https://auth.netatmo.com/access/checklogin)
-- at least one favorite station
-- client_id and client_secret from your app created at [developer page](https://dev.netatmo.com/).
-short notice is also on [Netatmo integration page](https://www.home-assistant.io/integrations/netatmo/)
+- Netatmo App created at [developer page](https://dev.netatmo.com/)
+https://raw.githubusercontent.com/GiZMoSK1221/hass-addons/main/nfws/help/netatmo_new_app.jpg
+- client_id and client_secret from your app
+https://raw.githubusercontent.com/GiZMoSK1221/hass-addons/main/nfws/help/netatmo_ids.jpg
+- at least one [favorite station](https://weathermap.netatmo.com/?zoom=15&maplayer=Map)
+https://raw.githubusercontent.com/GiZMoSK1221/hass-addons/main/nfws/help/netatmo_add_fav.jpg
 
 
 ## Installation and first run
@@ -19,16 +22,25 @@ short notice is also on [Netatmo integration page](https://www.home-assistant.io
  - install the addon
  [![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https://github.com/GiZMoSK1221/hass-addons)
 
- - go to config tab and enter your client_id and client_secret. Run addon
+ - go to config tab and enter your client_id and client_secret. Run addon, wait few seconds, stop addon
  - go to log tab. You will see there this message:
  >Missing Netatmo authorisation OAUTH code!
 When access granted, copy code value from returned url to config.yaml
 Example of returned URL: https://app.netatmo.net/oauth2/hassio?state=nfws_hass&code=5ebbe91cdd804326ddde4336c7e9b6b8
 Calling...https://api.netatmo.com/oauth2/authorize?client_id=60e5c04fef24f51a5d36c03a&redirect_uri=hassio&scope=read_station&state=nfws_hass
+
 - copy&paste URL to a new window and grant access
-- Netatmo will redirect your browser to app.netatmo.net with error 404. Just copy OAUTH code from code section from URL 
+https://raw.githubusercontent.com/GiZMoSK1221/hass-addons/main/nfws/help/netatmo_accept.jpg
+
+- Netatmo will redirect your browser to app.netatmo.net with error 404. Just copy OAUTH code from code section from URL  (code=OAUTH code)
+https://raw.githubusercontent.com/GiZMoSK1221/hass-addons/main/nfws/help/netatmo_accept_code.jpg
+
 - goto config tab and enter OAUTH code. 
 - run addon
+do last 3 steps quickly. Otherwise you might get:
+Netatmo authorization_code: Wrong response code 400
+{'error': 'expired_token'}
+
 - go to log tab. You should see
 >11.11.2022 11:11:16 Starting Netatmo service
 Run mode: hass
