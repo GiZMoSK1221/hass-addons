@@ -39,25 +39,37 @@ def prepare_hass_addon():
     if run_mode != "hass":
         return False
 
+##delete when copy from old location ot needed
     try:
-        res = os.listdir(r'/config/')
-        if not "nfws" in res:
-            try:
-                os.mkdir('/config/nfws')
-            except BaseException as err:
-                logger.critical('Cannot create directory /config/nfws')
-                exit()
-            try:
-                shutil.copyfile('/usr/bin/stations.yaml', '/config/nfws/stations.yaml')
-                #shutil.copyfile('stations_example.yaml', '/config/nfws/stations_example.yaml')
-            except BaseException as err:
-                logger.critical('Cannot copy stations.yaml to /config/nfws')
-                exit()
-            
+        res_old_config = os.listdir(rf'/homeassistant/nfws/')
+    except BaseException as err:
+        res_old_config = []
+##delete
+
+    try:     
+#        logger.critical(f"Directory1: {os.listdir(r'/config/')}")
+        res_config = os.listdir(rf'{config_dir}')
+        if not "stations.yaml" in res_config:
+##delete
+            if "stations.yaml" in res_old_config and "netatmo_token.yaml" in res_old_config:    #migration from old config location
+                try:
+                    logger.debug(f'Old config files found in /homeassistant/nfws/')
+                    shutil.copyfile('/homeassistant/nfws/stations.yaml', f'{config_dir}stations.yaml')
+                    shutil.copyfile('/homeassistant/nfws/netatmo_token.yaml', f'{config_dir}netatmo_token.yaml')
+                except BaseException as err:
+                    logger.critical(f'Cannot copy old config files from /config/nfws to {config_dir}')
+                    logger.critical(f'Copy netatmo_token.yaml and stations.yaml manually and restart addon')
+                    exit()
+            else:   #first run stations.yaml doesn't exists
+##delete            
+                try:
+                    logger.debug(f'New installation, copy default stations.yaml, please change it.')
+                    shutil.copyfile('/usr/bin/stations.yaml', f'{config_dir}stations.yaml')
+                except BaseException as err:
+                    logger.critical(f'Cannot copy stations.yaml to {config_dir}')
+                    exit()
     except BaseException as err:
         return False
-
-
 
     return True
 
@@ -68,8 +80,11 @@ def load_config():
     global config_dir
     global run_mode
 
+#    logger.debug(f"Run mode: {os.environ}")
+
     if "SUPERVISOR_TOKEN" in os.environ:
-        config_dir = "/config/nfws/"
+        config_dir = "/config/"
+#        config_dir = os.getenv('HOSTNAME')+"/"
         run_mode = "hass"
     else:
         run_mode = "local"
@@ -99,6 +114,8 @@ def load_config():
             config_stations = yaml.load(file, Loader=yaml.FullLoader)
     except BaseException as err:
         logger.critical(f"{snow()}{config_dir}stations.yaml missing {err=}, {type(err)=}")
+        logger.debug(f"Run mode: {run_mode}")
+        logger.debug(f"Config dir: {config_dir}")
         exit()
     config.update(config_stations)
 
@@ -144,7 +161,7 @@ def load_config():
 
 def load_netatmo_token():
     global netatmo_token
-    
+
     try:
         with open(config_dir+r'netatmo_token.yaml') as file:
             netatmo_token = yaml.load(file, Loader=yaml.FullLoader)
@@ -189,14 +206,17 @@ def netatmo_check_oauth_code():
         url = f"https://api.netatmo.com/oauth2/authorize?client_id={client_id}&redirect_uri={uri}&scope=read_station&state={state}"
         logger.critical(f"")
         logger.critical(f"Calling...{url}")
-        webbrowser.open_new(url)
+        #webbrowser.open_new(url)
         logger.critical(f"Copy&paste the url to a new window and get your OAUTH code")
+        logger.critical(f"Delete netatmo_token.yaml if it exists in config directory.")
+        logger.critical(f"when done, restart addon...")
+        time.sleep(600)
         exit()
         
     return 1
 
 def netatmo_get_oauth_token():
-    global netatmo_token    
+    global netatmo_token
     client_id = config["netatmo"]["client_id"]
     client_secret = config["netatmo"]["client_secret"]
     uri = config["netatmo"]["redirect_uri"]

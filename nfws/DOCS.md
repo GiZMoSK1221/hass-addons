@@ -67,3 +67,13 @@ Now, you were able tu run successfully the addon for the first time. Now, go to 
 -   nfws->deleteRetain: true deletes all sensors on startup created by addon. Use once when your configuration is finished to delete orphaned sensors     
 -  netatmo->log_level: possible values are: debug|info|warning|error|critical. Change to warning or info when addon runs correctly
  
+## Troubleshooting
+### Any problem with token, token not valid, new cannot be obtained
+1. stop addon
+2. delete netatmo_token.yaml
+3. in config tab set oauth_code: ""
+4. run addon. stop addon
+5. go to log, copy url and open it in a new browser tab/window. Allow plugin to access netatmo data 
+6. get code value from url, close tab/window
+7. go to log, enter oauth_code: 'code'
+8. start addon

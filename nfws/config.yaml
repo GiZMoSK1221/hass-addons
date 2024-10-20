@@ -1,6 +1,6 @@
 name: "Netatmo Favorites Weather Stations"
 description: "your Netatmo Favorites Weather Stations and even more!"
-version: "0.9.7"
+version: "0.9.8"
 slug: "nfws"
 init: false
 url: "https://github.com/GiZMoSK1221/hass-addons/nfws"
@@ -12,7 +12,10 @@ arch:
   - armv7
   - i386
 map:
-  - config:rw
+  - type: addon_config
+    read_only: False
+  - type: homeassistant_config
+    read_only: True
 options:
   netatmo:
     client_id: ""
