@@ -38,8 +38,8 @@ all files copy to your config dir (where is configuration.yaml)
 		- source is here in [sunways_gen2 directory](sunways_gen2)
 
 4. edit modbus configuration in wattsonic.yaml
-		 default is connection over serial and RS485. Change port according to your RS485 module.
-		 if you are running over TCP/IP, just delete serial config and uncomment tcp config
+		 default is connection over serial and RS485. Change port according to your RS485 module. Slave adress is 247.
+		 if you are running over TCP/IP, just delete serial config and uncomment tcp config. Slave adress is 255.
 
 5. restart HASS
 6. edit your lovelace dashboard, you can take mine [lovelace](lovelace.yaml) and just remove/use sensors

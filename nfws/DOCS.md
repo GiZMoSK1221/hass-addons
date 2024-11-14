@@ -56,7 +56,10 @@ Not used station id: 70:ee:50:24:18:3a, name:
 
 - Not used station section shows MAC address of your favourites stations
 
-Now, you were able tu run successfully the addon for the first time. Now, go to hass config/nfws directory and edit stations.yaml using MAC addresses you got.
+You were able tu run successfully the addon for the first time. 
+Now, go to \\addon_configs\adaeefb4_nfws\ directory and edit stations.yaml using MAC addresses you got.
+![](https://raw.githubusercontent.com/GiZMoSK1221/hass-addons/main/nfws/help/addon_config.jpg)
+
 
 ## Configuring add-on
 ### stations.yaml
