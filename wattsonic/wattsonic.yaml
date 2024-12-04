@@ -1,7 +1,7 @@
 modbus:  
   - name: wattsonic 
     # type: tcp
-    # host: 192.168.11.142
+    # host: 192.168.11.104
     # port: 502
     type: serial
     baudrate: 9600
@@ -82,6 +82,7 @@ modbus:
         count: 2
         data_type: custom
         structure: ">BBBB"
+        precision: 0
         scan_interval: 600
       - name: Wattsonic Firmware Version2
         unique_id: wattsonic_firmware_version2
@@ -92,6 +93,7 @@ modbus:
         data_type: custom
         structure: ">BBBB"
         scan_interval: 600
+        precision: 0
       - name: Wattsonic DateTime
         unique_id: wattsonic_datetime
         slave: 247
@@ -101,6 +103,17 @@ modbus:
         data_type: custom
         structure: ">BBBBBB"
         scan_interval: 300
+        precision: 0
+#      - name: Wattsonic DateTime2
+#        unique_id: wattsonic_datetime2
+#        slave: 247
+#        address: 20000
+#        input_type: holding
+#        count: 3
+#        data_type: custom
+#        structure: ">BBBBBB"
+#        scan_interval: 300
+#        precision: 0
       - name: Wattsonic Inverter Running Status #0:wait, wait for on-grid 1:check, self-check 2:On Grid 3:fault 4:flash, firmware update 5.Off Grid
         unique_id: wattsonic_inverter_running_status
         slave: 247
@@ -794,6 +807,30 @@ modbus:
         precision: 1
         data_type: int16
         scan_interval: 300
+      - name: Wattsonic Max Cell Voltage
+        unique_id: wattsonic_max_cell_voltage
+        slave: 247
+        address: 33013
+        input_type: holding
+        unit_of_measurement: V
+        state_class: measurement
+        device_class: voltage
+        scale: 0.001
+        precision: 3
+        data_type: int16
+        scan_interval: 300
+      - name: Wattsonic Min Cell Voltage
+        unique_id: wattsonic_min_cell_voltage
+        slave: 247
+        address: 33015
+        input_type: holding
+        unit_of_measurement: V
+        state_class: measurement
+        device_class: voltage
+        scale: 0.001
+        precision: 3
+        data_type: int16
+        scan_interval: 300
       - name: Wattsonic BMS Error Code
         unique_id: wattsonic_bms_error_code
         slave: 247
@@ -1012,54 +1049,7 @@ sensor:
             {% elif states('sensor.wattsonic_inverter_running_status') == '5' %}
                 Off Grid
             {% endif %}
-      # wattsonic_battery_soc_eta:
-         # friendly_name: Wattsonic Battery SOC ETA
-         # unique_id: wattsonic_battery_soc_eta
-         # value_template: >
-            # {% set battery_SOC = float(states("sensor.wattsonic_battery_soc"), default=100) %}
-            # {% set battery_SOC_last = float(states("sensor.wattsonic_battery_soc_5min_state"), default=0) %}
-            # {% set timediff = (states.sensor.wattsonic_battery_soc.last_updated.timestamp() - as_datetime(states("sensor.wattsonic_battery_soc_5min_last_updated")).timestamp())/60 %}
-            # {% set percdiff = battery_SOC - battery_SOC_last %}
-            # {% if battery_SOC>99: %}
-                # full
-            # {% elif percdiff==0 or timediff==0: %}
-                # {{ states('sensor.wattsonic_battery_soc_eta') }}
-            # {% elif battery_SOC<=20: %}
-                # almost dicharged
-            # {% elif percdiff<=0: %}
-                # {% set percmissing = battery_SOC-20 %}
-                # {% set timemissing = (percmissing / (percdiff/timediff))|round  %}
-                # ↓{{ as_local(as_datetime(as_timestamp(utcnow()) - timemissing*60)).strftime("%Y-%m-%d %H:%M") }}↓
-            # {% else %}
-                # {% set percmissing = 100-battery_SOC %}
-                # {% set timemissing = (percmissing / (percdiff/timediff))|round  %}
-                # ↑{{ as_local(as_datetime(as_timestamp(utcnow()) + timemissing*60)).strftime("%Y-%M-%d %H:%M") }}↑
-            # {% endif %}
-      # wattsonic_grid_injection_energy_on_that_day_15min:   #sell in last 15min
-         # friendly_name: Wattsonic Grid Injection 15min
-         # unique_id: wattsonic_grid_injection_energy_on_that_day_15min
-         # unit_of_measurement: kW
-         # device_class: power
-         # value_template: >
-            # {% set diff = (float(states("sensor.wattsonic_grid_injection_energy_on_that_day"), default=0) - float(states("sensor.wattsonic_grid_injection_energy_on_that_day_15min_state"), default=0) ) %}
-            # {% set timediff = (states.sensor.wattsonic_grid_injection_energy_on_that_day.last_updated.timestamp() - as_datetime(states("sensor.wattsonic_grid_injection_energy_on_that_day_15min_last_updated")).timestamp())/60 %}
-            # {% if timediff==0 or diff<=0: %}
-                # {{ float(0) }}
-            # {% else %}
-                # {% set res = (diff/timediff*60) %}
-                # {% if res>15: %}
-                    # {{ float(0) }}
-                # {% else %}
-                    # {{ res| round(1) }}
-                # {% endif %}
-            # {% endif %}
-         # attribute_templates:
-           # diff: >
-            # {% set diff = (float(states("sensor.wattsonic_grid_injection_energy_on_that_day"), default=0) - float(states("sensor.wattsonic_grid_injection_energy_on_that_day_15min_state"), default=0) ) %}
-            # {{ diff }}
-           # timediff: >
-            # {% set timediff = (states.sensor.wattsonic_grid_injection_energy_on_that_day.last_updated.timestamp() - as_datetime(states("sensor.wattsonic_grid_injection_energy_on_that_day_15min_last_updated")).timestamp())/60 %}
-            # {{ timediff }}           
+
       wattsonic_home_consumption_now:
          friendly_name: Wattsonic Home Consumption Now
          unique_id: wattsonic_home_consumption_now
@@ -1092,54 +1082,12 @@ sensor:
                          - float(states(''sensor.wattsonic_battery_charge_energy_on_that_day''), default=0) 
                          + float(states(''sensor.wattsonic_battery_discharge_energy_on_that_day''), default=0)) | round(3) }}'
 
-      wattsonic_battery_p_w:
-         friendly_name: Wattsonic Battery P Watt
-         unique_id: wattsonic_battery_p_w
-         unit_of_measurement: W
-         device_class: power
-         value_template: '{{ (states(''sensor.wattsonic_battery_p'')|float(0)*1000)|round(0) }}'
       wattsonic_total_power_on_meter_w:
          friendly_name: Wattsonic Total Power On Meter Watt
          unique_id: wattsonic_total_power_on_meter_w
          unit_of_measurement: W
          device_class: power
          value_template: '{{ (states(''sensor.wattsonic_total_power_on_meter'')|float(0)*-1000)|round(0) }}'
-      wattsonic_pv1_input_power_w:
-         friendly_name: Wattsonic PV1 Input Power Watt
-         unique_id: wattsonic_pv1_input_power_w
-         unit_of_measurement: W
-         device_class: power
-         value_template: '{{ (states(''sensor.wattsonic_pv1_input_power'')|float(0)*1000)|round(0) }}'
-      wattsonic_pv2_input_power_w:
-         friendly_name: Wattsonic PV2 Input Power Watt
-         unique_id: wattsonic_pv2_input_power_w
-         unit_of_measurement: W
-         device_class: power
-         value_template: '{{ (states(''sensor.wattsonic_pv2_input_power'')|float(0)*1000)|round(0) }}'
-      wattsonic_home_consumption_now_w:
-         friendly_name: Wattsonic Home Consumption Now Watt
-         unique_id: wattsonic_home_consumption_now_w
-         unit_of_measurement: W
-         device_class: power
-         value_template: '{{ (states(''sensor.wattsonic_home_consumption_now'')|float(0)*1000)|round(0) }}'
-      wattsonic_phase_a_power_on_meter_w:
-         friendly_name: Wattsonic Phase A Power on Meter Watt
-         unique_id: wattsonic_phase_a_power_on_meter_w
-         unit_of_measurement: W
-         device_class: power
-         value_template: '{{ (states(''sensor.wattsonic_phase_a_power_on_meter'')|float(0)*1000)|round(0) }}'
-      wattsonic_phase_b_power_on_meter_w:
-         friendly_name: Wattsonic Phase B Power on Meter Watt
-         unique_id: wattsonic_phase_b_power_on_meter_w
-         unit_of_measurement: W
-         device_class: power
-         value_template: '{{ (states(''sensor.wattsonic_phase_b_power_on_meter'')|float(0)*1000)|round(0) }}'
-      wattsonic_phase_c_power_on_meter_w:
-         friendly_name: Wattsonic Phase C Power on Meter Watt
-         unique_id: wattsonic_phase_c_power_on_meter_w
-         unit_of_measurement: W
-         device_class: power
-         value_template: '{{ (states(''sensor.wattsonic_phase_c_power_on_meter'')|float(0)*1000)|round(0) }}'
       wattsonic_sunsync_grid_connected:
          friendly_name: Wattsonic Sunsync Grid Connected
          unique_id: wattsonic_sunsync_grid_connected
@@ -1180,6 +1128,11 @@ sensor:
          friendly_name: Wattsonic Ecomode Period Enable Flag Binary
          unique_id: wattsonic_ecomode_period_enable_flag_bin
          value_template: '{{ (''{:b}''.format(states(''sensor.wattsonic_ecomode_period_enable_flag'')|int)).ljust(6, ''0'') }}'
+
+      wattsonic_datetime_dt:
+         friendly_name: Wattsonic DateTime DT
+         unique_id: wattsonic_datetime_dt
+         value_template: '{{ strptime(states(''sensor.wattsonic_datetime''),"%y,%m,%d,%H,%M,%S") }}'
 
 
 #Normal help
@@ -1359,7 +1312,7 @@ script:
         - 1
         - 1
         - 65535
-        - 1000
+        - 800
         - 65535
         - 0
         - 5947

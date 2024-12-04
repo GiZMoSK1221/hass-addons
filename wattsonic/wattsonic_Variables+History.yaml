@@ -66,7 +66,7 @@ automation:
           {% set json_new = 
                {"timestamp": as_timestamp(now()),
                 "date": now().strftime("%d.%m.%Y %H:%M:%S"),
-                "value": float(states('sensor.wattsonic_battery_soc'))| default(0) } 
+                "value": states('sensor.wattsonic_battery_soc')| float(0) } 
             %}
           {% set hist_new = namespace(data=[]) %}
           {% set hist_old = namespace(data=[]) %}
