@@ -61,6 +61,8 @@ Now, go to \\addon_configs\adaeefb4_nfws\ directory and edit stations.yaml using
 ![](https://raw.githubusercontent.com/GiZMoSK1221/hass-addons/main/nfws/help/addon_config.jpg)
 
 
+to edit stations.yaml in \\addon_configs\adaeefb4_nfws\ directory install Samba share addon and grant it access addon_configs directory.
+
 ## Configuring add-on
 ### stations.yaml
 [stations.yaml example](https://github.com/GiZMoSK1221/hass-addons/blob/main/nfws/help/stations_example.yaml) with parameters description
@@ -80,3 +82,6 @@ Now, go to \\addon_configs\adaeefb4_nfws\ directory and edit stations.yaml using
 6. get code value from url, close tab/window
 7. go to log, enter oauth_code: 'code'
 8. start addon
+
+### Device not found - response error from Netatmo service
+means Station was not added to favorite stations

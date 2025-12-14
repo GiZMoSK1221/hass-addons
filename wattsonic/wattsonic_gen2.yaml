@@ -364,15 +364,14 @@ modbus:
         scan_interval: 10
         lazy_error_count: 10
 
-sensor:
-  - platform: template
-    sensors:
-      wattsonic_home_consumption_now:
-         friendly_name: Wattsonic Home Consumption Now
-         unique_id: wattsonic_home_consumption_now
-         unit_of_measurement: kW
-         device_class: power
-         value_template: >
+template:
+  - sensor:
+      - default_entity_id: sensor.wattsonic_home_consumption_now
+        name: Wattsonic Home Consumption Now
+        unique_id: wattsonic_home_consumption_now
+        unit_of_measurement: kW
+        device_class: power
+        state: >
             {% set diff = (float(states("sensor.wattsonic_p_ac"), default=0) 
                          - float(states("sensor.wattsonic_total_power_on_meter"), default=0)) | round(3) %}
             {% if diff>0: %}

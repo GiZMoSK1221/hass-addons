@@ -1235,21 +1235,20 @@ modbus:
 #    - 5
 #or value: [2,65535,65535,800,65535,3,5]
 
-sensor:
-  - platform: template
-    sensors:
-      sunways_battery_mode_text:
-         friendly_name: Sunways Battery Mode
-         unique_id: sunways_battery_mode_text
-         value_template: >
+template:
+  - sensor:
+      - default_entity_id: sensor.sunways_battery_mode_text
+        name: Sunways Battery Mode
+        unique_id: sunways_battery_mode_text
+        state: >
             {% if states('sensor.sunways_battery_mode') == '0' %}
                 discharge
             {% else %}
                 charge
             {% endif %}
-      sunways_hybrid_inverter_working_mode_setting_text:
-         friendly_name: Sunways Hybrid Inverter Working Mode
-         value_template: >
+      - default_entity_id: sensor.sunways_hybrid_inverter_working_mode_setting_text
+        name: Sunways Hybrid Inverter Working Mode
+        state: >
             {% if states('sensor.sunways_hybrid_inverter_working_mode_setting') == '257' %}
                 General mode
             {% elif states('sensor.sunways_hybrid_inverter_working_mode_setting') == '258' %}
@@ -1259,9 +1258,9 @@ sensor:
             {% elif states('sensor.sunways_hybrid_inverter_working_mode_setting') == '512' %}
                 Offgrid mode
             {% endif %}
-      sunways_inverter_running_status_text:
-         friendly_name: Sunways Inverter Running Status
-         value_template: >
+      - default_entity_id: sensor.sunways_inverter_running_status_text
+        name: Sunways Inverter Running Status
+        state: >
             {% if states('sensor.sunways_inverter_running_status') == '0' %}
                 wait
             {% elif states('sensor.sunways_inverter_running_status') == '1' %}
@@ -1275,10 +1274,10 @@ sensor:
             {% elif states('sensor.sunways_inverter_running_status') == '5' %}
                 Off Grid
             {% endif %}
-      sunways_battery_soc_eta:
-         friendly_name: Sunways Battery SOC ETA
-         unique_id: sunways_battery_soc_eta
-         value_template: >
+      - default_entity_id: sensor.sunways_battery_soc_eta
+        name: Sunways Battery SOC ETA
+        unique_id: sunways_battery_soc_eta
+        state: >
             {% set battery_SOC = float(states("sensor.sunways_battery_soc"), default=100) %}
             {% set battery_SOC_last = float(states("sensor.sunways_battery_soc_5min_state"), default=0) %}
             {% set timediff = (states.sensor.sunways_battery_soc.last_updated.timestamp() - as_datetime(states("sensor.sunways_battery_soc_5min_last_updated")).timestamp())/60 %}
@@ -1298,12 +1297,12 @@ sensor:
                 {% set timemissing = (percmissing / (percdiff/timediff))|round  %}
                 ↑{{ as_local(as_datetime(as_timestamp(utcnow()) + timemissing*60)).strftime("%Y-%M-%d %H:%M") }}↑
             {% endif %}
-      sunways_grid_injection_energy_on_that_day_15min:   #sell in last 15min
-         friendly_name: Sunways Grid Injection 15min
-         unique_id: sunways_grid_injection_energy_on_that_day_15min
-         unit_of_measurement: kW
-         device_class: power
-         value_template: >
+      - default_entity_id: sensor.sunways_grid_injection_energy_on_that_day_15min   #sell in last 15min
+        name: Sunways Grid Injection 15min
+        unique_id: sunways_grid_injection_energy_on_that_day_15min
+        unit_of_measurement: kW
+        device_class: power
+        state: >
             {% set diff = (float(states("sensor.sunways_grid_injection_energy_on_that_day"), default=0) - float(states("sensor.sunways_grid_injection_energy_on_that_day_15min_state"), default=0) ) %}
             {% set timediff = (states.sensor.sunways_grid_injection_energy_on_that_day.last_updated.timestamp() - as_datetime(states("sensor.sunways_grid_injection_energy_on_that_day_15min_last_updated")).timestamp())/60 %}
             {% if timediff==0 or diff<=0: %}
@@ -1316,19 +1315,19 @@ sensor:
                     {{ res| round(1) }}
                 {% endif %}
             {% endif %}
-         attribute_templates:
+        attributes:
            diff: >
             {% set diff = (float(states("sensor.sunways_grid_injection_energy_on_that_day"), default=0) - float(states("sensor.sunways_grid_injection_energy_on_that_day_15min_state"), default=0) ) %}
             {{ diff }}
            timediff: >
             {% set timediff = (states.sensor.sunways_grid_injection_energy_on_that_day.last_updated.timestamp() - as_datetime(states("sensor.sunways_grid_injection_energy_on_that_day_15min_last_updated")).timestamp())/60 %}
             {{ timediff }}           
-      sunways_home_consumption_now:
-         friendly_name: Sunways Home Consumption Now
-         unique_id: sunways_home_consumption_now
-         unit_of_measurement: kW
-         device_class: power
-         value_template: >
+      - default_entity_id: sensor.sunways_home_consumption_now
+        name: Sunways Home Consumption Now
+        unique_id: sunways_home_consumption_now
+        unit_of_measurement: kW
+        device_class: power
+        state: >
             {% set diff = (float(states("sensor.sunways_p_ac"), default=0) 
                          - float(states("sensor.sunways_total_power_on_meter"), default=0)) | round(3) %}
             {% if diff>0: %}
@@ -1337,76 +1336,76 @@ sensor:
                 {{ (float(states("sensor.sunways_home_consumption_now"), default=0)) }}
             {% endif %}
          
-      sunways_home_consumption_today:
-         friendly_name: Sunways Home Consumption Today
-         unique_id: sunways_home_consumption_today
-         unit_of_measurement: kWh
-         device_class: energy
-         value_template: '{{ float(states(''sensor.sunways_loading_energy_on_that_day''), default= float(states(''sensor.sunways_home_consumption_today''), default=-10)) 
+      - default_entity_id: sensor.sunways_home_consumption_today
+        name: Sunways Home Consumption Today
+        unique_id: sunways_home_consumption_today
+        unit_of_measurement: kWh
+        device_class: energy
+        state: '{{ float(states(''sensor.sunways_loading_energy_on_that_day''), default= float(states(''sensor.sunways_home_consumption_today''), default=-10)) 
                          + float(states(''sensor.sunways_backup_output_energy_on_that_day''), default=0) }}'
-      sunways_home_consumption_today2:
-         friendly_name: Sunways Home Consumption Today2
-         unique_id: sunways_home_consumption_today2
-         unit_of_measurement: kWh
-         device_class: energy
-         value_template: '{{ (float(states(''sensor.sunways_pv_generation_energy_on_that_day''), default= float(states(''sensor.sunways_home_consumption_today2''), default=-10)) 
+      - default_entity_id: sensor.sunways_home_consumption_today2
+        name: Sunways Home Consumption Today2
+        unique_id: sunways_home_consumption_today2
+        unit_of_measurement: kWh
+        device_class: energy
+        state: '{{ (float(states(''sensor.sunways_pv_generation_energy_on_that_day''), default= float(states(''sensor.sunways_home_consumption_today2''), default=-10)) 
                          + float(states(''sensor.sunways_grid_purchasing_energy_on_that_day''), default=0)
                          - float(states(''sensor.sunways_grid_injection_energy_on_that_day''), default=0)
                          - float(states(''sensor.sunways_battery_charge_energy_on_that_day''), default=0) 
                          + float(states(''sensor.sunways_battery_discharge_energy_on_that_day''), default=0)) | round(3) }}'
 
-      sunways_battery_p_w:
-         friendly_name: Sunways Battery P Watt
-         unique_id: sunways_battery_p_w
-         unit_of_measurement: W
-         device_class: power
-         value_template: '{{ (states(''sensor.sunways_battery_p'')|float(0)*1000)|round(0) }}'
-      sunways_total_power_on_meter_w:
-         friendly_name: Sunways Total Power On Meter Watt
-         unique_id: sunways_total_power_on_meter_w
-         unit_of_measurement: W
-         device_class: power
-         value_template: '{{ (states(''sensor.sunways_total_power_on_meter'')|float(0)*-1000)|round(0) }}'
-      sunways_pv1_input_power_w:
-         friendly_name: Sunways PV1 Input Power Watt
-         unique_id: sunways_pv1_input_power_w
-         unit_of_measurement: W
-         device_class: power
-         value_template: '{{ (states(''sensor.sunways_pv1_input_power'')|float(0)*1000)|round(0) }}'
-      sunways_pv2_input_power_w:
-         friendly_name: Sunways PV2 Input Power Watt
-         unique_id: sunways_pv2_input_power_w
-         unit_of_measurement: W
-         device_class: power
-         value_template: '{{ (states(''sensor.sunways_pv2_input_power'')|float(0)*1000)|round(0) }}'
-      sunways_home_consumption_now_w:
-         friendly_name: Sunways Home Consumption Now Watt
-         unique_id: sunways_home_consumption_now_w
-         unit_of_measurement: W
-         device_class: power
-         value_template: '{{ (states(''sensor.sunways_home_consumption_now'')|float(0)*1000)|round(0) }}'
-      sunways_phase_a_power_on_meter_w:
-         friendly_name: Sunways Phase A Power on Meter Watt
-         unique_id: sunways_phase_a_power_on_meter_w
-         unit_of_measurement: W
-         device_class: power
-         value_template: '{{ (states(''sensor.sunways_phase_a_power_on_meter'')|float(0)*1000)|round(0) }}'
-      sunways_phase_b_power_on_meter_w:
-         friendly_name: Sunways Phase B Power on Meter Watt
-         unique_id: sunways_phase_b_power_on_meter_w
-         unit_of_measurement: W
-         device_class: power
-         value_template: '{{ (states(''sensor.sunways_phase_b_power_on_meter'')|float(0)*1000)|round(0) }}'
-      sunways_phase_c_power_on_meter_w:
-         friendly_name: Sunways Phase C Power on Meter Watt
-         unique_id: sunways_phase_c_power_on_meter_w
-         unit_of_measurement: W
-         device_class: power
-         value_template: '{{ (states(''sensor.sunways_phase_c_power_on_meter'')|float(0)*1000)|round(0) }}'
-      sunways_sunsync_grid_connected:
-         friendly_name: Sunways Sunsync Grid Connected
-         unique_id: sunways_sunsync_grid_connected
-         value_template: >
+      - default_entity_id: sensor.sunways_battery_p_w
+        name: Sunways Battery P Watt
+        unique_id: sunways_battery_p_w
+        unit_of_measurement: W
+        device_class: power
+        state: '{{ (states(''sensor.sunways_battery_p'')|float(0)*1000)|round(0) }}'
+      - default_entity_id: sensor.sunways_total_power_on_meter_w
+        name: Sunways Total Power On Meter Watt
+        unique_id: sunways_total_power_on_meter_w
+        unit_of_measurement: W
+        device_class: power
+        state: '{{ (states(''sensor.sunways_total_power_on_meter'')|float(0)*-1000)|round(0) }}'
+      - default_entity_id: sensor.sunways_pv1_input_power_w
+        name: Sunways PV1 Input Power Watt
+        unique_id: sunways_pv1_input_power_w
+        unit_of_measurement: W
+        device_class: power
+        state: '{{ (states(''sensor.sunways_pv1_input_power'')|float(0)*1000)|round(0) }}'
+      - default_entity_id: sensor.sunways_pv2_input_power_w
+        name: Sunways PV2 Input Power Watt
+        unique_id: sunways_pv2_input_power_w
+        unit_of_measurement: W
+        device_class: power
+        state: '{{ (states(''sensor.sunways_pv2_input_power'')|float(0)*1000)|round(0) }}'
+      - default_entity_id: sensor.sunways_home_consumption_now_w
+        name: Sunways Home Consumption Now Watt
+        unique_id: sunways_home_consumption_now_w
+        unit_of_measurement: W
+        device_class: power
+        state: '{{ (states(''sensor.sunways_home_consumption_now'')|float(0)*1000)|round(0) }}'
+      - default_entity_id: sensor.sunways_phase_a_power_on_meter_w
+        name: Sunways Phase A Power on Meter Watt
+        unique_id: sunways_phase_a_power_on_meter_w
+        unit_of_measurement: W
+        device_class: power
+        state: '{{ (states(''sensor.sunways_phase_a_power_on_meter'')|float(0)*1000)|round(0) }}'
+      - default_entity_id: sensor.sunways_phase_b_power_on_meter_w
+        name: Sunways Phase B Power on Meter Watt
+        unique_id: sunways_phase_b_power_on_meter_w
+        unit_of_measurement: W
+        device_class: power
+        state: '{{ (states(''sensor.sunways_phase_b_power_on_meter'')|float(0)*1000)|round(0) }}'
+      - default_entity_id: sensor.sunways_phase_c_power_on_meter_w
+        name: Sunways Phase C Power on Meter Watt
+        unique_id: sunways_phase_c_power_on_meter_w
+        unit_of_measurement: W
+        device_class: power
+        state: '{{ (states(''sensor.sunways_phase_c_power_on_meter'')|float(0)*1000)|round(0) }}'
+      - default_entity_id: sensor.sunways_sunsync_grid_connected
+        name: Sunways Sunsync Grid Connected
+        unique_id: sunways_sunsync_grid_connected
+        state: >
            {% if states('sensor.sunways_inverter_running_status') == '2' %} 
               1
            {% else %}
@@ -1418,31 +1417,31 @@ sensor:
 #druhy riadok 3 - 2,65535,65535,860,65535,0,256; cas je 00:00-01:00
 #druhy riadok 3 - 2,65535,65535,860,65535,512,768; cas je 02:00-03:00
 #
-      sunways_ecomode_period1_chargedischarge_setting:
-         friendly_name: Sunways Ecomode Period1 ChargeDischarge Setting #Period1: 0:NONE 1:charge 2:discharge
-         unique_id: sunways_ecomode_period1_chargedischarge_setting
-         value_template: '{{ states(''sensor.sunways_ecomode_period1_struct'').split('','')[0]|default(-1) }}'
-      sunways_ecomode_period1_battery_charge_by:   
-         friendly_name: Sunways Ecomode Period1 Battery Charge By #0:PV 1:PV+GRID
-         unique_id: sunways_ecomode_period1_battery_charge_by
-         value_template: '{{ states(''sensor.sunways_ecomode_period1_struct'').split('','')[1]|default(-1) }}'
-      sunways_ecomode_period1_power_limit:   
-         friendly_name: Sunways Ecomode Period1 Power Limit #[0.0-100.0%]
-         unique_id: sunways_ecomode_period1_power_limit
-         unit_of_measurement: '%'
-         value_template: '{{ states(''sensor.sunways_ecomode_period1_struct'').split('','')[3]|float(0)/10|default(-1) }}'
-      sunways_ecomode_period1_start_time:
-         friendly_name: Sunways Ecomode Period1 Start Time #High 8bits(Hour):[0,23] Low 8bits(Mins):[0,59]
-         unique_id: sunways_ecomode_period1_start_time
-         value_template: '{{ ((states(''sensor.sunways_ecomode_period1_struct'').split('','')[5]|int//256)|string).zfill(2) }}:{{ ((states(''sensor.sunways_ecomode_period1_struct'').split('','')[5]|int%256)|string).zfill(2) }}'
-      sunways_ecomode_period1_end_time:
-         friendly_name: Sunways Ecomode Period1 End Time #High 8bits(Hour):[0,23] Low 8bits(Mins):[0,59]
-         unique_id: sunways_ecomode_period1_end_time
-         value_template: '{{ ((states(''sensor.sunways_ecomode_period1_struct'').split('','')[6]|int//256)|string).zfill(2) }}:{{ ((states(''sensor.sunways_ecomode_period1_struct'').split('','')[6]|int%256)|string).zfill(2) }}'
-      sunways_ecomode_period_enable_flag_bin:
-         friendly_name: Sunways Ecomode Period Enable Flag Binary
-         unique_id: sunways_ecomode_period_enable_flag_bin
-         value_template: '{{ (''{:b}''.format(states(''sensor.sunways_ecomode_period_enable_flag'')|int)).ljust(6, ''0'') }}'
+      - default_entity_id: sensor.sunways_ecomode_period1_chargedischarge_setting
+        name: Sunways Ecomode Period1 ChargeDischarge Setting #Period1: 0:NONE 1:charge 2:discharge
+        unique_id: sunways_ecomode_period1_chargedischarge_setting
+        state: '{{ states(''sensor.sunways_ecomode_period1_struct'').split('','')[0]|default(-1) }}'
+      - default_entity_id: sensor.sunways_ecomode_period1_battery_charge_by
+        name: Sunways Ecomode Period1 Battery Charge By #0:PV 1:PV+GRID
+        unique_id: sunways_ecomode_period1_battery_charge_by
+        state: '{{ states(''sensor.sunways_ecomode_period1_struct'').split('','')[1]|default(-1) }}'
+      - default_entity_id: sensor.sunways_ecomode_period1_power_limit
+        name: Sunways Ecomode Period1 Power Limit #[0.0-100.0%]
+        unique_id: sunways_ecomode_period1_power_limit
+        unit_of_measurement: '%'
+        state: '{{ states(''sensor.sunways_ecomode_period1_struct'').split('','')[3]|float(0)/10|default(-1) }}'
+      - default_entity_id: sensor.sunways_ecomode_period1_start_time
+        name: Sunways Ecomode Period1 Start Time #High 8bits(Hour):[0,23] Low 8bits(Mins):[0,59]
+        unique_id: sunways_ecomode_period1_start_time
+        state: '{{ ((states(''sensor.sunways_ecomode_period1_struct'').split('','')[5]|int//256)|string).zfill(2) }}:{{ ((states(''sensor.sunways_ecomode_period1_struct'').split('','')[5]|int%256)|string).zfill(2) }}'
+      - default_entity_id: sensor.sunways_ecomode_period1_end_time
+        name: Sunways Ecomode Period1 End Time #High 8bits(Hour):[0,23] Low 8bits(Mins):[0,59]
+        unique_id: sunways_ecomode_period1_end_time
+        state: '{{ ((states(''sensor.sunways_ecomode_period1_struct'').split('','')[6]|int//256)|string).zfill(2) }}:{{ ((states(''sensor.sunways_ecomode_period1_struct'').split('','')[6]|int%256)|string).zfill(2) }}'
+      - default_entity_id: sensor.sunways_ecomode_period_enable_flag_bin
+        name: Sunways Ecomode Period Enable Flag Binary
+        unique_id: sunways_ecomode_period_enable_flag_bin
+        state: '{{ (''{:b}''.format(states(''sensor.sunways_ecomode_period_enable_flag'')|int)).ljust(6, ''0'') }}'
 
 
 #Normal help

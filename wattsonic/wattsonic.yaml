@@ -990,13 +990,12 @@ modbus:
 #    - 5
 #or value: [2,65535,65535,800,65535,3,5]
 
-sensor:
-  - platform: template
-    sensors:
-      wattsonic_battery_configuration_text:
-         friendly_name: Wattsonic Battery Configuration
-         unique_id: wattsonic_battery_configuration_text
-         value_template: >
+template:
+  - sensor:
+      - default_entity_id: sensor.wattsonic_battery_configuration_text
+        name: Wattsonic Battery Configuration
+        unique_id: wattsonic_battery_configuration_text
+        state: >
             {% if states('sensor.wattsonic_battery_configuration') == '1' %}
                 Solinteg
             {% elif states('sensor.wattsonic_battery_configuration') == '2' %}
@@ -1006,18 +1005,19 @@ sensor:
             {% else %}
                 Reserved
             {% endif %}
-      wattsonic_battery_mode_text:
-         friendly_name: Wattsonic Battery Mode
-         unique_id: wattsonic_battery_mode_text
-         value_template: >
+
+      - default_entity_id: sensor.wattsonic_battery_mode_text
+        name: Wattsonic Battery Mode
+        unique_id: wattsonic_battery_mode_text
+        state: >
             {% if states('sensor.wattsonic_battery_mode') == '0' %}
                 discharge
             {% else %}
                 charge
             {% endif %}
-      wattsonic_hybrid_inverter_working_mode_setting_text:
-         friendly_name: Wattsonic Hybrid Inverter Working Mode
-         value_template: >
+      - default_entity_id: sensor.wattsonic_hybrid_inverter_working_mode_setting_text
+        name: Wattsonic Hybrid Inverter Working Mode
+        state: >
             {% if states('sensor.wattsonic_hybrid_inverter_working_mode_setting') == '257' %}
                 General mode
             {% elif states('sensor.wattsonic_hybrid_inverter_working_mode_setting') == '258' %}
@@ -1033,9 +1033,9 @@ sensor:
             {% elif states('sensor.wattsonic_hybrid_inverter_working_mode_setting') == '771' %}
                 EMS_BattCtrlMode
             {% endif %}
-      wattsonic_inverter_running_status_text:
-         friendly_name: Wattsonic Inverter Running Status
-         value_template: >
+      - default_entity_id: sensor.wattsonic_inverter_running_status_text
+        name: Wattsonic Inverter Running Status
+        state: >
             {% if states('sensor.wattsonic_inverter_running_status') == '0' %}
                 wait
             {% elif states('sensor.wattsonic_inverter_running_status') == '1' %}
@@ -1050,12 +1050,12 @@ sensor:
                 Off Grid
             {% endif %}
 
-      wattsonic_home_consumption_now:
-         friendly_name: Wattsonic Home Consumption Now
-         unique_id: wattsonic_home_consumption_now
-         unit_of_measurement: kW
-         device_class: power
-         value_template: >
+      - default_entity_id: sensor.wattsonic_home_consumption_now
+        name: Wattsonic Home Consumption Now
+        unique_id: wattsonic_home_consumption_now
+        unit_of_measurement: kW
+        device_class: power
+        state: >
             {% set diff = (float(states("sensor.wattsonic_p_ac"), default=0) 
                          - float(states("sensor.wattsonic_total_power_on_meter"), default=0)) | round(3) %}
             {% if diff>0: %}
@@ -1064,34 +1064,34 @@ sensor:
                 {{ (float(states("sensor.wattsonic_home_consumption_now"), default=0)) }}
             {% endif %}
          
-      wattsonic_home_consumption_today:
-         friendly_name: Wattsonic Home Consumption Today
-         unique_id: wattsonic_home_consumption_today
-         unit_of_measurement: kWh
-         device_class: energy
-         value_template: '{{ float(states(''sensor.wattsonic_loading_energy_on_that_day''), default= float(states(''sensor.wattsonic_home_consumption_today''), default=-10)) 
+      - default_entity_id: sensor.wattsonic_home_consumption_today
+        name: Wattsonic Home Consumption Today
+        unique_id: wattsonic_home_consumption_today
+        unit_of_measurement: kWh
+        device_class: energy
+        state: '{{ float(states(''sensor.wattsonic_loading_energy_on_that_day''), default= float(states(''sensor.wattsonic_home_consumption_today''), default=-10)) 
                          + float(states(''sensor.wattsonic_backup_output_energy_on_that_day''), default=0) }}'
-      wattsonic_home_consumption_today2:
-         friendly_name: Wattsonic Home Consumption Today2
-         unique_id: wattsonic_home_consumption_today2
-         unit_of_measurement: kWh
-         device_class: energy
-         value_template: '{{ (float(states(''sensor.wattsonic_pv_generation_energy_on_that_day''), default= float(states(''sensor.wattsonic_home_consumption_today2''), default=-10)) 
+      - default_entity_id: sensor.wattsonic_home_consumption_today2
+        name: Wattsonic Home Consumption Today2
+        unique_id: wattsonic_home_consumption_today2
+        unit_of_measurement: kWh
+        device_class: energy
+        state: '{{ (float(states(''sensor.wattsonic_pv_generation_energy_on_that_day''), default= float(states(''sensor.wattsonic_home_consumption_today2''), default=-10)) 
                          + float(states(''sensor.wattsonic_grid_purchasing_energy_on_that_day''), default=0)
                          - float(states(''sensor.wattsonic_grid_injection_energy_on_that_day''), default=0)
                          - float(states(''sensor.wattsonic_battery_charge_energy_on_that_day''), default=0) 
                          + float(states(''sensor.wattsonic_battery_discharge_energy_on_that_day''), default=0)) | round(3) }}'
 
-      wattsonic_total_power_on_meter_w:
-         friendly_name: Wattsonic Total Power On Meter Watt
-         unique_id: wattsonic_total_power_on_meter_w
-         unit_of_measurement: W
-         device_class: power
-         value_template: '{{ (states(''sensor.wattsonic_total_power_on_meter'')|float(0)*-1000)|round(0) }}'
-      wattsonic_sunsync_grid_connected:
-         friendly_name: Wattsonic Sunsync Grid Connected
-         unique_id: wattsonic_sunsync_grid_connected
-         value_template: >
+      - default_entity_id: sensor.wattsonic_total_power_on_meter_w
+        name: Wattsonic Total Power On Meter Watt
+        unique_id: wattsonic_total_power_on_meter_w
+        unit_of_measurement: W
+        device_class: power
+        state: '{{ (states(''sensor.wattsonic_total_power_on_meter'')|float(0)*-1000)|round(0) }}'
+      - default_entity_id: sensor.wattsonic_sunsync_grid_connected
+        name: Wattsonic Sunsync Grid Connected
+        unique_id: wattsonic_sunsync_grid_connected
+        state: >
            {% if states('sensor.wattsonic_inverter_running_status') == '2' %} 
               1
            {% else %}
@@ -1102,37 +1102,37 @@ sensor:
 #druhy riadok 3 - 1,0,65535,235,65535,5915,5937; cas je 23:27-23:49; 23.5%
 #druhy riadok 3 - 2,65535,65535,860,65535,0,256; cas je 00:00-01:00
 #druhy riadok 3 - 2,65535,65535,860,65535,512,768; cas je 02:00-03:00
-#
-      wattsonic_ecomode_period1_chargedischarge_setting:
-         friendly_name: Wattsonic Ecomode Period1 ChargeDischarge Setting #Period1: 0:NONE 1:charge 2:discharge
-         unique_id: wattsonic_ecomode_period1_chargedischarge_setting
-         value_template: '{{ states(''sensor.wattsonic_ecomode_period1_struct'').split('','')[0]|default(-1) }}'
-      wattsonic_ecomode_period1_battery_charge_by:   
-         friendly_name: Wattsonic Ecomode Period1 Battery Charge By #0:PV 1:PV+GRID
-         unique_id: wattsonic_ecomode_period1_battery_charge_by
-         value_template: '{{ states(''sensor.wattsonic_ecomode_period1_struct'').split('','')[1]|default(-1) }}'
-      wattsonic_ecomode_period1_power_limit:   
-         friendly_name: Wattsonic Ecomode Period1 Power Limit #[0.0-100.0%]
-         unique_id: wattsonic_ecomode_period1_power_limit
-         unit_of_measurement: '%'
-         value_template: '{{ states(''sensor.wattsonic_ecomode_period1_struct'').split('','')[3]|float(0)/10|default(-1) }}'
-      wattsonic_ecomode_period1_start_time:
-         friendly_name: Wattsonic Ecomode Period1 Start Time #High 8bits(Hour):[0,23] Low 8bits(Mins):[0,59]
-         unique_id: wattsonic_ecomode_period1_start_time
-         value_template: '{{ ((states(''sensor.wattsonic_ecomode_period1_struct'').split('','')[5]|int//256)|string).zfill(2) }}:{{ ((states(''sensor.wattsonic_ecomode_period1_struct'').split('','')[5]|int%256)|string).zfill(2) }}'
-      wattsonic_ecomode_period1_end_time:
-         friendly_name: Wattsonic Ecomode Period1 End Time #High 8bits(Hour):[0,23] Low 8bits(Mins):[0,59]
-         unique_id: wattsonic_ecomode_period1_end_time
-         value_template: '{{ ((states(''sensor.wattsonic_ecomode_period1_struct'').split('','')[6]|int//256)|string).zfill(2) }}:{{ ((states(''sensor.wattsonic_ecomode_period1_struct'').split('','')[6]|int%256)|string).zfill(2) }}'
-      wattsonic_ecomode_period_enable_flag_bin:
-         friendly_name: Wattsonic Ecomode Period Enable Flag Binary
-         unique_id: wattsonic_ecomode_period_enable_flag_bin
-         value_template: '{{ (''{:b}''.format(states(''sensor.wattsonic_ecomode_period_enable_flag'')|int)).ljust(6, ''0'') }}'
 
-      wattsonic_datetime_dt:
-         friendly_name: Wattsonic DateTime DT
-         unique_id: wattsonic_datetime_dt
-         value_template: '{{ strptime(states(''sensor.wattsonic_datetime''),"%y,%m,%d,%H,%M,%S") }}'
+      - default_entity_id: sensor.wattsonic_ecomode_period1_chargedischarge_setting
+        name: Wattsonic Ecomode Period1 ChargeDischarge Setting #Period1: 0:NONE 1:charge 2:discharge
+        unique_id: wattsonic_ecomode_period1_chargedischarge_setting
+        state: '{{ states(''sensor.wattsonic_ecomode_period1_struct'').split('','')[0]|default(-1) }}'
+      - default_entity_id: sensor.wattsonic_ecomode_period1_battery_charge_by
+        name: Wattsonic Ecomode Period1 Battery Charge By #0:PV 1:PV+GRID
+        unique_id: wattsonic_ecomode_period1_battery_charge_by
+        state: '{{ states(''sensor.wattsonic_ecomode_period1_struct'').split('','')[1]|default(-1) }}'
+      - default_entity_id: sensor.wattsonic_ecomode_period1_power_limit
+        name: Wattsonic Ecomode Period1 Power Limit #[0.0-100.0%]
+        unique_id: wattsonic_ecomode_period1_power_limit
+        unit_of_measurement: '%'
+        state: '{{ states(''sensor.wattsonic_ecomode_period1_struct'').split('','')[3]|default(-10)|int(0)/10 }}'
+      - default_entity_id: sensor.wattsonic_ecomode_period1_start_time
+        name: Wattsonic Ecomode Period1 Start Time #High 8bits(Hour):[0,23] Low 8bits(Mins):[0,59]
+        unique_id: wattsonic_ecomode_period1_start_time
+        state: '{{ ((states(''sensor.wattsonic_ecomode_period1_struct'').split('','')[5]|default(0)|int(0)//256)|string).zfill(2) }}:{{ ((states(''sensor.wattsonic_ecomode_period1_struct'').split('','')[5]|default(0)|int%256)|string).zfill(2) }}'
+      - default_entity_id: sensor.wattsonic_ecomode_period1_end_time
+        name: Wattsonic Ecomode Period1 End Time #High 8bits(Hour):[0,23] Low 8bits(Mins):[0,59]
+        unique_id: wattsonic_ecomode_period1_end_time
+        state: '{{ ((states(''sensor.wattsonic_ecomode_period1_struct'').split('','')[6]|default(0)|int(0)//256)|string).zfill(2) }}:{{ ((states(''sensor.wattsonic_ecomode_period1_struct'').split('','')[6]|default(0)|int%256)|string).zfill(2) }}'
+      - default_entity_id: sensor.wattsonic_ecomode_period_enable_flag_bin
+        name: Wattsonic Ecomode Period Enable Flag Binary
+        unique_id: wattsonic_ecomode_period_enable_flag_bin
+        state: '{{ (''{:b}''.format(states(''sensor.wattsonic_ecomode_period_enable_flag'')|int(0))).ljust(6, ''0'') }}'
+
+      - default_entity_id: sensor.wattsonic_datetime_dt
+        name: Wattsonic DateTime DT
+        unique_id: wattsonic_datetime_dt
+        state: '{{ strptime(states(''sensor.wattsonic_datetime''),"%y,%m,%d,%H,%M,%S") }}'
 
 
 #Normal help
@@ -1180,6 +1180,8 @@ sensor:
 #- *battery is below 25%   -> just for sure, critical event
 #- *battery is over 99%    -> we can export to grid
 #* = event, withou asterix are conditions
+
+
 automation:
 - id: '1679907434474'
   alias: Wattsonic Minimal import from grid set General Mode
