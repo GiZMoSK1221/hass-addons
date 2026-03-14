@@ -1,5 +1,5 @@
-modbus:  
-  - name: wattsonic 
+modbus:
+  - name: wattsonic
     # type: tcp
     # host: 192.168.11.104
     # port: 502
@@ -422,7 +422,7 @@ modbus:
         device_class: voltage
         scale: 0.1
         precision: 1
-        data_type: int16        
+        data_type: int16
         scan_interval: 60
       - name: Wattsonic Grid Phase A Voltage
         unique_id: wattsonic_grid_phase_a_voltage
@@ -692,7 +692,7 @@ modbus:
         input_type: holding
         data_type: int32
         scan_interval: 60
-        
+
       - name: Wattsonic Total Backup P          #load power, total active power
         unique_id: wattsonic_total_backup_p
         slave: 247
@@ -847,7 +847,9 @@ modbus:
         scan_interval: 60
 
 #RW values
-      - name: Wattsonic Hybrid Inverter Working Mode Setting  #257=General mode; 258=Economic mode; 259=UPS mode; 512=Off grid mode
+        # Peak Shift, Feed-In and ToU modes are specific to firmware v3 and newer
+        # ECO mode is used up to v2, then substituted by ToU
+      - name: Wattsonic Hybrid Inverter Working Mode Setting  #257=General mode; 258=Economic mode; 259=UPS mode; 260=Peak Shift; 261=Feed-In; 512=Off grid mode; 1024=ToU
         unique_id: wattsonic_hybrid_inverter_working_mode_setting #RW
         slave: 247
         address: 50000
@@ -917,6 +919,28 @@ modbus:
         slave: 247
         address: 52500
         input_type: holding
+        data_type: int16
+        scan_interval: 60
+      - name: Wattsonic Charge Current Limit # Ampers [0-200], default 200
+        unique_id: wattsonic_charge_current_limit #RW
+        device_class: current
+        unit_of_measurement: A
+        slave: 247
+        address: 52601
+        input_type: holding
+        scale: 0.1
+        precision: 0
+        data_type: int16
+        scan_interval: 60
+      - name: Wattsonic Discharge Current Limit # Ampers [0-200], default 200
+        unique_id: wattsonic_discharge_current_limit #RW
+        device_class: current
+        unit_of_measurement: A
+        slave: 247
+        address: 52603
+        input_type: holding
+        scale: 0.1
+        precision: 0
         data_type: int16
         scan_interval: 60
       - name: Wattsonic RW BMS Status #Table 3.8
@@ -996,59 +1020,68 @@ template:
         name: Wattsonic Battery Configuration
         unique_id: wattsonic_battery_configuration_text
         state: >
-            {% if states('sensor.wattsonic_battery_configuration') == '1' %}
-                Solinteg
-            {% elif states('sensor.wattsonic_battery_configuration') == '2' %}
-                EMS
-            {% elif states('sensor.wattsonic_battery_configuration') == '10' %}
-                Wattsonic Li-HV
-            {% else %}
-                Reserved
-            {% endif %}
+          {{ {
+              1: 'Solinteg',
+              2: 'EMS',
+              10: 'Wattsonic Li-HV'
+          }.get(states('sensor.wattsonic_battery_configuration') | int(0), 'Reserved') }}
 
       - default_entity_id: sensor.wattsonic_battery_mode_text
         name: Wattsonic Battery Mode
         unique_id: wattsonic_battery_mode_text
         state: >
-            {% if states('sensor.wattsonic_battery_mode') == '0' %}
-                discharge
-            {% else %}
-                charge
-            {% endif %}
+          {{ {
+              0: 'discharge'
+          }.get(states('sensor.wattsonic_battery_mode') | int(65535), 'charge') }}
+
       - default_entity_id: sensor.wattsonic_hybrid_inverter_working_mode_setting_text
         name: Wattsonic Hybrid Inverter Working Mode
+        unique_id: wattsonic_hybrid_inverter_working_mode_setting_text
         state: >
-            {% if states('sensor.wattsonic_hybrid_inverter_working_mode_setting') == '257' %}
-                General mode
-            {% elif states('sensor.wattsonic_hybrid_inverter_working_mode_setting') == '258' %}
-                Economic mode
-            {% elif states('sensor.wattsonic_hybrid_inverter_working_mode_setting') == '259' %}
-                UPS mode
-            {% elif states('sensor.wattsonic_hybrid_inverter_working_mode_setting') == '512' %}
-                Offgrid mode
-            {% elif states('sensor.wattsonic_hybrid_inverter_working_mode_setting') == '769' %}
-                EMS_ACCtrlMode
-            {% elif states('sensor.wattsonic_hybrid_inverter_working_mode_setting') == '770' %}
-                EMS_GeneralMode
-            {% elif states('sensor.wattsonic_hybrid_inverter_working_mode_setting') == '771' %}
-                EMS_BattCtrlMode
-            {% endif %}
+          {{ {
+            257: 'General mode',
+            258: 'Economic mode',
+            259: 'UPS mode',
+            260: 'Peak Shift',
+            261: 'Feed-In',
+            512: 'Offgrid mode',
+            769: 'EMS_ACCtrlMode',
+            770: 'EMS_GeneralMode',
+            771: 'EMS_BattCtrlMode',
+            1024: 'ToU'
+          }.get(states('sensor.wattsonic_hybrid_inverter_working_mode_setting') | int(0), 'Unknown') }}
+
       - default_entity_id: sensor.wattsonic_inverter_running_status_text
         name: Wattsonic Inverter Running Status
+        unique_id: wattsonic_inverter_running_status_text
         state: >
-            {% if states('sensor.wattsonic_inverter_running_status') == '0' %}
-                wait
-            {% elif states('sensor.wattsonic_inverter_running_status') == '1' %}
-                check
-            {% elif states('sensor.wattsonic_inverter_running_status') == '2' %}
-                On Grid
-            {% elif states('sensor.wattsonic_inverter_running_status') == '3' %}
-                fault
-            {% elif states('sensor.wattsonic_inverter_running_status') == '4' %}
-                flash
-            {% elif states('sensor.wattsonic_inverter_running_status') == '5' %}
-                Off Grid
-            {% endif %}
+          {{ {
+              0: 'wait',
+              1: 'check',
+              2: 'On Grid',
+              3: 'fault',
+              4: 'flash',
+              5: 'Off Grid'
+          }.get(states('sensor.wattsonic_inverter_running_status') | int(65535), 'Unknown ') }}
+
+      - default_entity_id: sensor.wattsonic_ecomode_period1_chargedischarge_setting_text
+        name: Wattsonic Ecomode Period1 ChargeDischarge Setting Text
+        unique_id: wattsonic_ecomode_period1_chargedischarge_setting_text
+        state: >
+          {{ {
+            0: 'None',
+            1: 'Charge',
+            2: 'Discharge'
+          }.get(states('sensor.wattsonic_ecomode_period1_chargedischarge_setting') | int(65535), 'Unknown') }}
+
+      - default_entity_id: sensor.wattsonic_ecomode_period1_battery_charge_by_text
+        name: Wattsonic Ecomode Period1 Battery Charge By Text
+        unique_id: wattsonic_ecomode_period1_battery_charge_by_text
+        state: >
+          {{ {
+            0: 'PV',
+            1: 'PV+GRID'
+          }.get(states('sensor.wattsonic_ecomode_period1_battery_charge_by') | int(65535), 'Unknown') }}
 
       - default_entity_id: sensor.wattsonic_home_consumption_now
         name: Wattsonic Home Consumption Now
@@ -1056,31 +1089,31 @@ template:
         unit_of_measurement: kW
         device_class: power
         state: >
-            {% set diff = (float(states("sensor.wattsonic_p_ac"), default=0) 
-                         - float(states("sensor.wattsonic_total_power_on_meter"), default=0)) | round(3) %}
+            {% set diff = (float(states("sensor.wattsonic_p_ac"), default=0)
+                          - float(states("sensor.wattsonic_total_power_on_meter"), default=0)) | round(3) %}
             {% if diff>0: %}
                 {{ diff }}
             {% else %}
                 {{ (float(states("sensor.wattsonic_home_consumption_now"), default=0)) }}
             {% endif %}
-         
+
       - default_entity_id: sensor.wattsonic_home_consumption_today
         name: Wattsonic Home Consumption Today
         unique_id: wattsonic_home_consumption_today
         unit_of_measurement: kWh
         device_class: energy
-        state: '{{ float(states(''sensor.wattsonic_loading_energy_on_that_day''), default= float(states(''sensor.wattsonic_home_consumption_today''), default=-10)) 
-                         + float(states(''sensor.wattsonic_backup_output_energy_on_that_day''), default=0) }}'
+        state: '{{ float(states(''sensor.wattsonic_loading_energy_on_that_day''), default= float(states(''sensor.wattsonic_home_consumption_today''), default=-10))
+                          + float(states(''sensor.wattsonic_backup_output_energy_on_that_day''), default=0) }}'
       - default_entity_id: sensor.wattsonic_home_consumption_today2
         name: Wattsonic Home Consumption Today2
         unique_id: wattsonic_home_consumption_today2
         unit_of_measurement: kWh
         device_class: energy
-        state: '{{ (float(states(''sensor.wattsonic_pv_generation_energy_on_that_day''), default= float(states(''sensor.wattsonic_home_consumption_today2''), default=-10)) 
-                         + float(states(''sensor.wattsonic_grid_purchasing_energy_on_that_day''), default=0)
-                         - float(states(''sensor.wattsonic_grid_injection_energy_on_that_day''), default=0)
-                         - float(states(''sensor.wattsonic_battery_charge_energy_on_that_day''), default=0) 
-                         + float(states(''sensor.wattsonic_battery_discharge_energy_on_that_day''), default=0)) | round(3) }}'
+        state: '{{ (float(states(''sensor.wattsonic_pv_generation_energy_on_that_day''), default= float(states(''sensor.wattsonic_home_consumption_today2''), default=-10))
+                          + float(states(''sensor.wattsonic_grid_purchasing_energy_on_that_day''), default=0)
+                          - float(states(''sensor.wattsonic_grid_injection_energy_on_that_day''), default=0)
+                          - float(states(''sensor.wattsonic_battery_charge_energy_on_that_day''), default=0)
+                          + float(states(''sensor.wattsonic_battery_discharge_energy_on_that_day''), default=0)) | round(3) }}'
 
       - default_entity_id: sensor.wattsonic_total_power_on_meter_w
         name: Wattsonic Total Power On Meter Watt
@@ -1092,11 +1125,11 @@ template:
         name: Wattsonic Sunsync Grid Connected
         unique_id: wattsonic_sunsync_grid_connected
         state: >
-           {% if states('sensor.wattsonic_inverter_running_status') == '2' %} 
+            {% if states('sensor.wattsonic_inverter_running_status') == '2' %}
               1
-           {% else %}
+            {% else %}
               0
-           {% endif %}
+            {% endif %}
 
 #jeden riadok 1 - 2,65535,65535,860,65535,1,7; cas je 00:01-00:07
 #druhy riadok 3 - 1,0,65535,235,65535,5915,5937; cas je 23:27-23:49; 23.5%
@@ -1135,29 +1168,45 @@ template:
         state: '{{ strptime(states(''sensor.wattsonic_datetime''),"%y,%m,%d,%H,%M,%S") }}'
 
 
-#Normal help
-#PV power is sufficient, power from the PV will firstly supply loads, then excess power charge battery, 
-#and any surplus power will be fed to the grid. 
-#PV power is insufficient to satisfy loads, the battery will discharge power to fill the power gap, 
-#and the grid will join in if it’s still not enough.
+# General mode
+# PV power is sufficient, power from the PV will firstly supply loads, then excess power charge battery,
+# and any surplus power will be fed to the grid.
+# PV power is insufficient to satisfy loads, the battery will discharge power to fill the power gap,
+# and the grid will join in if it’s still not enough.
 
-#Economic help
-#This mode is typically used in areas where with peak and valley electricity prices to assist clients in optimizing their energy costs. 
-#By configuring the App, customers can charge power from the grid during valley hours. 
-#Customers can also discharge power during peak hours by configuring the App, 
-#and the battery will discharge electricity to supply loads or feed to the grid in this instance.
-#standardne bez casov vobec nepouziva baterku / nenabija/nevybija
+# Economic mode (up to firmware v2)
+# This mode is typically used in areas where with peak and valley electricity prices to assist clients in optimizing their energy costs.
+# By configuring the App, customers can charge power from the grid during valley hours.
+# Customers can also discharge power during peak hours by configuring the App,
+# and the battery will discharge electricity to supply loads or feed to the grid in this instance.
+# standardne bez casov vobec nepouziva baterku / nenabija/nevybija
 
-#Off-grid mode
-#In the pure off-grid mode, power from PV will supply the back-up loads first and then charge the battery if there's surplus power. 
-#When the power from PV isn’t enough, the battery will discharge to supply back-up loads together with PV. 
-#Note: If there’s no grid connection when configuring the hybrid system, please set the work mode to “Off-grid” to enable 
-#the power output in back-up port and switch to other modes when grid comes back.
+# Off-grid mode
+# In the pure off-grid mode, power from PV will supply the back-up loads first and then charge the battery if there's surplus power.
+# When the power from PV isn’t enough, the battery will discharge to supply back-up loads together with PV.
+# Note: If there’s no grid connection when configuring the hybrid system, please set the work mode to “Off-grid” to enable
+# the power output in back-up port and switch to other modes when grid comes back.
+
+# Feed-in mode (firmware v3 and newer)
+# It's used to increase feed-in power to grid in period with peak electricity price for more profit.
+# PV power will firstly supply loads, then excess power feeds the grid (up to the limit set), and any surplus power will charge the battery.
+# When the power from PV isn’t enough, the battery will discharge to supply loads together with PV. If still not enough, the grid will join in.
+
+# Peak shift mode (firmware v3 and newer)
+# It is suitable for locations where exceeding the contractual grid power (Pmax) would result in penalties or high fees.
+# Loads are firsly supplied by PV, then from the grid up to the limit set. If there is more power needed, the battery will discharge to fill the gap.
+
+# TuO mode (firmware v3 and newer)
+# TuO stands for Time of Use.
+# It's more advanced edition of Economic mode and have been instroduced in Wattsonic firmware v3, replacing Eco mode.
+# It allows to switch betwen modes (general, offgrid, feed-in, ups, peakshifting) for each time period.
+# Note, this integration can display and activate this mode, but it provides no support to set-up periods properly.
+# We expect it uses the same structure as Ecomode, incl. reserved registers.
 
 # UPS mode
-# Power grid is connected, power from PV or grid will firstly charge the battery until it’s full, 
-# and loads will be supplied by the grid during charging period. Battery will not discharge power when the grid is connected. 
-# Power grid fails, and PV power is insufficient to meet the loads' consumption, the battery will discharge power to supply 
+# Power grid is connected, power from PV or grid will firstly charge the battery until it’s full,
+# and loads will be supplied by the grid during charging period. Battery will not discharge power when the grid is connected.
+# Power grid fails, and PV power is insufficient to meet the loads' consumption, the battery will discharge power to supply
 # loads connected to the back-up port.
 
 #Wattsonic Minimal import from grid alghoritm
@@ -1169,7 +1218,7 @@ template:
 #preconditions, not checked in alghoritm:
 # none
 #turn on Off-grid mode => battery charges from PV, energy to household goes from PV and battery
-#- *after sunset 
+#- *after sunset
 #-  or *solar production=0 for 1h - todo
 #- solar forecast for next day > 5kWh - todo
 #- battery SOC > 60
@@ -1239,6 +1288,7 @@ script:
         value: 259
     mode: single
     icon: mdi:alpha-w-box
+
   wattsonic_mode_economic:
     alias: wattsonic_mode_economic
     sequence:
@@ -1250,6 +1300,7 @@ script:
         value: 258
     mode: single
     icon: mdi:alpha-w-box
+
   wattsonic_mode_general:
     alias: wattsonic_mode_general
     sequence:
@@ -1261,6 +1312,7 @@ script:
         value: 257
     mode: single
     icon: mdi:alpha-w-box
+
   wattsonic_mode_offgrid:
     alias: wattsonic_mode_offgrid
     sequence:
@@ -1272,18 +1324,31 @@ script:
         value: 512
     mode: single
     icon: mdi:alpha-w-box
-  # wattsonic_set_grid_injection_power_limit_switch:
-    # alias: Wattsonic Set Grid Injection Power Limit Switch
-    # sequence:
-    # - service: modbus.write_register
-      # data:
-        # address: 25100
-        # hub: wattsonic
-        # slave: 247
-        # value: '{{ switch }}'
-    # mode: single
-    # icon: mdi:alpha-w-box
-    
+
+  wattsonic_set_charge_current_limit:
+    alias: Wattsonic Set Charge Current Limit
+    sequence:
+    - service: modbus.write_register
+      data:
+        address: 52601
+        hub: wattsonic
+        slave: 247
+        value: '{{ float(limit)*10 }}'
+    mode: single
+    icon: mdi:alpha-w-box
+
+  wattsonic_set_discharge_current_limit:
+    alias: Wattsonic Set Discharge Current Limit
+    sequence:
+    - service: modbus.write_register
+      data:
+        address: 52603
+        hub: wattsonic
+        slave: 247
+        value: '{{ float(limit)*10 }}'
+    mode: single
+    icon: mdi:alpha-w-box
+
   wattsonic_set_grid_injection_power_limit_setting:
     alias: Wattsonic Set Grid Injection Power Limit Setting
     sequence:
