@@ -177,11 +177,13 @@
         entities:
           - entity: sensor.wattsonic_ecomode_period_enable_flag
           - entity: sensor.wattsonic_ecomode_period_enable_flag_bin
-          - entity: sensor.wattsonic_ecomode_period1_chargedischarge_setting
-          - entity: sensor.wattsonic_ecomode_period1_battery_charge_by
+          - entity: sensor.wattsonic_ecomode_period1_chargedischarge_setting_text
+          - entity: sensor.wattsonic_ecomode_period1_battery_charge_by_text
           - entity: sensor.wattsonic_ecomode_period1_power_limit
           - entity: sensor.wattsonic_ecomode_period1_start_time
           - entity: sensor.wattsonic_ecomode_period1_end_time
+          - entity: sensor.wattsonic_charge_current_limit
+          - entity: sensor.wattsonic_discharge_current_limit
         show_header_toggle: false
       - type: custom:history-explorer-card
         cardName: historycard-91888117
