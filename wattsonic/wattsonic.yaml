@@ -1,8 +1,14 @@
+#add corresponding line to secrets.yaml and uncomment it
+#wattsonic_slave: 255 #for TCP/IP
+#wattsonic_slave: 247 #for serial RTU
+
 modbus:
   - name: wattsonic
-    # type: tcp
-    # host: 192.168.11.104
-    # port: 502
+#uncomment this section for TCP/IP connection
+#    type: tcp
+#    host: 192.168.11.104
+#    port: 502
+#uncomment this section for serial RTU connection
     type: serial
     baudrate: 9600
     bytesize: 8
@@ -10,10 +16,11 @@ modbus:
     parity: N
     port: /dev/ttyUSB1
     stopbits: 1
+#end section for serial RTU connection
     switches:
       - name: Wattsonic Grid Injection Power Limit Switch  #0:Off;1:ON
         unique_id: wattsonic_grid_injection_power_limit_switch #RW
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 25100
         write_type: holding
         scan_interval: 360
@@ -26,7 +33,7 @@ modbus:
             state_off: 0
       - name: Wattsonic Off-grid Battery SOC Protection Switch  #0:Off;1:ON
         unique_id: wattsonic_off_grid_battery_soc_protection_switch #RW
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 52504
         write_type: holding
         scan_interval: 360
@@ -39,7 +46,7 @@ modbus:
             state_off: 0
       - name: Wattsonic On-grid Battery SOC Protection Switch  #0:Off;1:ON
         unique_id: wattsonic_on_grid_battery_soc_protection_switch #RW
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 52502
         write_type: holding
         scan_interval: 360
@@ -52,7 +59,7 @@ modbus:
             state_off: 0
       - name: Wattsonic Priority Power Output Setting  #0：PV Output Priority ; 1：Battery Output Priority
         unique_id: wattsonic_priority_power_output_setting #RW
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 50210
         write_type: holding
         scan_interval: 360
@@ -68,7 +75,7 @@ modbus:
     sensors:
       - name: Wattsonic Inverter SN
         unique_id: wattsonic_inverter_sn
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 10000
         input_type: holding
         count: 10
@@ -76,7 +83,7 @@ modbus:
         scan_interval: 86400
       - name: Wattsonic Firmware Version1
         unique_id: wattsonic_firmware_version1
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 10011
         input_type: holding
         count: 2
@@ -86,7 +93,7 @@ modbus:
         scan_interval: 600
       - name: Wattsonic Firmware Version2
         unique_id: wattsonic_firmware_version2
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 10013
         input_type: holding
         count: 2
@@ -96,7 +103,7 @@ modbus:
         precision: 0
       - name: Wattsonic DateTime
         unique_id: wattsonic_datetime
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 10100
         input_type: holding
         count: 3
@@ -106,7 +113,7 @@ modbus:
         precision: 0
 #      - name: Wattsonic DateTime2
 #        unique_id: wattsonic_datetime2
-#        slave: 247
+#        slave: !secret wattsonic_slave
 #        address: 20000
 #        input_type: holding
 #        count: 3
@@ -116,14 +123,14 @@ modbus:
 #        precision: 0
       - name: Wattsonic Inverter Running Status #0:wait, wait for on-grid 1:check, self-check 2:On Grid 3:fault 4:flash, firmware update 5.Off Grid
         unique_id: wattsonic_inverter_running_status
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 10105
         input_type: holding
         data_type: int16
         scan_interval: 10
       - name: Wattsonic Phase A Power on Meter
         unique_id: wattsonic_phase_a_power_on_meter
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 10994
         input_type: holding
         state_class: measurement
@@ -135,7 +142,7 @@ modbus:
         scan_interval: 10
       - name: Wattsonic Phase B Power on Meter
         unique_id: wattsonic_phase_b_power_on_meter
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 10996
         input_type: holding
         state_class: measurement
@@ -147,7 +154,7 @@ modbus:
         scan_interval: 10
       - name: Wattsonic Phase C Power on Meter
         unique_id: wattsonic_phase_c_power_on_meter
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 10998
         input_type: holding
         state_class: measurement
@@ -159,7 +166,7 @@ modbus:
         scan_interval: 10
       - name: Wattsonic Total Power on Meter        #Grid power
         unique_id: wattsonic_total_power_on_meter
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 11000
         input_type: holding
         state_class: measurement
@@ -172,7 +179,7 @@ modbus:
 
       - name: Wattsonic Grid Injection Energy on that day   #export/day
         unique_id: wattsonic_grid_injection_energy_on_that_day
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 31000
         scale: 0.1
         precision: 2
@@ -184,7 +191,7 @@ modbus:
         scan_interval: 60
       - name: Wattsonic Grid Purchasing Energy on that day
         unique_id: wattsonic_grid_purchasing_energy_on_that_day
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 31001
         scale: 0.1
         precision: 1
@@ -196,7 +203,7 @@ modbus:
         scan_interval: 60
       - name: Wattsonic Backup Output Energy on that day
         unique_id: wattsonic_backup_output_energy_on_that_day
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 31002
         scale: 0.1
         precision: 1
@@ -208,7 +215,7 @@ modbus:
         scan_interval: 300
       - name: Wattsonic Battery Charge Energy on that day
         unique_id: wattsonic_battery_charge_energy_on_that_day
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 31003
         scale: 0.1
         precision: 1
@@ -220,7 +227,7 @@ modbus:
         scan_interval: 60
       - name: Wattsonic Battery Discharge Energy on that day
         unique_id: wattsonic_battery_discharge_energy_on_that_day
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 31004
         scale: 0.1
         precision: 1
@@ -232,7 +239,7 @@ modbus:
         scan_interval: 60
       - name: Wattsonic PV Generation Energy on that day    #E-today from GUI
         unique_id: wattsonic_pv_generation_energy_on_that_day
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 31005
         scale: 0.1
         precision: 1
@@ -244,7 +251,7 @@ modbus:
         scan_interval: 60
       - name: Wattsonic Loading Energy on that day
         unique_id: wattsonic_loading_energy_on_that_day
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 31006
         scale: 0.1
         precision: 1
@@ -256,7 +263,7 @@ modbus:
         scan_interval: 300
       - name: Wattsonic Energy Purchased from Grid on that day  #on inverter side
         unique_id: wattsonic_energy_purchased_from_grid_on_that_day
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 31008
         scale: 0.1
         precision: 1
@@ -268,7 +275,7 @@ modbus:
         scan_interval: 300
       - name: Wattsonic Total Energy injected to grid
         unique_id: wattsonic_total_energy_injected_to_grid
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 31102
         scale: 0.1
         precision: 1
@@ -280,7 +287,7 @@ modbus:
         scan_interval: 600
       - name: Wattsonic Total Energy Purchased from Grid from Meter
         unique_id: wattsonic_total_energy_purchased_from_grid_from_meter
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 31104
         scale: 0.1
         precision: 1
@@ -292,7 +299,7 @@ modbus:
         scan_interval: 600
       - name: Wattsonic Total Output Energy on backup port
         unique_id: wattsonic_total_output_energy_on_backup_port
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 31106
         scale: 0.1
         precision: 1
@@ -304,7 +311,7 @@ modbus:
         scan_interval: 3600
       - name: Wattsonic Total Energy Charged to Battery
         unique_id: wattsonic_total_energy_charged_to_battery
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 31108
         scale: 0.1
         precision: 1
@@ -316,7 +323,7 @@ modbus:
         scan_interval: 600
       - name: Wattsonic Total Energy Discharged from Battery
         unique_id: wattsonic_total_energy_discharged_from_battery
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 31110
         scale: 0.1
         precision: 1
@@ -328,7 +335,7 @@ modbus:
         scan_interval: 600
       - name: Wattsonic Total PV Generation
         unique_id: wattsonic_total_pv_generation
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 31112
         scale: 0.1
         precision: 1
@@ -340,7 +347,7 @@ modbus:
         scan_interval: 600
       - name: Wattsonic Total Loading Energy consumed at grid side  #totoal load consumption
         unique_id: wattsonic_total_loading_energy_consumed_at_grid_side
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 31114
         scale: 0.1
         precision: 1
@@ -352,7 +359,7 @@ modbus:
         scan_interval: 3600
       - name: Wattsonic Total Energy Purchased from Grid at inverter side
         unique_id: wattsonic_total_energy_purchased_from_grid_at_inverter_side
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 31118
         scale: 0.1
         precision: 1
@@ -365,7 +372,7 @@ modbus:
 
       - name: Wattsonic Total Grid-Injection Energy on Meter
         unique_id: wattsonic_total_grid_injection_energy_on_meter
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 11002
         input_type: holding
         state_class: total_increasing
@@ -377,7 +384,7 @@ modbus:
         scan_interval: 3600
       - name: Wattsonic Total Purchasing Energy from Grid on Meter
         unique_id: wattsonic_total_purchasing_energy_from_grid_on_meter
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 11004
         input_type: holding
         state_class: total_increasing
@@ -390,7 +397,7 @@ modbus:
 
       - name: Wattsonic Grid Lines A/B Voltage
         unique_id: wattsonic_grid_lines_a_b_voltage
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 11006
         input_type: holding
         unit_of_measurement: V
@@ -402,7 +409,7 @@ modbus:
         scan_interval: 60
       - name: Wattsonic Grid Lines B/C Voltage
         unique_id: wattsonic_grid_lines_b_c_voltage
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 11007
         input_type: holding
         unit_of_measurement: V
@@ -414,7 +421,7 @@ modbus:
         scan_interval: 60
       - name: Wattsonic Grid Lines C/A Voltage
         unique_id: wattsonic_grid_lines_c_a_voltage
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 11008
         input_type: holding
         unit_of_measurement: V
@@ -426,7 +433,7 @@ modbus:
         scan_interval: 60
       - name: Wattsonic Grid Phase A Voltage
         unique_id: wattsonic_grid_phase_a_voltage
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 11009
         input_type: holding
         unit_of_measurement: V
@@ -438,7 +445,7 @@ modbus:
         scan_interval: 60
       - name: Wattsonic Grid Phase B Voltage
         unique_id: wattsonic_grid_phase_b_voltage
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 11011
         input_type: holding
         unit_of_measurement: V
@@ -450,7 +457,7 @@ modbus:
         scan_interval: 60
       - name: Wattsonic Grid Phase C Voltage
         unique_id: wattsonic_grid_pase_c_voltage
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 11013
         input_type: holding
         unit_of_measurement: V
@@ -462,7 +469,7 @@ modbus:
         scan_interval: 60
       - name: Wattsonic Grid Phase A Current
         unique_id: wattsonic_grid_phase_a_current
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 11010
         input_type: holding
         state_class: measurement
@@ -474,7 +481,7 @@ modbus:
         scan_interval: 60
       - name: Wattsonic Grid Phase B Current
         unique_id: wattsonic_grid_phase_b_current
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 11012
         input_type: holding
         state_class: measurement
@@ -486,7 +493,7 @@ modbus:
         scan_interval: 60
       - name: Wattsonic Grid Phase C Current
         unique_id: wattsonic_grid_phase_c_current
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 11014
         input_type: holding
         state_class: measurement
@@ -498,7 +505,7 @@ modbus:
         scan_interval: 60
       - name: Wattsonic P AC
         unique_id: wattsonic_p_ac
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 11016
         input_type: holding
         state_class: measurement
@@ -510,7 +517,7 @@ modbus:
         scan_interval: 10
       - name: Wattsonic Total PV Generation on that day  #energy today
         unique_id: wattsonic_total_pv_generation_on_that_day
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 11018
         input_type: holding
         state_class: total_increasing
@@ -522,7 +529,7 @@ modbus:
         scan_interval: 1800
       - name: Wattsonic Total PV Generation from Installation  #energy total
         unique_id: wattsonic_total_pv_generation_from_installation
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 11020
         input_type: holding
         state_class: total_increasing
@@ -534,7 +541,7 @@ modbus:
         scan_interval: 3600
       - name: Wattsonic PV Input Total Power        #PV power, panel actual power
         unique_id: wattsonic_pv_input_total_power
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 11028
         input_type: holding
         state_class: measurement
@@ -546,7 +553,7 @@ modbus:
         scan_interval: 10
       - name: Wattsonic Temperature Sensor 1
         unique_id: wattsonic_temperature_sensor_1
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 11032
         input_type: holding
         state_class: measurement
@@ -558,7 +565,7 @@ modbus:
         scan_interval: 300
       - name: Wattsonic Temperature Sensor 2
         unique_id: wattsonic_temperature_sensor_2
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 11033
         input_type: holding
         state_class: measurement
@@ -570,7 +577,7 @@ modbus:
         scan_interval: 600
       - name: Wattsonic Temperature Sensor 3
         unique_id: wattsonic_temperature_sensor_3
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 11034
         input_type: holding
         state_class: measurement
@@ -582,7 +589,7 @@ modbus:
         scan_interval: 600
       - name: Wattsonic Temperature Sensor 4
         unique_id: wattsonic_temperature_sensor_4
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 11035
         input_type: holding
         state_class: measurement
@@ -594,7 +601,7 @@ modbus:
         scan_interval: 600
       - name: Wattsonic PV1 Voltage
         unique_id: wattsonic_pv1_voltage
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 11038
         input_type: holding
         unit_of_measurement: V
@@ -606,7 +613,7 @@ modbus:
         scan_interval: 300
       - name: Wattsonic PV2 Voltage
         unique_id: wattsonic_pv2_voltage
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 11040
         input_type: holding
         unit_of_measurement: V
@@ -618,7 +625,7 @@ modbus:
         scan_interval: 300
       - name: Wattsonic PV1 Current
         unique_id: wattsonic_pv1_current
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 11039
         input_type: holding
         state_class: measurement
@@ -630,7 +637,7 @@ modbus:
         scan_interval: 300
       - name: Wattsonic PV2 Current
         unique_id: wattsonic_pv2_current
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 11041
         input_type: holding
         state_class: measurement
@@ -642,7 +649,7 @@ modbus:
         scan_interval: 300
       - name: Wattsonic PV1 Input Power
         unique_id: wattsonic_pv1_input_power
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 11062
         input_type: holding
         state_class: measurement
@@ -654,7 +661,7 @@ modbus:
         scan_interval: 10
       - name: Wattsonic PV2 Input Power
         unique_id: wattsonic_pv2_input_power
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 11064
         input_type: holding
         state_class: measurement
@@ -666,28 +673,28 @@ modbus:
         scan_interval: 10
       - name: Wattsonic ARM Fault Flag1 #Table 3.3 Troubleshooting
         unique_id: wattsonic_arm_fault_flag1
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 18000
         input_type: holding
         data_type: int32
         scan_interval: 60
       - name: Wattsonic Fault Flag1 #Table 3.3 Troubleshooting
         unique_id: wattsonic_fault_flag1
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 10112
         input_type: holding
         data_type: int32
         scan_interval: 60
       - name: Wattsonic Fault Flag2 #Table 3.3 Troubleshooting
         unique_id: wattsonic_fault_flag2
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 10114
         input_type: holding
         data_type: int32
         scan_interval: 60
       - name: Wattsonic Fault Flag3 #Table 3.3 Troubleshooting
         unique_id: wattsonic_fault_flag3
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 10116
         input_type: holding
         data_type: int32
@@ -695,7 +702,7 @@ modbus:
 
       - name: Wattsonic Total Backup P          #load power, total active power
         unique_id: wattsonic_total_backup_p
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 30230
         input_type: holding
         state_class: measurement
@@ -708,7 +715,7 @@ modbus:
 
       - name: Wattsonic Battery V #DC Voltage
         unique_id: wattsonic_battery_v
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 30254
         input_type: holding
         unit_of_measurement: V
@@ -720,7 +727,7 @@ modbus:
         scan_interval: 300
       - name: Wattsonic Battery I #DC Current
         unique_id: wattsonic_battery_i
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 30255
         input_type: holding
         state_class: measurement
@@ -732,7 +739,7 @@ modbus:
         scan_interval: 300
       - name: Wattsonic Battery P           #Battery Power
         unique_id: wattsonic_battery_p
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 30258
         input_type: holding
         state_class: measurement
@@ -744,7 +751,7 @@ modbus:
         scan_interval: 10
       - name: Wattsonic Battery Mode #0:discharge;1:charge
         unique_id: wattsonic_battery_mode
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 30256
         input_type: holding
         data_type: int16
@@ -752,21 +759,21 @@ modbus:
 #BMS registers
       - name: Wattsonic BMS Software Version
         unique_id: wattsonic_bms_software_version
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 32003
         input_type: holding
         data_type: int16
         scan_interval: 600
       - name: Wattsonic BMS Hardware Version
         unique_id: wattsonic_bms_hardware_version
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 32004
         input_type: holding
         data_type: int16
         scan_interval: 600
       - name: Wattsonic Battery SOC
         unique_id: wattsonic_battery_soc
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 33000
         input_type: holding
         state_class: measurement
@@ -778,7 +785,7 @@ modbus:
         scan_interval: 60
       - name: Wattsonic Battery SOH
         unique_id: wattsonic_battery_soh
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 33001
         input_type: holding
         state_class: measurement
@@ -790,14 +797,14 @@ modbus:
         scan_interval: 3600
       - name: Wattsonic BMS Status
         unique_id: wattsonic_bms_status
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 33002
         input_type: holding
         data_type: int16
         scan_interval: 60
       - name: Wattsonic BMS Pack Temperature
         unique_id: wattsonic_bms_pack_temperature
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 33003
         input_type: holding
         state_class: measurement
@@ -809,7 +816,7 @@ modbus:
         scan_interval: 300
       - name: Wattsonic Max Cell Voltage
         unique_id: wattsonic_max_cell_voltage
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 33013
         input_type: holding
         unit_of_measurement: V
@@ -821,7 +828,7 @@ modbus:
         scan_interval: 300
       - name: Wattsonic Min Cell Voltage
         unique_id: wattsonic_min_cell_voltage
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 33015
         input_type: holding
         unit_of_measurement: V
@@ -833,14 +840,14 @@ modbus:
         scan_interval: 300
       - name: Wattsonic BMS Error Code
         unique_id: wattsonic_bms_error_code
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 33016
         input_type: holding
         data_type: int32
         scan_interval: 60
       - name: Wattsonic BMS Warn Code
         unique_id: wattsonic_bms_warn_code
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 33018
         input_type: holding
         data_type: int32
@@ -851,7 +858,7 @@ modbus:
         # ECO mode is used up to v2, then substituted by ToU
       - name: Wattsonic Hybrid Inverter Working Mode Setting  #257=General mode; 258=Economic mode; 259=UPS mode; 260=Peak Shift; 261=Feed-In; 512=Off grid mode; 1024=ToU
         unique_id: wattsonic_hybrid_inverter_working_mode_setting #RW
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 50000
         input_type: holding
         data_type: int16
@@ -859,7 +866,7 @@ modbus:
 
       - name: Wattsonic Grid Injection Power Limit Setting  #[0.0%-100.0%]
         unique_id: wattsonic_grid_injection_power_limit_setting #RW
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 25103
         input_type: holding
         scale: 0.1    #spec: 1000
@@ -867,8 +874,9 @@ modbus:
         data_type: int16
         scan_interval: 110
       - name: Wattsonic On-grid Battery End SOC  #[0.0%-100.0%]
+            #v případě připojení vozidla zapište aktuální hodnotu SOC, která pak neklesne. A po odpojení vozidla po nabíjení - vraťte původní hodnotu
         unique_id: wattsonic_on_grid_battery_end_soc #RW
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 52503
         input_type: holding
         scale: 0.1    #spec: 1000
@@ -877,7 +885,7 @@ modbus:
         scan_interval: 360
       - name: Wattsonic Off-grid Battery End SOC  #[0.0%-100.0%]
         unique_id: wattsonic_off_grid_battery_end_soc #RW
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 52505
         input_type: holding
         scale: 0.1    #spec: 1000
@@ -886,7 +894,7 @@ modbus:
         scan_interval: 360
       - name: Wattsonic Battery Power Setting
         unique_id: wattsonic_battery_power_setting
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 50207
         input_type: holding
         unit_of_measurement: kW
@@ -896,7 +904,7 @@ modbus:
         scan_interval: 60
       - name: Wattsonic Battery Max. AC Power Limit Setting
         unique_id: wattsonic_battery_power_max_up_limit
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 50208
         input_type: holding
         scale: 0.01    #spec: 100
@@ -906,7 +914,7 @@ modbus:
         scan_interval: 60
       - name: Wattsonic Battery Min. AC Power Limit Setting
         unique_id: wattsonic_battery_power_min_up_limit
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 50209
         input_type: holding
         unit_of_measurement: kW
@@ -916,7 +924,7 @@ modbus:
         scan_interval: 60
       - name: Wattsonic Battery Configuration # Table 3.7
         unique_id: wattsonic_battery_configuration
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 52500
         input_type: holding
         data_type: int16
@@ -925,7 +933,7 @@ modbus:
         unique_id: wattsonic_charge_current_limit #RW
         device_class: current
         unit_of_measurement: A
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 52601
         input_type: holding
         scale: 0.1
@@ -936,7 +944,7 @@ modbus:
         unique_id: wattsonic_discharge_current_limit #RW
         device_class: current
         unit_of_measurement: A
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 52603
         input_type: holding
         scale: 0.1
@@ -945,28 +953,28 @@ modbus:
         scan_interval: 60
       - name: Wattsonic RW BMS Status #Table 3.8
         unique_id: wattsonic_rw_bms_status
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 53508
         input_type: holding
         data_type: int16
         scan_interval: 60
       - name: Wattsonic RW BMS ErrorCode #Table 3.9
         unique_id: wattsonic_rw_bms_errorcode
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 53509
         input_type: holding
         data_type: int32
         scan_interval: 60
       - name: Wattsonic RW BMS ProtectionCode #Table 3.9
         unique_id: wattsonic_rw_bms_protectioncode
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 53511
         input_type: holding
         data_type: int32
         scan_interval: 60
       - name: Wattsonic RW BMS WarnCode #Table 3.9
         unique_id: wattsonic_rw_bms_warncode
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 53513
         input_type: holding
         data_type: int32
@@ -975,14 +983,14 @@ modbus:
       - name: Wattsonic Ecomode Period Enable Flag #bit0- bit5 stands for period1-period6, bit7-bit15 reserved; 0: disable 1: enable
       #1=one line; #3=2 lines; 7=4lines; 15=5lines; 31=6lines
         unique_id: wattsonic_ecomode_period_enable_flag
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 53006
         input_type: holding
         data_type: int16
         scan_interval: 60
       - name: Wattsonic Ecomode Period1 Struct
         unique_id: wattsonic_ecomode_period1_struct
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 53007
         input_type: holding
         count: 7
@@ -991,7 +999,7 @@ modbus:
         scan_interval: 60
       - name: Wattsonic Ecomode Period2 Struct
         unique_id: wattsonic_ecomode_period2_struct
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 53014
         input_type: holding
         count: 7
@@ -1003,7 +1011,7 @@ modbus:
 #data:
 #  hub: wattsonic
 #  address: 53007
-#  slave: 247
+#  slave: !secret wattsonic_slave
 #  value:
 #    - 2
 #    - 65535
@@ -1284,7 +1292,7 @@ script:
       data:
         address: 50000
         hub: wattsonic
-        slave: 247
+        slave: !secret wattsonic_slave
         value: 259
     mode: single
     icon: mdi:alpha-w-box
@@ -1296,7 +1304,7 @@ script:
       data:
         address: 50000
         hub: wattsonic
-        slave: 247
+        slave: !secret wattsonic_slave
         value: 258
     mode: single
     icon: mdi:alpha-w-box
@@ -1308,7 +1316,7 @@ script:
       data:
         address: 50000
         hub: wattsonic
-        slave: 247
+        slave: !secret wattsonic_slave
         value: 257
     mode: single
     icon: mdi:alpha-w-box
@@ -1320,7 +1328,7 @@ script:
       data:
         address: 50000
         hub: wattsonic
-        slave: 247
+        slave: !secret wattsonic_slave
         value: 512
     mode: single
     icon: mdi:alpha-w-box
@@ -1332,7 +1340,7 @@ script:
       data:
         address: 52601
         hub: wattsonic
-        slave: 247
+        slave: !secret wattsonic_slave
         value: '{{ float(limit)*10 }}'
     mode: single
     icon: mdi:alpha-w-box
@@ -1344,7 +1352,7 @@ script:
       data:
         address: 52603
         hub: wattsonic
-        slave: 247
+        slave: !secret wattsonic_slave
         value: '{{ float(limit)*10 }}'
     mode: single
     icon: mdi:alpha-w-box
@@ -1356,7 +1364,7 @@ script:
       data:
         address: 25103
         hub: wattsonic
-        slave: 247
+        slave: !secret wattsonic_slave
         value: '{{ float(limit)*10 }}'
     mode: single
     icon: mdi:alpha-w-box
@@ -1367,13 +1375,13 @@ script:
     - service: modbus.write_register
       data:
         hub: wattsonic
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 53006
         value: 1
     - service: modbus.write_register
       data:
         hub: wattsonic
-        slave: 247
+        slave: !secret wattsonic_slave
         address: 53007
         value:
         - 1
